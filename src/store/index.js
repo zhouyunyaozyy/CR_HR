@@ -3,6 +3,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import JSEncrypt from 'jsencrypt'
 import Guid from 'guid'
+import tj from './modules/tj';
+import zyy from './modules/zyy';
 let CryptoJS = require('crypto-js')
 
 Vue.use(Vuex)
@@ -143,6 +145,10 @@ const store = new Vuex.Store({
         })
       window.sessionStorage.setItem('sessionSalt', decrypted.toString(CryptoJS.enc.Utf8))
     }
+  },
+  modules: {
+      tj,
+      zyy
   }
 })
 
