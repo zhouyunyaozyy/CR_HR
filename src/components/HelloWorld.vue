@@ -84,6 +84,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   name: 'HelloWorld',
   data () {
@@ -93,7 +94,27 @@ export default {
   },
   methods: {
     click () {
-      this.$router.push('hello')
+      this.$router.push({
+        path: '/403',
+        query: {id: 123}
+      })
+      
+//      store.state.pageStatus = 'login'
+//      let user = {}
+//      user.phone = '13888888888'
+//      user.pwd = '123456'
+//      store.commit('jiami', user)
+//      let resultData = store.state.jiamiData
+//      console.log(resultData)
+//      this.$axios({
+//        type: 'post',
+//        url: '/dabai-authority/authority/login',
+//        data: resultData,
+//        fuc: (res) => {
+//          console.log('login', res)
+//          this.msg = res
+//        }
+//      })
     }
   }
 }

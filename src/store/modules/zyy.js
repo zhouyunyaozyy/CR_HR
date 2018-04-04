@@ -1,5 +1,6 @@
 const zyy = {
     state: {
+      isTrue: 'yes'
 //        属性
     },
     mutations: {

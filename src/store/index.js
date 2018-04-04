@@ -73,7 +73,7 @@ const store = new Vuex.Store({
             data.client = 'Safari'
             data.clientVersion = ver
           }
-          window.localStorage.setItem('platform', 'chaorenjob-company')
+          window.localStorage.setItem('platform', 'DABAI_CHAORENJOB_HR')
         // 判断本地是否有clintUid
           if (window.sessionStorage.getItem('clientUid')) {
             data.clientUid = window.sessionStorage.getItem('clientUid')
@@ -81,12 +81,12 @@ const store = new Vuex.Store({
             data.clientUid = Guid.create().value
             window.sessionStorage.setItem('clientUid', data.clientUid)
           }
-          data.platform = 'chaorenjob-company'
-          data.loginName = msg.phone
-          data.passWord = msg.pwd
+          data.platform = 'DABAI_CHAORENJOB_HR'
+          data.username = msg.phone
+          data.password = msg.pwd
           if (state.pageStatus === 'reg') {
             data.postVersion = state.validationUid + '.' + msg.num
-            data.userName = msg.name
+            data.username = msg.name
           }
           if (state.pageStatus === 'forget') {
             data.postVersion = state.validationUid + '.' + msg.num
@@ -128,11 +128,12 @@ const store = new Vuex.Store({
         return encrypted.toString() // 返回的是base64格式的密文
       })()
   // RSA加密
-      let encrypt = new JSEncrypt.JSEncrypt()
+      console.log(new JSEncrypt())
+      let encrypt = new JSEncrypt()
       var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdIIlQzv3fb9ktUGphZ/4l0qQ87iMxLjn1Rc3yhWL0KlnTSY/tziRi0XRyoSCBovZe1hhWGXnfwSvgJRvkzBWRHrnGor0+6I18DnY1lnrckp6bmjirX0BvdqFWxmXgIoz985YjLnPGNqBzt58EBdC5YqUYYnATRgKMA4g0N0Cd6QIDAQAB'  // 从服务端接收到的公钥，缓存到本地
       encrypt.setPublicKey(publicKey)
       resultData.aesKey = encrypt.encrypt(beforeKey) // RSAkey
-      state.jiamiData = JSON.stringify(resultData)
+      state.jiamiData = resultData
     },
     jieMi (state, msg) { // 解密
       let key = CryptoJS.enc.Utf8.parse(state.key)

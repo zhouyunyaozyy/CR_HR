@@ -5,10 +5,10 @@ import App from './App'
 import {router} from './router'
 import store from '@/store'
 import axios from 'axios';
-import qs from 'qs'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import { Message } from 'element-ui';
+const global = require('./global.js')
 
 Vue.use(ElementUI)
 
@@ -57,7 +57,7 @@ Vue.prototype.$axios = (params) => {
       resultData = base64Data+'.'+hmacData
   }
 //
-  let baseUrl = global.configSelf.api
+  let baseUrl = global.configSelf.paramUrl
   if (params.type === 'get') {
     axios.get(baseUrl + params.url, {withCredentials:false, headers: {"Content-Type": "application/x-www-form-urlencoded ", "Accept" : "*/*", 'CR-token': resultData}})
       .then(function(response){
@@ -79,13 +79,13 @@ Vue.prototype.$axios = (params) => {
   } else {
     axios.post(
       baseUrl + params.url,
-      qs.stringify(params.data), 
+      params.data, 
       {
         withCredentials:false, 
-        headers: {"Content-Type": "application/x-www-form-urlencoded ", "Accept" : "*/*", 'CR-token': resultData}
+        headers: {"Content-Type": "application/json", "Accept" : "*/*", 'CR-token': resultData}
       })
       .then(function(response){
-        if (response.data.code !== 1) {
+        if (response.data.code != 1) {
           Message({
             message: response.data.msg,
             type: 'error',
@@ -95,8 +95,23 @@ Vue.prototype.$axios = (params) => {
         }
       })
       .catch(function(error){
+        if (error.response) {
+          // The request was made and the server responded with a status code
+          // that falls out of the range of 2xx
+          console.log(error.response.data);
+          console.log(error.response.status);
+          console.log(error.response.headers);
+        } else if (error.request) {
+          // The request was made but no response was received
+          // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+          // http.ClientRequest in node.js     
+          console.log(error.request);
+        } else {
+          // Something happened in setting up the request that triggered an Error
+          console.log('Error', error.message);
+        }
          Message({
-          message: error,
+          message: error.message,
           type: 'error',
         });
       });

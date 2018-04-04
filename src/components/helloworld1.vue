@@ -2,7 +2,7 @@
   <div class="hello">
     <h1>{{ msg }}</h1>
     <h2>Essential Links</h2>
-    <span>测试</span>
+    <span>测试{{$route.query.id}}</span>
     <ul>
       <li>
         <a
