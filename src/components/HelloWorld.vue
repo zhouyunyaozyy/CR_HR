@@ -1,5 +1,7 @@
 <template>
   <div class="hello">
+    <w-label></w-label>
+    <div>32</div>
     <h1>{{ msg }}</h1>
     <h2 @click='click'>Essential Links</h2>
     <ul>
@@ -98,7 +100,7 @@ export default {
 //        path: '/hello',
 //        query: {id: 123}
 //      })
-      
+
       store.state.pageStatus = 'login'
       let user = {}
       user.phone = '13888888888'

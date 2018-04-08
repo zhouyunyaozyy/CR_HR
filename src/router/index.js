@@ -2,6 +2,10 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import helloworld1 from '@/components/helloworld1'
+import iHtml from '@/views/index/index'
+import test1 from '@/views/test/test1'
+import test2 from '@/views/test/test2'
+import test3 from '@/views/test/test3'
 
 Vue.use(Router)
 const router1 = new Router({
@@ -9,6 +13,17 @@ const router1 = new Router({
   routes: [
     {
       path: '/',
+      name: 'iHtml',
+      component: iHtml,
+      children:[
+        {
+          path: '/',
+          name: 'test1',
+          component: test1,
+        }
+      ]
+    },{
+      path: '/HelloWorld',
       name: 'HelloWorld',
       component: HelloWorld
     },{
