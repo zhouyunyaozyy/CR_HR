@@ -144,7 +144,8 @@ const store = new Vuex.Store({
           mode: CryptoJS.mode.CBC,
           padding: CryptoJS.pad.Pkcs7
         })
-      window.sessionStorage.setItem('sessionSalt', decrypted.toString(CryptoJS.enc.Utf8))
+      window.sessionStorage.setItem('ticket', decrypted.toString(CryptoJS.enc.Utf8).split('.')[0])
+      window.sessionStorage.setItem('ticketsSalt', decrypted.toString(CryptoJS.enc.Utf8).split('.')[1])
     }
   },
   modules: {

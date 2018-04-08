@@ -1,7 +1,8 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <h2>Essential Links</h2>
+    <h2 @click='goHome'>Essential Links</h2>
+    <el-input></el-input>
     <span>测试{{$route.query.id}}</span>
     <ul>
       <li>
@@ -90,6 +91,11 @@ export default {
   data () {
     return {
       msg: 'Welcome to Your Vue.js App'
+    }
+  },
+  methods: {
+    goHome () {
+      this.$router.push('/')
     }
   }
 }

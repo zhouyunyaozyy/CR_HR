@@ -8,6 +8,8 @@ import axios from 'axios';
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
 import { Message } from 'element-ui';
+const Base64 = require('js-base64').Base64
+const CryptoJS = require('crypto-js')
 const global = require('./global.js')
 
 Vue.use(ElementUI)
@@ -20,7 +22,9 @@ Vue.prototype.$axios = (params) => {
   
 //  cr-token算法
   let resultData = 0
-  if(window.sessionStorage.getItem('sessionSalt')){
+  console.log(Base64)
+  console.log(CryptoJS)
+  if(window.sessionStorage.getItem('ticketsSalt')){
       function rndRandom (size) {
       let rnd = {}
       rnd.size = size
@@ -46,13 +50,14 @@ Vue.prototype.$axios = (params) => {
       let postTime = ''+(Date.parse(new Date()))// 时间戳
       let postVersion = rndRandom(20) // uuid随机数
       let base64DataBefore = {
-          sessionId: Cookies.get('sessionId'),
+          tickets: window.sessionStorage.getItem('ticket'),
           postVersion: postVersion,
-          postTime:postTime
+          postTime:postTime,
+          appVersion: 1
       }
      // sessionSalt="sessionSalt"&postVersion="UUid 随机数"&postTime="时间戳"&platform="平台名称"&clientUid="机器唯一编码"
-      let hmacDataBefore = 'sessionSalt=' + Cookies.get('sessionSalt')+'&postVersion='+postVersion+'&postTime='+postTime+'&platform='+window.localStorage.getItem('platform')+'&clientUid='+window.localStorage.getItem('clientUid')
-      var hmacData = CryptoJS.HmacSHA1(hmacDataBefore, Cookies.get('sessionSalt'))
+      let hmacDataBefore = 'ticketsSalt=' + window.sessionStorage.getItem('ticketsSalt')+'&postVersion='+postVersion+'&postTime='+postTime+'&platform='+window.localStorage.getItem('platform')+'&clientUid='+window.localStorage.getItem('clientUid')
+      var hmacData = CryptoJS.HmacSHA1(hmacDataBefore, window.sessionStorage.getItem('ticketsSalt'))
       let base64Data = Base64.encode(JSON.stringify(base64DataBefore))
       resultData = base64Data+'.'+hmacData
   }

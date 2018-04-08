@@ -32,7 +32,7 @@ let urlSelf = {
 let configSelf = {
   appKey: 'k51hidwqknn3b',
   //paramUrl: 'http://192.168.1.115:8080',
-  paramUrl: 'http://192.168.1.115:50200',
+  paramUrl: 'http://192.168.1.115:5020',
   nodeUrl: 'http://192.168.1.183:7000',
   proxyTable: {
 //    '*': {
