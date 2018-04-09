@@ -3,9 +3,8 @@ import Router from 'vue-router'
 import HelloWorld from '@/components/HelloWorld'
 import helloworld1 from '@/components/helloworld1'
 import iHtml from '@/views/index/index'
-import test1 from '@/views/test/test1'
-import test2 from '@/views/test/test2'
-import test3 from '@/views/test/test3'
+import account from '@/views/accountManagement/accountManagement'
+import position from '@/views/positionManagement/positionManagement'
 
 Vue.use(Router)
 const router1 = new Router({
@@ -18,8 +17,18 @@ const router1 = new Router({
       children:[
         {
           path: '/',
-          name: 'test1',
-          component: test1,
+          name: 'account',
+          component: account,
+        },
+        {
+          path: '/account',
+          name: 'account',
+          component: account,
+        },
+        {
+          path: '/position',
+          name: 'position',
+          component: position,
         }
       ]
     },

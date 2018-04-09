@@ -1,10 +1,10 @@
 <template>
-  <h1>test3</h1>
+  <h1>`fda</h1>
 </template>
 
 <script>
   export default {
-    name: "test3"
+    name: "accountManagement"
   }
 </script>
 

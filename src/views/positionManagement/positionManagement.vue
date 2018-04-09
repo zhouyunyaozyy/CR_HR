@@ -1,10 +1,10 @@
 <template>
-  <h1>test2</h1>
+  <div>fdsafads131</div>
 </template>
 
 <script>
   export default {
-    name: "test2"
+    name: "positionManagement"
   }
 </script>
 
