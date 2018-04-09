@@ -1,10 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
-import helloworld1 from '@/components/helloworld1'
-import iHtml from '@/views/index/index'
-import account from '@/views/accountManagement/accountManagement'
-import position from '@/views/positionManagement/positionManagement'
 
 Vue.use(Router)
 const router1 = new Router({
@@ -12,51 +7,72 @@ const router1 = new Router({
   routes: [
     {
       path: '/',
-      name: 'iHtml',
-      component: iHtml,
-      children:[
-        {
-          path: '/',
-          name: 'account',
-          component: account,
-        },
-        {
-          path: '/account',
-          name: 'account',
-          component: account,
-        },
-        {
-          path: '/position',
-          name: 'position',
-          component: position,
-        }
-      ]
-    },
-    {
-      path: '/signUp',
       name: 'signUp',
       component: resolve => require(['@/views/signUp/index'], resolve),
       children:[
         {
-          path: '/login',
+          path: '/',
           name: 'login',
-          component: resolve => require(['@/views/signUp/login'], resolve),
+          component: resolve => require(['@/views/signUp/login'], resolve)
         },
         {
           path: '/register',
           name: 'register',
-          component: resolve => require(['@/views/signUp/register'], resolve),
+          component: resolve => require(['@/views/signUp/register'], resolve)
         },
         {
           path: '/forgetPwd',
           name: 'forgetPwd',
-          component: resolve => require(['@/views/signUp/forgetPwd'], resolve),
+          component: resolve => require(['@/views/signUp/forgetPwd'], resolve)
         }
       ]
-    },{
-      path: '/HelloWorld',
-      name: 'HelloWorld',
-      component: HelloWorld
+    },
+    {
+      path: '/main',
+      name: 'main',
+      component: resolve => require(['@/views/main/index'], resolve),
+      children:[
+        { // 账号管理列表
+          path: '/hrList',
+          name: 'hrList',
+          component: resolve => require(['@/views/main/accountManage/accountManageList'], resolve),
+        },
+        { // 账号管理详情
+          path: '/hrDetail',
+          name: 'hrDetail',
+          component: resolve => require(['@/views/main/accountManage/accountManageDetail'], resolve),
+        },
+        { // 职位管理列表
+          path: '/jobList',
+          name: 'jobList',
+          component: resolve => require(['@/views/main/positionManage/positionManageList'], resolve),
+        },
+        { // 职位管理详情
+          path: '/jobList',
+          name: 'jobList',
+          component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve),
+        },
+        { // 简历列表
+          path: '/recruitList',
+          name: 'recruitList',
+          component: resolve => require(['@/views/main/recruitManage/recruitList'], resolve),
+        },
+        { // 简历详情
+          path: '/recruitDetail',
+          name: 'recruitDetail',
+          component: resolve => require(['@/views/main/recruitManage/recruitDetail'], resolve),
+        },
+        { // 职位沟通列表
+          path: '/sealTalkList',
+          name: 'sealTalkList',
+          component: resolve => require(['@/views/main/sealTalk/sealTalkList'], resolve),
+        },
+        { // 职位沟通详情页
+          path: '/sealTalkDetail',
+          name: 'sealTalkDetail',
+          component: resolve => require(['@/views/main/sealTalk/sealTalkDetail'], resolve),
+        }
+      ]
     },{
       path: '/403',
       meta: {
@@ -71,11 +87,6 @@ const router1 = new Router({
       },
       name: 'error-500',
       component: resolve => { require(['@/views/error-page/500.vue'], resolve); }
-    },
-    {
-      path: '/hello',
-      name: 'helloworld1',
-      component: helloworld1
     },{
       path: '/*',
       name: 'error-404',

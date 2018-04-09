@@ -19,8 +19,6 @@ export default {
   /*color: #2c3e50;*/
   /*margin-top: 60px;*/
   min-width: 1200px;
-}
-body{
   height: 100%;
 }
   html,body{
@@ -28,13 +26,13 @@ body{
   }
 	/* WebKit browsers */
 	.el-input__inner::-webkit-input-placeholder { color: #808080; }
-	
+
 	/* Mozilla Firefox 4 to 18 */
 	.el-input__inner::-moz-placeholder { color:#808080; }
-	
+
 	/* Mozilla Firefox 19+ */
 	.el-input__inner::-moz-placeholder { color:#808080; }
-	
+
 	/* Internet Explorer 10+ */
 	.el-input__inner::-ms-input-placeholder { color:#808080; }
 *{
