@@ -121,15 +121,15 @@ export default {
       }).then(() => {
         this.$axios({
           type: 'post',
-          url: '/dabai-chaorenjob-ca/hr/getUserInfoByTickets',
+          url: '/dabai-chaorenjob/hr/getUserInfoByTickets',
           fuc: (res) => {
             console.log('loginAfter', res)
           }
         })
-      this.$router.push({
-        path: '/hello',
-        query: {id: 123}
-      })
+//      this.$router.push({
+//        path: '/hello',
+//        query: {id: 123}
+//      })
 
 //      store.state.pageStatus = 'login'
 //      let user = {}
@@ -159,6 +159,7 @@ export default {
 //          }
 //        })
 //      })
+      })
     }
   }
 }

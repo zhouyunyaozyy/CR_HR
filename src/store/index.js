@@ -73,7 +73,7 @@ const store = new Vuex.Store({
             data.client = 'Safari'
             data.clientVersion = ver
           }
-          window.localStorage.setItem('platform', 'DABAI_CHAORENJOB_HR')
+          window.localStorage.setItem('platform', 'DABAI_CHAORENJOB_B_WEB')
         // 判断本地是否有clintUid
           if (window.sessionStorage.getItem('clientUid')) {
             data.clientUid = window.sessionStorage.getItem('clientUid')
@@ -81,7 +81,7 @@ const store = new Vuex.Store({
             data.clientUid = Guid.create().value
             window.sessionStorage.setItem('clientUid', data.clientUid)
           }
-          data.platform = 'DABAI_CHAORENJOB_HR'
+          data.platform = 'DABAI_CHAORENJOB_B_WEB'
           data.username = msg.phone
           data.password = msg.pwd
           if (state.pageStatus === 'reg') {

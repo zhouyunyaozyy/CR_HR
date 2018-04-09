@@ -22,6 +22,28 @@ const router1 = new Router({
           component: test1,
         }
       ]
+    },
+    {
+      path: '/signUp',
+      name: 'signUp',
+      component: resolve => require(['@/views/signUp/index'], resolve),
+      children:[
+        {
+          path: '/login',
+          name: 'login',
+          component: resolve => require(['@/views/signUp/login'], resolve),
+        },
+        {
+          path: '/register',
+          name: 'register',
+          component: resolve => require(['@/views/signUp/register'], resolve),
+        },
+        {
+          path: '/forgetPwd',
+          name: 'forgetPwd',
+          component: resolve => require(['@/views/signUp/forgetPwd'], resolve),
+        }
+      ]
     },{
       path: '/HelloWorld',
       name: 'HelloWorld',
