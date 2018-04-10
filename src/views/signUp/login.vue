@@ -75,7 +75,7 @@
 								url: '/dabai-chaorenjob/hr/getUserInfoByTickets',
 								fuc: (res) => {
 									console.log('loginAfter', res)
-									this.$router.push('/')
+									this.$router.push('/main')
 								}
 							})
 						})

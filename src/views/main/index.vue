@@ -76,6 +76,7 @@
   </el-container>
 </template>
 <script>
+	import '@/css/iconfont/iconfont.css'
     export default {
       name: "index",
       data() {
