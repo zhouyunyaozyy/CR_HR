@@ -35,42 +35,69 @@ const router1 = new Router({
         { // 账号管理列表
           path: '/hrList',
           name: 'hrList',
-          component: resolve => require(['@/views/main/accountManage/accountManageList'], resolve),
+          component: resolve => require(['@/views/main/accountManage/accountManageList'], resolve)
         },
         { // 账号管理详情
           path: '/hrDetail',
           name: 'hrDetail',
-          component: resolve => require(['@/views/main/accountManage/accountManageDetail'], resolve),
+          component: resolve => require(['@/views/main/accountManage/accountManageDetail'], resolve)
         },
         { // 职位管理列表
           path: '/jobList',
           name: 'jobList',
-          component: resolve => require(['@/views/main/positionManage/positionManageList'], resolve),
+          component: resolve => require(['@/views/main/positionManage/positionManageList'], resolve)
         },
         { // 职位管理详情
           path: '/jobList',
           name: 'jobList',
-          component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve),
+          component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve)
         },
         { // 简历列表
           path: '/recruitList',
           name: 'recruitList',
-          component: resolve => require(['@/views/main/recruitManage/recruitList'], resolve),
+          component: resolve => require(['@/views/main/recruitManage/recruitList'], resolve)
         },
         { // 简历详情
           path: '/recruitDetail',
           name: 'recruitDetail',
-          component: resolve => require(['@/views/main/recruitManage/recruitDetail'], resolve),
+          component: resolve => require(['@/views/main/recruitManage/recruitDetail'], resolve)
+        },
+        { // 个人信息设置
+          path: '/personSetting',
+          name: 'personSetting',
+          component: resolve => require(['@/views/main/settings/personSetting/index'], resolve),
+					children: [
+						{ // 设置姓名
+							path: '/personSettingUser',
+							name: 'personSettingUser',
+							component: resolve => require(['@/views/main/settings/personSetting/SettingUser'], resolve)
+						},
+						{ // 更换手机号第一步
+							path: '/personSettingPhone',
+							name: 'personSettingPhone',
+							component: resolve => require(['@/views/main/settings/personSetting/SettingPhone'], resolve)
+						},
+						{ // 更换手机号第二部
+							path: '/personSettingPhoneAfter',
+							name: 'personSettingPhoneAfter',
+							component: resolve => require(['@/views/main/settings/personSetting/SettingPhoneAfter'], resolve)
+						},
+						{ // 更换密码
+							path: '/personSettingPwd',
+							name: 'personSettingPwd',
+							component: resolve => require(['@/views/main/settings/personSetting/SettingPwd'], resolve)
+						},
+					]
         },
         { // 职位沟通列表
           path: '/sealTalkList',
           name: 'sealTalkList',
-          component: resolve => require(['@/views/main/sealTalk/sealTalkList'], resolve),
+          component: resolve => require(['@/views/main/sealTalk/sealTalkList'], resolve)
         },
         { // 职位沟通详情页
           path: '/sealTalkDetail',
           name: 'sealTalkDetail',
-          component: resolve => require(['@/views/main/sealTalk/sealTalkDetail'], resolve),
+          component: resolve => require(['@/views/main/sealTalk/sealTalkDetail'], resolve)
         }
       ]
     },{

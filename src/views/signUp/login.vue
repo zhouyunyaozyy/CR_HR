@@ -11,7 +11,7 @@
 			</el-form-item>
 			<el-form-item prop='pwd'>
 				<el-input
-					type='text'
+					type='password'
 					placeholder="请输入密码"
 					prefix-icon="el-icon-search"
 					v-model='form.pwd'
@@ -39,7 +39,7 @@
 		data () {
 			return {
 				form: {
-					phone: '13888888888',
+					phone: '13512345678',
 					pwd: '123456'
 				},
 				rules: {

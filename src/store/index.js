@@ -81,16 +81,19 @@ const store = new Vuex.Store({
             data.clientUid = Guid.create().value
             window.sessionStorage.setItem('clientUid', data.clientUid)
           }
-          data.platform = 'DABAI_CHAORENJOB_B_WEB'
-          data.username = msg.phone
-          data.password = msg.pwd
           if (state.pageStatus === 'reg') {
-            data.postVersion = state.validationUid + '.' + msg.num
-            data.username = msg.name
+            data.verificationId = state.validationUid
+            data.mobile = msg.phone
+            data.password = msg.pwd
+            data.verificationCode = msg.num
           }
           if (state.pageStatus === 'forget') {
             data.postVersion = state.validationUid + '.' + msg.num
-          }
+          } else if (state.pageStatus === 'login') {
+						data.username = msg.phone
+          	data.password = msg.pwd
+          	data.platform = 'DABAI_CHAORENJOB_B_WEB'
+					}
       } else if (state.pageStatus === 'newPhone') { // 更换手机号
 //        oldMobile:"旧的手机号"
 //        newMoblie:"新的手机号"
@@ -102,7 +105,7 @@ const store = new Vuex.Store({
           data.oldPassWord = msg.oldPwd
           data.newPassWord = msg.pwd
       }
-    
+    	console.log('data', data)
       let resultData = {}
       // aes加密
       resultData.content = (function () {

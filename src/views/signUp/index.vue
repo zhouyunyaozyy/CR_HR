@@ -1,7 +1,7 @@
 <template>
   <div class="signUp">
     <header>
-      <img src="../../imgs/logo_min.png">
+      <img src="../../imgs/logo.png">
       <p>超人招聘</p>
       <p>专注航空领域人才招聘</p>
     </header>
