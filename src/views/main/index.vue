@@ -1,79 +1,81 @@
 <template>
-  <el-container height="100%">
-    <el-header>
-      <div class="logo_cont">
-        <span class="logo_txt">超人招聘企业管理平台</span>
-      </div>
-      <div class="user_name">欢迎回来！ 旺旺</div>
-      <div class="right_icon">
-        <div class="icon_item" v-if="group_id != 1">
-          <span class="icon_txt">职位沟通</span>
+  <div class="index_cont">
+    <el-container height="100%">
+      <el-header>
+        <div class="logo_cont">
+          <span class="logo_txt">超人招聘企业管理平台</span>
         </div>
-        <div class="icon_item">
-          <span class="icon_txt">设置</span>
-        </div>
-      </div>
-    </el-header>
-    <el-container>
-      <el-aside width="200px">
-        <div class="time_cont">
-          <div>
-            <div class="week_time">星期四</div>
-            <div class="time_time">16:10</div>
-            <div class="day_time">2018.4.15</div>
+        <div class="user_name">欢迎回来！ 旺旺</div>
+        <div class="right_icon">
+          <div class="icon_item" v-if="group_id != 1">
+            <span class="icon_txt">职位沟通</span>
+          </div>
+          <div class="icon_item">
+            <span class="icon_txt">设置</span>
           </div>
         </div>
-        <el-menu
-          router
-          :default-active="$route.path"
-          class="aside_label"
-          @select="handleSelect"
-          background-color="#1f282d"
-          text-color="#fff"
-          active-text-color="#fff" >
-          <el-menu-item index="/account" v-if="group_id == 1">
-            <i class="el-icon-menu"></i>
-            <span slot="title">HR账号管理</span>
-          </el-menu-item>
-          <el-submenu index="1" v-if="group_id != 1">
-            <template slot="title">
+      </el-header>
+      <el-container>
+        <el-aside width="200px">
+          <div class="time_cont">
+            <div>
+              <div class="week_time">星期四</div>
+              <div class="time_time">16:10</div>
+              <div class="day_time">2018.4.15</div>
+            </div>
+          </div>
+          <el-menu
+            router
+            :default-active="$route.path"
+            class="aside_label"
+            @select="handleSelect"
+            background-color="#1f282d"
+            text-color="#fff"
+            active-text-color="#fff" >
+            <el-menu-item index="/hrList" v-if="group_id == 1">
+              <i class="el-icon-menu"></i>
+              <span slot="title">HR账号管理</span>
+            </el-menu-item>
+            <el-menu-item index="/aa" v-if="group_id != 1">
               <i class="el-icon-location"></i>
-              <span>简历管理</span>
-            </template>
-            <el-menu-item index="1-1">职位简历</el-menu-item>
-            <el-menu-item index="1-2">简历收藏</el-menu-item>
-          </el-submenu>
-          <el-menu-item index="/position">
-            <i class="el-icon-menu"></i>
-            <span slot="title">职位管理</span>
-          </el-menu-item>
-        </el-menu>
-      </el-aside>
-      <el-main>
-        <div class="label_cont">
-          <el-tabs
-            v-model="tabIndex"
-            type="card"
-            closable
-            @tab-remove="removeTab"
-            @tab-click="clickTab"
-          >
-            <el-tab-pane
-              v-for="(item, index) in label_list"
-              :key="item.name"
-              :label="item.title"
-              :name="item.name">
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-        <div class="content">
-          <keep-alive>
-            <router-view/>
-          </keep-alive>
-        </div>
-      </el-main>
+              <span slot="title">简历管理</span>
+            </el-menu-item>
+            <div class="sub_menu" v-if="sub_show">
+              <el-menu-item index="1-1">职位简历</el-menu-item>
+              <el-menu-item index="1-2">简历收藏</el-menu-item>
+            </div>
+            <el-menu-item index="/jobList">
+              <i class="el-icon-menu"></i>
+              <span slot="title">职位管理</span>
+            </el-menu-item>
+          </el-menu>
+        </el-aside>
+        <el-main>
+          <div class="label_cont">
+            <el-tabs
+              v-model="tabIndex"
+              type="card"
+              closable
+              @tab-remove="removeTab"
+              @tab-click="clickTab"
+            >
+              <el-tab-pane
+                v-for="(item, index) in label_list"
+                :key="item.name"
+                :label="item.title"
+                :name="item.name">
+              </el-tab-pane>
+            </el-tabs>
+          </div>
+          <div class="content">
+            <keep-alive>
+              <router-view/>
+            </keep-alive>
+          </div>
+        </el-main>
+      </el-container>
     </el-container>
-  </el-container>
+  </div>
 </template>
 <script>
 	import '@/css/iconfont/iconfont.css'
@@ -82,6 +84,7 @@
       data() {
         return {
           group_id:1,
+          sub_show:false,
           label_list:JSON.parse(window.sessionStorage.getItem("label_list")) || [],
           tabIndex: window.sessionStorage.getItem("tabIndex") || ""
         }
@@ -105,10 +108,10 @@
           if(state == false){
             let titleName;
             switch (key){
-              case "/account":
+              case "/hrList":
                 titleName = "HR账号管理"
                 break;
-              case "/position":
+              case "/jobList":
                 titleName = "职位管理"
                 break;
             }
@@ -158,7 +161,26 @@
       }
     }
 </script>
+<style>
+  .aside_label>.el-menu-item,.aside_label>.el-submenu>.el-submenu__title{
+    border-left: 4px solid transparent;
+    color:#fff;
+    font-size: 18px;
+    padding-left: 10px;
+    text-align: left;
+  }
+  .aside_label>.is-active,.aside_label>.is-opened>.el-submenu__title{
+    border-left-color: #048adf;
+    background-color: #4e5d66 !important;
+  }
+</style>
 <style scoped>
+  .index_cont{
+    height: 100%;
+  }
+  .el-container{
+    height: 100%;
+  }
   .el-aside{
     position:fixed;
     top:60px;
@@ -192,9 +214,6 @@
   .icon_item{
     padding-right: 40px;
   }
-  .el-container{
-    height: 100%;
-  }
   .time_cont{
     color:#fff;
     height: 120px;
@@ -203,6 +222,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 10px;
+    text-align: center;
   }
   .time_time{
     font-size: 22px;
@@ -210,17 +230,6 @@
   }
   .el-menu{
     border:0;
-  }
-  .aside_label>li{
-    border-left: 4px solid transparent;
-    color:#fff;
-    font-size: 18px;
-    padding-left: 10px;
-    text-align: left;
-  }
-  .aside_label>.is-active{
-    border-left-color: #048adf;
-    background-color: #4e5d66;
   }
   .el-main{
     height: 100%;
