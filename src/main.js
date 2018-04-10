@@ -58,6 +58,7 @@ Vue.prototype.$axios = (params) => {
       }
      // sessionSalt="sessionSalt"&postVersion="UUid 随机数"&postTime="时间戳"&platform="平台名称"&clientUid="机器唯一编码"
       let hmacDataBefore = 'ticketsSalt=' + window.sessionStorage.getItem('ticketsSalt')+'&postVersion='+postVersion+'&postTime='+postTime+'&platform='+window.localStorage.getItem('platform')+'&clientUid='+window.localStorage.getItem('clientUid')
+			console.log('hmacDataBefore', hmacDataBefore)
       var hmacData = CryptoJS.HmacSHA1(hmacDataBefore, window.sessionStorage.getItem('ticketsSalt'))
       let base64Data = Base64.encode(JSON.stringify(base64DataBefore))
       resultData = base64Data+'.'+hmacData

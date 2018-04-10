@@ -75,11 +75,11 @@ const store = new Vuex.Store({
           }
           window.localStorage.setItem('platform', 'DABAI_CHAORENJOB_B_WEB')
         // 判断本地是否有clintUid
-          if (window.sessionStorage.getItem('clientUid')) {
-            data.clientUid = window.sessionStorage.getItem('clientUid')
+          if (window.localStorage.getItem('clientUid')) {
+            data.clientUid = window.localStorage.getItem('clientUid')
           } else {
             data.clientUid = Guid.create().value
-            window.sessionStorage.setItem('clientUid', data.clientUid)
+            window.localStorage.setItem('clientUid', data.clientUid)
           }
           if (state.pageStatus === 'reg') {
             data.verificationId = state.validationUid
