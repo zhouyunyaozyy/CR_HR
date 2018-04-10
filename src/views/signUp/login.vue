@@ -75,6 +75,7 @@
 								url: '/dabai-chaorenjob/hr/getUserInfoByTickets',
 								fuc: (res) => {
 									console.log('loginAfter', res)
+									window.sessionStorage.setItem('cid', res.data.cid)
 									this.$router.push('/main')
 								}
 							})
