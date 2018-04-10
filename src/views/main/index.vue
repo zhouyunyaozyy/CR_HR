@@ -3,15 +3,29 @@
     <el-container height="100%">
       <el-header>
         <div class="logo_cont">
+          <img src="@/assets/logo.png" alt="">
           <span class="logo_txt">超人招聘企业管理平台</span>
         </div>
         <div class="user_name">欢迎回来！ 旺旺</div>
         <div class="right_icon">
-          <div class="icon_item" v-if="group_id != 1">
+          <div class="icon_item">
+            <i class="iconfont icon-ai-message"></i>
             <span class="icon_txt">职位沟通</span>
           </div>
           <div class="icon_item">
-            <span class="icon_txt">设置</span>
+            <el-dropdown>
+              <div class="el-dropdown-link">
+                <i class="iconfont icon-shezhi-tianchong"></i>
+                <span class="icon_txt">设置</span>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item>个人信息</el-dropdown-item>
+                <el-dropdown-item>企业信息</el-dropdown-item>
+                <el-dropdown-item>系统通知</el-dropdown-item>
+                <el-dropdown-item>反馈</el-dropdown-item>
+                <el-dropdown-item>退出</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
           </div>
         </div>
       </el-header>
@@ -34,9 +48,9 @@
             active-text-color="#fff" >
             <el-menu-item index="/hrList" v-if="group_id == 1">
               <i class="el-icon-menu"></i>
-              <span slot="title">HR账号管理</span>
+              <span slot="title">账号管理</span>
             </el-menu-item>
-            <el-menu-item index="/aa" v-if="group_id != 1">
+            <el-menu-item index="/aa">
               <i class="el-icon-location"></i>
               <span slot="title">简历管理</span>
             </el-menu-item>
@@ -52,20 +66,25 @@
         </el-aside>
         <el-main>
           <div class="label_cont">
-            <el-tabs
-              v-model="tabIndex"
-              type="card"
-              closable
-              @tab-remove="removeTab"
-              @tab-click="clickTab"
-            >
-              <el-tab-pane
-                v-for="(item, index) in label_list"
-                :key="item.name"
-                :label="item.title"
-                :name="item.name">
-              </el-tab-pane>
-            </el-tabs>
+            <div class="label_main">
+              <el-tabs
+                v-model="tabIndex"
+                type="card"
+                closable
+                @tab-remove="removeTab"
+                @tab-click="clickTab"
+              >
+                <el-tab-pane
+                  v-for="(item, index) in label_list"
+                  :key="item.name"
+                  :label="item.title"
+                  :name="item.name">
+                </el-tab-pane>
+              </el-tabs>
+            </div>
+            <div @click="refresh()" class="refresh_btn">
+              <img src="@/assets/refresh.png" alt="">
+            </div>
           </div>
           <div class="content">
             <keep-alive>
@@ -85,48 +104,30 @@
         return {
           group_id:1,
           sub_show:false,
-          label_list:JSON.parse(window.sessionStorage.getItem("label_list")) || [],
-          tabIndex: window.sessionStorage.getItem("tabIndex") || ""
         }
       },
       components:{
         // WLabel
       },
+      computed:{
+        label_list (){
+          return this.$store.state.tj.label_list;
+        },
+        tabIndex: {
+          get (){
+            return this.$store.state.tj.tabIndex;
+          },
+          set (newKey){
+            this.$store.commit('changeTab',newKey)
+          }
+        }
+      },
       methods: {
+        refresh(){
+          window.location.reload()
+        },
         handleSelect(key,keyPath){
-          let state = false;
-          var label_arr = this.label_list;
-          if(label_arr.length > 0){
-            label_arr.forEach((item) => {
-              console.log(item)
-              if(item.name === key){
-                state = true;
-                return;
-              };
-            })
-          }
-          if(state == false){
-            let titleName;
-            switch (key){
-              case "/hrList":
-                titleName = "HR账号管理"
-                break;
-              case "/jobList":
-                titleName = "职位管理"
-                break;
-            }
-            label_arr.push({
-              title: titleName,
-              name: key,
-            })
-            window.sessionStorage.setItem("label_list",JSON.stringify(label_arr))
-            window.sessionStorage.setItem("tabIndex",key)
-            this.label_list = label_arr;
-            this.tabIndex = key
-          }else{
-            window.sessionStorage.setItem("tabIndex",key)
-            this.tabIndex = key
-          }
+          this.$store.commit('addTab',keyPath)
         },
         handleOpen(key, keyPath) {
           console.log(key, keyPath);
@@ -135,28 +136,13 @@
           console.log(key, keyPath);
         },
         clickTab(VueComponent) {
+          this.$store.commit('changeTab',VueComponent.name)
           this.$router.push({path: VueComponent.name});
-          console.log(VueComponent.name)
         },
         removeTab(targetName) {
+          this.$store.commit('removeTab',targetName)
           console.log(targetName)
-          let tabs = this.label_list;
-          let activeName = this.tabIndex;
-          if (activeName === targetName) {
-            tabs.forEach((tab, index) => {
-              if (tab.name === targetName) {
-                let nextTab = tabs[index + 1] || tabs[index - 1];
-                if (nextTab) {
-                  activeName = nextTab.name;
-                }
-              }
-            });
-          }
-          tabs = tabs.filter(tab => tab.name !== targetName);
-          window.sessionStorage.setItem("label_list",JSON.stringify(tabs))
-          window.sessionStorage.setItem("tabIndex",activeName)
-          this.tabIndex = activeName;
-          this.label_list = tabs
+
         }
       }
     }
@@ -172,6 +158,21 @@
   .aside_label>.is-active,.aside_label>.is-opened>.el-submenu__title{
     border-left-color: #048adf;
     background-color: #4e5d66 !important;
+  }
+  .label_cont .el-tabs--card>.el-tabs__header .el-tabs__nav{
+    border-radius: 0;
+  }
+  .label_cont .el-tabs--card>.el-tabs__header .el-tabs__item.is-active{
+    /*background-color: #e6e6e6;*/
+    /*border-bottom: 1px solid #e4e7ed;*/
+    /*color:#333;*/
+    /*border-bottom: 3px solid #2d8cf0;*/
+    font-weight: bold;
+  }
+  .label_cont .el-tabs__item{
+    /*box-sizing: border-box;*/
+    /*border-bottom: 3px solid transparent;*/
+    /*color:#666;*/
   }
 </style>
 <style scoped>
@@ -200,7 +201,13 @@
   .logo_cont{
     flex: 0 0 300px;
     padding-left: 20px;
-    text-align: left;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  .logo_cont img{
+    width: 40px;
+    margin-right: 10px;
   }
   .user_name{
     flex: 1;
@@ -213,6 +220,42 @@
   }
   .icon_item{
     padding-right: 40px;
+    position: relative;
+  }
+  .icon_item .iconfont{
+    font-size: 20px;
+  }
+  .icon_item .el-dropdown-link{
+    color:#fff;
+    font-size: 20px;
+  }
+  .set_main{
+    position: absolute;
+    top:47px;
+    right:40px;
+    background-color: #fff;
+    width: 170px;
+    box-shadow: 0px -2px 10px rgba(0,0,0,.2);
+    color:#808080;
+    font-size: 18px;
+    text-align: center;
+    border-radius: 5px;
+    z-index: 100;
+  }
+  .set_main i.set_cont_icon{
+    position: absolute;
+    top:-20px;
+    right:20px;
+    width: 0;
+    height: 0;
+    border:10px solid transparent;
+    border-bottom-color: #fff;
+  }
+  .set_item{
+    height: 55px;
+    line-height: 55px;
+    box-sizing: border-box;
+    border-bottom: 1px solid #dbdbdb;
   }
   .time_cont{
     color:#fff;
@@ -240,6 +283,18 @@
   .label_cont{
     height: 40px;
     background: #fff;
+    /*padding-left: 10px;*/
+    display: flex;
+    overflow: hidden;
+  }
+  .label_main{
+    flex: 1;
+  }
+  .refresh_btn{
+    flex: 0 0 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .content{
     min-height: calc(100% - 101px);

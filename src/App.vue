@@ -11,17 +11,17 @@ export default {
 </script>
 
 <style>
-#app {
-  font-family: "Microsoft YaHei",'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-size: 12px;
-  /*color: #2c3e50;*/
-  /*margin-top: 60px;*/
-  min-width: 1200px;
-  height: 100%;
-  letter-spacing:1px;
-}
+  #app {
+    font-family: "Microsoft YaHei",'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 12px;
+    /*color: #2c3e50;*/
+    /*margin-top: 60px;*/
+    min-width: 1200px;
+    height: 100%;
+    letter-spacing:1px;
+  }
   html,body{
     height: 100%;
   }
@@ -36,8 +36,11 @@ export default {
 
 	/* Internet Explorer 10+ */
 	.el-input__inner::-ms-input-placeholder { color:#808080; }
-*{
-  margin: 0;
-  padding: 0;
-}
+  *{
+    margin: 0;
+    padding: 0;
+  }
+  a{
+    text-decoration:none;
+  }
 </style>
