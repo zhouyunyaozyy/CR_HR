@@ -12,7 +12,7 @@ export default {
 
 <style>
 #app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  font-family: "Microsoft YaHei",'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 12px;
@@ -20,6 +20,7 @@ export default {
   /*margin-top: 60px;*/
   min-width: 1200px;
   height: 100%;
+  letter-spacing:1px;
 }
   html,body{
     height: 100%;
