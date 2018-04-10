@@ -53,7 +53,8 @@ Vue.prototype.$axios = (params) => {
           tickets: window.sessionStorage.getItem('ticket'),
           postVersion: postVersion,
           postTime:postTime,
-          appVersion: 1
+          appVersion: 1,
+					platform: window.localStorage.getItem('platform')
       }
      // sessionSalt="sessionSalt"&postVersion="UUid 随机数"&postTime="时间戳"&platform="平台名称"&clientUid="机器唯一编码"
       let hmacDataBefore = 'ticketsSalt=' + window.sessionStorage.getItem('ticketsSalt')+'&postVersion='+postVersion+'&postTime='+postTime+'&platform='+window.localStorage.getItem('platform')+'&clientUid='+window.localStorage.getItem('clientUid')
