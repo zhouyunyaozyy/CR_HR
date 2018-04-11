@@ -89,6 +89,11 @@ const router1 = new Router({
 						},
 					]
         },
+        { // 企业信息管理
+          path: '/companySetting',
+          name: 'companySetting',
+          component: resolve => require(['@/views/main/settings/companySetting/companySetting'], resolve)
+        },
         { // 职位沟通列表
           path: '/sealTalkList',
           name: 'sealTalkList',

@@ -98,6 +98,8 @@
 </template>
 <script>
 	import '@/css/iconfont/iconfont.css'
+	import area from '@/area.json';
+	import Default from '@/default.json';
     export default {
       name: "index",
       data() {
@@ -109,6 +111,12 @@
       components:{
         // WLabel
       },
+			created () {
+				let _form = Default
+				_form.area = area.area
+				console.log('_form', _form)
+				window.sessionStorage.setItem('localData', JSON.stringify(_form))
+			},
       computed:{
         label_list (){
           return this.$store.state.tj.label_list;
@@ -142,7 +150,6 @@
         removeTab(targetName) {
           this.$store.commit('removeTab',targetName)
           console.log(targetName)
-
         }
       }
     }
