@@ -48,8 +48,8 @@ const router1 = new Router({
           component: resolve => require(['@/views/main/positionManage/positionManageList'], resolve)
         },
         { // 职位管理详情
-          path: '/jobList',
-          name: 'jobList',
+          path: '/jobDetail',
+          name: 'jobDetail',
           component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve)
         },
         { // 简历列表

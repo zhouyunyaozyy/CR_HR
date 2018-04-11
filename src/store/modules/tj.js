@@ -11,8 +11,7 @@ const tj = {
         var label_arr = state.label_list;
         if(label_arr.length > 0){
           label_arr.forEach((item) => {
-            console.log(item)
-            if(item.name === key[0]){
+            if(item.name === key.path || key.path === "/"){
               status = true;
               return;
             };
@@ -20,30 +19,36 @@ const tj = {
         }
         if(status == false){
           let titleName;
-          switch (key[0]){
+          switch (key.path){
             case "/hrList":
               titleName = "账号管理"
               break;
             case "/jobList":
               titleName = "职位管理"
               break;
+            case "/jobDetail":
+              titleName = "添加职位"
+              break;
+            case "/recruitList":
+              titleName = "职位简历"
+              break;
             case "/hrDetail":
-              titleName = key[1]
+              titleName = "添加账号"
               break;
           }
           label_arr.push({
             title: titleName,
-            name: key[0],
+            name: key.path,
           })
           console.log(label_arr)
           window.sessionStorage.setItem("label_list",JSON.stringify(label_arr))
-          window.sessionStorage.setItem("tabIndex",key[0])
+          window.sessionStorage.setItem("tabIndex",key.path)
           state.label_list = label_arr;
-          state.tabIndex = key[0]
+          state.tabIndex = key.path
         }else{
           console.log(key)
-          window.sessionStorage.setItem("tabIndex",key[0])
-          state.tabIndex = key[0]
+          window.sessionStorage.setItem("tabIndex",key.path)
+          state.tabIndex = key.path
         }
       },
       changeTab (state,key){

@@ -38,31 +38,35 @@
               <div class="day_time">2018.4.15</div>
             </div>
           </div>
-          <el-menu
-            router
-            :default-active="$route.path"
-            class="aside_label"
-            @select="handleSelect"
-            background-color="#1f282d"
-            text-color="#fff"
-            active-text-color="#fff" >
-            <el-menu-item index="/hrList" v-if="group_id == 1">
-              <i class="el-icon-menu"></i>
-              <span slot="title">账号管理</span>
-            </el-menu-item>
-            <el-menu-item index="/aa">
-              <i class="el-icon-location"></i>
-              <span slot="title">简历管理</span>
-            </el-menu-item>
-            <div class="sub_menu" v-if="sub_show">
-              <el-menu-item index="1-1">职位简历</el-menu-item>
-              <el-menu-item index="1-2">简历收藏</el-menu-item>
-            </div>
-            <el-menu-item index="/jobList">
-              <i class="el-icon-menu"></i>
-              <span slot="title">职位管理</span>
-            </el-menu-item>
-          </el-menu>
+          <div ref="elmenu">
+            <el-menu
+              router
+              :default-active="$route.path"
+              class="aside_label"
+              @select="handleSelect"
+              background-color="#1f282d"
+              text-color="#fff"
+              active-text-color="#fff" >
+              <el-menu-item index="/hrList" v-if="group_id == 1">
+                <i class="el-icon-menu"></i>
+                <span slot="title">账号管理</span>
+              </el-menu-item>
+              <el-submenu index="1">
+                <template slot="title">
+                  <i class="iconfont icon-pipeizhiwei"></i>
+                  <span>简历管理</span>
+                </template>
+                <el-menu-item-group>
+                  <el-menu-item index="/recruitList">职位简历</el-menu-item>
+                  <el-menu-item index="/recruitList">简历收藏</el-menu-item>
+                </el-menu-item-group>
+              </el-submenu>
+              <el-menu-item index="/jobList">
+                <i class="iconfont icon-pipeizhiwei"></i>
+                <span slot="title">职位管理</span>
+              </el-menu-item>
+            </el-menu>
+          </div>
         </el-aside>
         <el-main>
           <div class="label_cont">
@@ -124,10 +128,11 @@
       },
       methods: {
         refresh(){
-          window.location.reload()
+          this.$router.push({path: this.tabIndex});
         },
         handleSelect(key,keyPath){
-          this.$store.commit('addTab',keyPath)
+          console.log(this.$refs.elmenu)
+          // this.$store.commit('addTab',keyPath)
         },
         handleOpen(key, keyPath) {
           console.log(key, keyPath);
@@ -141,8 +146,7 @@
         },
         removeTab(targetName) {
           this.$store.commit('removeTab',targetName)
-          console.log(targetName)
-
+          this.$router.push({path: this.tabIndex});
         }
       }
     }
@@ -158,6 +162,21 @@
   .aside_label>.is-active,.aside_label>.is-opened>.el-submenu__title{
     border-left-color: #048adf;
     background-color: #4e5d66 !important;
+  }
+  .aside_label .el-menu-item-group{
+    margin-bottom: 10px;
+  }
+  .aside_label .el-menu-item-group__title{
+    padding: 0;
+  }
+  .aside_label .el-menu-item-group .el-menu-item{
+    height: 35px;
+    line-height: 35px;
+    text-align: center;
+    font-size: 16px;
+  }
+  .aside_label .el-menu-item-group .el-menu-item.is-active{
+    background-color: #151b1e;
   }
   .label_cont .el-tabs--card>.el-tabs__header .el-tabs__nav{
     border-radius: 0;

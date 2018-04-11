@@ -19,11 +19,11 @@ Vue.config.productionTip = false
 //封装方法
 
 Vue.prototype.$axios = (params) => {
-  
+
 //  cr-token算法
   let resultData = 0
-  console.log(Base64)
-  console.log(CryptoJS)
+  // console.log(Base64)
+  // console.log(CryptoJS)
   if(window.sessionStorage.getItem('ticketsSalt')){
       function rndRandom (size) {
       let rnd = {}
@@ -58,7 +58,7 @@ Vue.prototype.$axios = (params) => {
       }
      // sessionSalt="sessionSalt"&postVersion="UUid 随机数"&postTime="时间戳"&platform="平台名称"&clientUid="机器唯一编码"
       let hmacDataBefore = 'ticketsSalt=' + window.sessionStorage.getItem('ticketsSalt')+'&postVersion='+postVersion+'&postTime='+postTime+'&platform='+window.localStorage.getItem('platform')+'&clientUid='+window.localStorage.getItem('clientUid')
-			console.log('hmacDataBefore', hmacDataBefore)
+			// console.log('hmacDataBefore', hmacDataBefore)
       var hmacData = CryptoJS.HmacSHA1(hmacDataBefore, window.sessionStorage.getItem('ticketsSalt'))
       let base64Data = Base64.encode(JSON.stringify(base64DataBefore))
       resultData = base64Data+'.'+hmacData
@@ -86,9 +86,9 @@ Vue.prototype.$axios = (params) => {
   } else {
     axios.post(
       baseUrl + params.url,
-      params.data, 
+      params.data,
       {
-        withCredentials:false, 
+        withCredentials:false,
         headers: {"Content-Type": "application/json", "Accept" : "*/*", 'CR-token': resultData}
       })
       .then(function(response){
@@ -111,7 +111,7 @@ Vue.prototype.$axios = (params) => {
         } else if (error.request) {
           // The request was made but no response was received
           // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
-          // http.ClientRequest in node.js     
+          // http.ClientRequest in node.js
           console.log(error.request);
         } else {
           // Something happened in setting up the request that triggered an Error
