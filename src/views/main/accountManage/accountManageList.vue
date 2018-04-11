@@ -19,24 +19,32 @@
             min-width="140">
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="mobile"
             label="手机号"
             min-width="150">
           </el-table-column>
           <el-table-column
-            prop="userName"
+            prop="username"
             label="用户名"
             min-width="170">
           </el-table-column>
           <el-table-column
-            prop="state"
             label="状态"
             min-width="80">
+            <template slot-scope="scope">
+              <span v-if='scope.row.status === 1'>已激活</span>
+              <span v-else-if='scope.row.status === 2'>未激活</span>
+              <span v-else-if='scope.row.status === 3'>封禁</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="create_time"
             label="创建时间"
             min-width="140">
+            <template slot-scope="scope">
+              <span v-if='scope.row.create_time === 0'>未激活</span>
+              <span v-else>{{new Date(parseInt(scope.row.create_time)).toLocaleString().replace(/:\d{1,2}$/, '')}}</span>
+            </template>
           </el-table-column>
           <el-table-column width="240px">
             <template slot-scope="scope">
@@ -70,46 +78,25 @@
       return {
         total:1000,
         size:15,
-        tableData: [{
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }, {
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }, {
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }, {
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }]
+        tableData: []
       }
     },
-    created () {
+    activated () {
+      let resultData = {
+        cid:window.sessionStorage.getItem("cid")
+      };
       this.$axios({
         type: 'get',
         url: '/dabai-chaorenjob/company/queryAllChildrenByCid',
-        // data: resultData,
+        data: resultData,
         fuc: (res) => {
+          this.tableData= res.data.data;
           console.log( res)
         }
       })
     },
     methods:{
       addHr (){
-        this.$store.commit('addTab',["/hrDetail","添加账号"])
         this.$router.push({path:'/hrDetail'})
       },
     }

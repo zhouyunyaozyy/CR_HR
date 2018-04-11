@@ -6,7 +6,18 @@
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  watch: {
+    $route (to, from) {
+      let keyPath={
+        path:to.path
+      }
+      this.$store.commit('addTab',keyPath)
+      console.log(to,from)
+      // 执行ajax请求，但只希望在进入时请求，离开时不希望进行请求。
+      // this.getData()
+    }
+  },
 }
 </script>
 

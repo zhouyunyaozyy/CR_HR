@@ -109,8 +109,7 @@
     },
     methods:{
       addHr (){
-        console.log(13)
-        this.$store.commit('addTab',["/hrDetail","添加账号"])
+        this.$router.push({path:'/jobDetail'})
       },
     }
   }
