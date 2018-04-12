@@ -40,13 +40,13 @@ const tj = {
             title: titleName,
             name: key.path,
           })
-          console.log(label_arr)
+          // console.log(label_arr)
           window.sessionStorage.setItem("label_list",JSON.stringify(label_arr))
           window.sessionStorage.setItem("tabIndex",key.path)
           state.label_list = label_arr;
           state.tabIndex = key.path
         }else{
-          console.log(key)
+          // console.log(key)
           window.sessionStorage.setItem("tabIndex",key.path)
           state.tabIndex = key.path
         }

@@ -306,6 +306,7 @@
     margin-left: 200px;
     background-color: #eff9ff;
     padding: 0;
+    position: relative;
   }
   .label_cont{
     height: 40px;
@@ -313,6 +314,13 @@
     /*padding-left: 10px;*/
     display: flex;
     overflow: hidden;
+    /*margin-bottom: 10px;*/
+    position: fixed;
+    top:60px;
+    left: 200px;
+    right: 0;
+    z-index: 100;
+    border-bottom: 10px solid #eff9ff;
   }
   .label_main{
     flex: 1;
@@ -324,8 +332,14 @@
     justify-content: center;
   }
   .content{
-    min-height: calc(100% - 101px);
+    /*position: absolute;*/
+    /*top: 40px;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*bottom: 0;*/
+    /*margin-top: 40px;*/
+    min-height: calc(100% - 70px);
     overflow: auto;
-    padding: 10px;
+    margin: 50px 10px 10px;
   }
 </style>
