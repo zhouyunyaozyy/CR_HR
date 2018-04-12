@@ -151,7 +151,7 @@
             workExp:"无经验",
             education:"小学",
             lang:"小学话",
-            reservationState:"未确认",
+            reservationState:"未确",
             review:"/",
             overVoteStatusEnum:"未查看"
           }
