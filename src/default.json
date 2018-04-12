@@ -124,13 +124,19 @@
 		{"code":"5","name":"行业水平"}
 	],
 	"overVoteStatusEnum":[
-		{"code":"1","name":"已投递"},
+		{"code":"1","name":"未查看"},
 		{"code":"2","name":"已查看"},
-		{"code":"3","name":"线下面试"},
+		{"code":"3","name":"预约面试"},
 		{"code":"4","name":"不合适"},
-		{"code":"5","name":"视频面试"},
-		{"code":"6","name":"视频面试结束"}
+		{"code":"5","name":"评审"},
+		{"code":"6","name":"所有"}
 	],
+  "reservationState":[
+    {"code":"1","name":"未预约"},
+    {"code":"2","name":"未确认"},
+    {"code":"3","name":"已确认"},
+    {"code":"4","name":"所有"}
+  ],
 	"userIdentityEnum":[
 		{"code":"1","name":"管理员"},
 		{"code":"2","name":"主账号"},

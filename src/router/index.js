@@ -48,19 +48,24 @@ const router1 = new Router({
           component: resolve => require(['@/views/main/positionManage/positionManageList'], resolve)
         },
         { // 职位管理详情
-          path: '/jobDetail',
+          path: '/jobDetail/:jid',
           name: 'jobDetail',
           component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve)
         },
         { // 简历列表
-          path: '/recruitList',
-          name: 'recruitList',
-          component: resolve => require(['@/views/main/recruitManage/recruitList'], resolve)
+          path: '/resumeList',
+          name: 'resumeList',
+          component: resolve => require(['@/views/main/resumeManage/resumeList'], resolve)
         },
         { // 简历详情
-          path: '/recruitDetail',
-          name: 'recruitDetail',
-          component: resolve => require(['@/views/main/recruitManage/recruitDetail'], resolve)
+          path: '/resumeDetail',
+          name: 'resumeDetail',
+          component: resolve => require(['@/views/main/resumeManage/resumeDetail'], resolve)
+        },
+        { // 简历收藏
+          path: '/resumeCollect',
+          name: 'resumeCollect',
+          component: resolve => require(['@/views/main/resumeManage/resumeCollect'], resolve)
         },
         { // 个人信息设置
           path: '/personSetting',

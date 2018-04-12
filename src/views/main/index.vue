@@ -43,22 +43,21 @@
               router
               :default-active="$route.path"
               class="aside_label"
-              @select="handleSelect"
               background-color="#1f282d"
               text-color="#fff"
               active-text-color="#fff" >
               <el-menu-item index="/hrList" v-if="group_id == 1">
-                <i class="el-icon-menu"></i>
+                <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
               <el-submenu index="1">
                 <template slot="title">
-                  <i class="iconfont icon-pipeizhiwei"></i>
+                  <i class="iconfont icon-wendang"></i>
                   <span>简历管理</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="/recruitList">职位简历</el-menu-item>
-                  <el-menu-item index="/recruitList">简历收藏</el-menu-item>
+                  <el-menu-item index="/resumeList">职位简历</el-menu-item>
+                  <el-menu-item index="/resumeCollect">简历收藏</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
               <el-menu-item index="/jobList">
@@ -149,10 +148,14 @@
           console.log(key, keyPath);
         },
         clickTab(VueComponent) {
+          // console.log(VueComponent.name,VueComponent)
           this.$store.commit('changeTab',VueComponent.name)
-          this.$router.push({path: VueComponent.name});
+          this.$router.push({
+            path:VueComponent.name
+          });
         },
         removeTab(targetName) {
+          console.log(targetName)
           this.$store.commit('removeTab',targetName)
           this.$router.push({path: this.tabIndex});
         }
@@ -186,6 +189,9 @@
   .aside_label .el-menu-item-group .el-menu-item.is-active{
     background-color: #151b1e;
   }
+  .aside_label .el-submenu__title i{
+    color:#fff;
+  }
   .label_cont .el-tabs--card>.el-tabs__header .el-tabs__nav{
     border-radius: 0;
   }
@@ -200,6 +206,12 @@
     /*box-sizing: border-box;*/
     /*border-bottom: 3px solid transparent;*/
     /*color:#666;*/
+  }
+  .el-input__inner,.el-textarea__inner{
+    color:#333;
+    border-color:#bbb;
+    font-size: 14px;
+    height: 30px;
   }
 </style>
 <style scoped>
