@@ -2,7 +2,6 @@
   <el-form
     :model="form"
     status-icon
-    ref="jobDetail"
     label-width="105px"
     class="job_detail">
     <div class="job_detail_item">
@@ -274,25 +273,75 @@
         address: '', // 选择的省
         address2: '', // 选择的市
         nowCity: [], // 对应的市
+        jid:this.$route.params.jid
       }
     },
+    computed:{
+    },
     activated () {
-      console.log(this.localData)
-      let resultData = {
-        cid:window.sessionStorage.getItem("cid")
-      };
-      this.$axios({
-        type: 'get',
-        url: '/dabai-chaorenjob/resumeTarget/getActiveResumeTarget',
-        data: resultData,
-        fuc: (res) => {
-          // 获取职能
-          this.rcnidArr = res.data;
-          console.log( res)
-        }
-      })
+      this.getfuc();
+      if(this.$route.params.jid != 1){
+        this.getDetail();
+      }
     },
     methods: {
+      getfuc () {
+        let resultData = {
+          cid:window.sessionStorage.getItem("cid")
+        };
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeTarget/getActiveResumeTarget',
+          data: resultData,
+          fuc: (res) => {
+            // 获取职能
+            if(res.code == 1){
+              this.rcnidArr = res.data;
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
+            console.log( res)
+          }
+        })
+      },
+      getDetail (){
+        let resultData = {
+          jid:this.$route.params.jid
+        };
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/job/getJob',
+          data: resultData,
+          fuc: (res) => {
+            // 获取详情
+            if(res.code == 1){
+              this.form.name = res.data.name
+              this.form.rtid = res.data.rtid
+              this.form.education = res.data.education+""
+              this.address = (res.data.address+"").slice(0,3)+"000"
+              this.selectCity();
+              this.address2 = res.data.address+""
+              this.form.work_experience = res.data.work_experience+""
+              this.form.wages = res.data.wages+""
+              this.form.hire_number = res.data.hire_number+""
+              this.form.profile = res.data.profile+""
+              this.screen = JSON.parse(res.data.search_config_json)
+              console.log(this.screen)
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
+            console.log( res)
+          }
+        })
+      },
       addJob(){
         let resultData = {
           name:this.form.name,
@@ -305,9 +354,16 @@
           profile:this.form.profile,
           search_config_json:JSON.stringify(this.screen)
         };
+        let url='';
+        if(this.$route.params.jid != 1){
+          url = '/dabai-chaorenjob/job/updateJob'
+          resultData.jid = this.jid;
+        }else{
+          url = '/dabai-chaorenjob/job/insertJob'
+        }
         this.$axios({
           type: 'post',
-          url: '/dabai-chaorenjob/job/insertJob',
+          url: url,
           data: resultData,
           fuc: (res) => {
             console.log( res)
@@ -317,31 +373,67 @@
       submitForm() {
         console.log(this.form)
         if(!this.form.name){
-          this.$message.error('请输入职位名称')
+          this.$message({
+            type: 'error',
+            message: '请输入职位名称',
+            duration: 1000
+          })
           return;
         }else if(!this.form.rtid){
-          this.$message.error('请选择职能')
+          this.$message({
+            type: 'error',
+            message: '请选择职能',
+            duration: 1000
+          })
           return;
         }else if(!this.form.education){
-          this.$message.error('请选择学历')
+          this.$message({
+            type: 'error',
+            message: '请选择学历',
+            duration: 1000
+          })
           return;
         }else if(!this.address){
-          this.$message.error('请选择省份')
+          this.$message({
+            type: 'error',
+            message: '请选择省份',
+            duration: 1000
+          })
           return;
         }else if(!this.address2){
-          this.$message.error('请选择城市')
+          this.$message({
+            type: 'error',
+            message: '请选择城市',
+            duration: 1000
+          })
           return;
         }else if(!this.form.work_experience){
-          this.$message.error('请选择工作经验')
+          this.$message({
+            type: 'error',
+            message: '请选择工作经验',
+            duration: 1000
+          })
           return;
         }else if(!this.form.wages){
-          this.$message.error('请选择薪资范围')
+          this.$message({
+            type: 'error',
+            message: '请选择薪资范围',
+            duration: 1000
+          })
           return;
         }else if(!this.form.hire_number){
-          this.$message.error('请输入招聘人数')
+          this.$message({
+            type: 'error',
+            message: '请输入招聘人数',
+            duration: 1000
+          })
           return;
         }else if(!this.form.profile){
-          this.$message.error('请输入职位描述')
+          this.$message({
+            type: 'error',
+            message: '请输入职位描述',
+            duration: 1000
+          })
           return;
         }
         this.addJob();

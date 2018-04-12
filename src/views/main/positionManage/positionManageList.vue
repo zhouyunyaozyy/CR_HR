@@ -29,7 +29,7 @@
           <el-table-column
             prop="address"
             label="工作地"
-            min-width="150">
+            min-width="100">
             <template slot-scope="scope">
               <span>{{selectCity(scope.row.address)}}</span>
             </template>
@@ -72,10 +72,10 @@
             <template slot-scope="scope">
               <div class="btn_cont">
                 <el-button type="primary" plain>查看</el-button>
-                <el-button type="primary" plain>编辑</el-button>
+                <el-button @click="_edit(scope.row.jid)" type="primary" plain>编辑</el-button>
                 <!--<el-button type="primary" plain>权限管理</el-button>-->
-                <el-button type="primary" v-if="scope.row.status == 1" plain>停止发布</el-button>
-                <el-button type="primary" v-else="scope.row.status == 0" plain>发布</el-button>
+                <el-button @click="_release(scope.row,2)" type="primary" v-if="scope.row.status == 1" plain>停止发布</el-button>
+                <el-button @click="_release(scope.row,1)" type="primary" v-else="scope.row.status == 0" plain>发布</el-button>
               </div>
             </template>
           </el-table-column>
@@ -106,24 +106,25 @@
       }
     },
     activated () {
-      console.log(3)
-      let resultData = {
-        cid:window.sessionStorage.getItem("cid")
-      };
-      this.$axios({
-        type: 'get',
-        url: '/dabai-chaorenjob/job/queryAllJobListByCid',
-        data: resultData,
-        fuc: (res) => {
-          this.tableData= res.data.data;
-          console.log(this.tableData)
-          console.log( res)
-        }
-      })
+      this.init();
     },
     methods:{
+      init(){
+        let resultData = {
+          cid:window.sessionStorage.getItem("cid")
+        };
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/job/queryAllJobListByCid',
+          data: resultData,
+          fuc: (res) => {
+            this.tableData= res.data.data;
+            console.log( res)
+          }
+        })
+      },
       addHr (){
-        this.$router.push({path:'/jobDetail'})
+        this.$router.push('/jobDetail/1')
       },
       selectCity (code){
         let cityName;
@@ -140,6 +141,37 @@
           }
         })
         return cityName;
+      },
+      _release (row,url_type) {
+        let resultData = {
+          jid: row.jid
+        };
+        let url;
+        if(url_type == 1){
+          url = '/dabai-chaorenjob/job/markSuccessJob'
+        }else if(url_type == 2){
+          url = '/dabai-chaorenjob/job/markFailJob'
+        }
+        this.$axios({
+          type: 'post',
+          url: url,
+          data: resultData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.init();
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
+            console.log( res)
+          }
+        })
+      },
+      _edit (jid){
+        this.$router.push("/jobDetail/"+jid)
       }
     }
   }

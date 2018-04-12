@@ -49,12 +49,12 @@
           <el-table-column width="240px">
             <template slot-scope="scope">
               <div class="btn_cont">
-                <el-button v-if="scope.row.status === 3" @click="thaw(scope.row)" type="primary" plain>解冻</el-button>
-                <el-button v-else @click="frozen(scope.row)" type="primary" plain>冻结</el-button>
+                <el-button v-if="scope.row.status === 3" @click="_thaw(scope.row)" type="primary" plain>解冻</el-button>
+                <el-button v-else @click="_frozen(scope.$index,scope.row)" type="primary" plain>冻结</el-button>
 
-                <el-button type="primary" plain>删除</el-button>
+                <el-button @click="_delete(scope.row)" type="primary" plain>删除</el-button>
                 <!--<el-button type="primary" plain>权限管理</el-button>-->
-                <el-button type="primary" plain>编辑</el-button>
+                <el-button @click="_edit(scope.row)" type="primary" plain>编辑</el-button>
               </div>
             </template>
           </el-table-column>
@@ -84,26 +84,29 @@
       }
     },
     activated () {
-      let resultData = {
-        cid:window.sessionStorage.getItem("cid")
-      };
-      this.$axios({
-        type: 'get',
-        url: '/dabai-chaorenjob/company/queryAllChildrenByCid',
-        data: resultData,
-        fuc: (res) => {
-          this.tableData = res.data.data;
-          this.total = res.data.count;
-          this.size = res.data.pageSize;
-          console.log( res)
-        }
-      })
+      this.init();
     },
     methods:{
+      init (){
+        let resultData = {
+          cid:window.sessionStorage.getItem("cid")
+        };
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/company/queryAllChildrenByCid',
+          data: resultData,
+          fuc: (res) => {
+            this.tableData = res.data.data;
+            this.total = res.data.count;
+            this.size = res.data.pageSize;
+            console.log( res)
+          }
+        })
+      },
       addHr () {
         this.$router.push({path:'/hrDetail'})
       },
-      frozen (row) {
+      _frozen (index,row) {
         let resultData = {
           uid:row.uid
         };
@@ -112,11 +115,21 @@
           url: '/dabai-chaorenjob/company/freezingChildren',
           data: resultData,
           fuc: (res) => {
+            if(res.code == 1){
+              this.init();
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
+            // this.tableData[index].status ==
             console.log( res)
           }
         })
       },
-      thaw (row) {
+      _thaw (row) {
         let resultData = {
           uid:row.uid
         };
@@ -125,9 +138,62 @@
           url: '/dabai-chaorenjob/company/defrostingChildren',
           data: resultData,
           fuc: (res) => {
+            if(res.code == 1){
+              this.init();
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
             console.log( res)
           }
         })
+      },
+      _delete (row){
+        let resultData = {
+          uid:row.uid
+        };
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/company/deleteChildren',
+          data: resultData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.init();
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
+            console.log( res)
+          }
+        })
+      },
+      _edit (row){
+        // let resultData = {
+        //   uid:row.uid
+        // };
+        // this.$axios({
+        //   type: 'get',
+        //   url: '/dabai-chaorenjob/hr/getUserHr',
+        //   data: resultData,
+        //   fuc: (res) => {
+        //     if(res.code == 1){
+        //       this.init();
+        //     }else{
+        //       this.$message({
+        //         type: 'error',
+        //         message: res.msg,
+        //         duration: 1000
+        //       })
+        //     }
+        //     console.log( res)
+        //   }
+        // })
       }
     }
   }

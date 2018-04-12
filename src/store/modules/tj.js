@@ -7,48 +7,62 @@ const tj = {
     },
     mutations: {
       addTab (state,key) {
+        let titleName,pathName;
         let status = false;
         var label_arr = state.label_list;
         if(label_arr.length > 0){
           label_arr.forEach((item) => {
             if(item.name === key.path || key.path === "/"){
+              console.log(2)
               status = true;
               return;
             };
           })
         }
         if(status == false){
-          let titleName;
-          switch (key.path){
-            case "/hrList":
+          switch (key.name){
+            case "hrList":
               titleName = "账号管理"
+              pathName = key.path
               break;
-            case "/jobList":
+            case "jobList":
               titleName = "职位管理"
+              pathName = key.path
               break;
-            case "/jobDetail":
-              titleName = "添加职位"
+            case "jobDetail":
+              if(Object.keys(key.params).length > 0){
+                titleName = "编辑职位"
+              }else{
+                titleName = "添加职位"
+              }
+              pathName = key.path
               break;
-            case "/recruitList":
+            case "resumeList":
               titleName = "职位简历"
+              pathName = key.path
               break;
-            case "/hrDetail":
+            case "resumeCollect":
+              titleName = "简历收藏"
+              pathName = key.path
+              break;
+            case "hrDetail":
               titleName = "添加账号"
+              pathName = key.path
               break;
           }
           label_arr.push({
             title: titleName,
-            name: key.path,
+            name: pathName,
           })
           // console.log(label_arr)
           window.sessionStorage.setItem("label_list",JSON.stringify(label_arr))
-          window.sessionStorage.setItem("tabIndex",key.path)
+          window.sessionStorage.setItem("tabIndex",pathName)
           state.label_list = label_arr;
-          state.tabIndex = key.path
+          state.tabIndex = pathName
         }else{
           // console.log(key)
-          window.sessionStorage.setItem("tabIndex",key.path)
-          state.tabIndex = key.path
+          window.sessionStorage.setItem("tabIndex",pathName)
+          state.tabIndex = pathName
         }
       },
       changeTab (state,key){
@@ -68,6 +82,7 @@ const tj = {
             }
           });
         }
+        console.log(activeName,key)
         tabs = tabs.filter(tab => tab.name !== key);
         window.sessionStorage.setItem("label_list",JSON.stringify(tabs))
         window.sessionStorage.setItem("tabIndex",activeName)
