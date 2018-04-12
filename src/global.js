@@ -16,8 +16,8 @@ let urlSelf = {
       getAllChildren: '/hr/user/getAllChildren'  // 获取所有子账号
     },
     qiniu: {
-      token: '/qiniu/token', // 获取七牛上传时需要的token
-      url: '/qiniu/url/' // 获取上传文件的路径
+      token: '/dabai-chaorenjob/common/qiniu/token', // 获取七牛上传时需要的token
+      url: '/dabai-chaorenjob/common/qiniu/url/' // 获取上传文件的路径
     },
     company: {
       getCompanyInfo: '/company/getCompanyInfo', // 获取公司基本信息

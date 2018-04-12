@@ -71,7 +71,7 @@ Vue.prototype.$axios = (params) => {
         if (response.data.code != 1) {
           Message({
 						showClose: true,
-            message: response.data.msg,
+            message: response.data.msg + params.url,
             type: 'error',
           });
         } else {
@@ -81,7 +81,7 @@ Vue.prototype.$axios = (params) => {
       .catch(function(error){
           Message({
 						showClose: true,
-            message: error,
+            message: error + params.url,
             type: 'error',
           });
       });

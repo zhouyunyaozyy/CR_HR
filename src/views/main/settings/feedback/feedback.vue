@@ -39,13 +39,11 @@
       }
     },
     created () {
-      store.state.ajax({
+      this.$axios({
         url: global.urlSelf.qiniu.token,
-        type: 'GET',
-        success: (res) => {
-          if (res.code === 1) {
-            this.postData = {token: res.data}
-          }
+        type: 'get',
+        fuc: (res) => {
+					this.postData = {token: res.data}
         }
       })
     },
@@ -129,25 +127,21 @@
           data.client = 'Safari'
           data.client_version = ver
         }
-        data.app_version = 'hrWeb'
-        
-        data.title = 'hrWeb反馈'
+        data.app_version = '1'
         data.content = this.textareaValue
         console.log(this.images)
         data.images = this.images.join(',')
         data.title = 'hrWeb反馈'
-        store.state.ajax({
-          url: '/feedback/submitFeedback',
+        this.$axios({
+          url: '/dabai-chaorenjob/feedback/insert',
           type: 'post',
           data: {data: JSON.stringify(data)},
-          success: (res) => {
-            if (res.code === 1) {
-              this.$message.success('操作成功')
-              this.imagesUrl = []
-              this.images = []
-              this.textareaValue = ''
-              document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'inline-block'
-            }
+          fuc: (res) => {
+						this.$message.success('操作成功')
+						this.imagesUrl = []
+						this.images = []
+						this.textareaValue = ''
+						document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'inline-block'
           }
         })
       }

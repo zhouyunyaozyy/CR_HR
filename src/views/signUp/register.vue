@@ -15,7 +15,7 @@
 					placeholder="请输4位数验证码"
 					v-model='form.num'
 					@keydown.enter.native="login">
-					<el-button slot="suffix" type='primary'  style='float:right' :disabled='getNumBool' @click='timeFuc'>{{form.time}}</el-button>
+					<el-button slot="suffix" type='primary' style='float:right' :disabled='getNumBool' @click='timeFuc'>{{form.time}}</el-button>
 				</el-input>
 			</el-form-item>
 			<el-form-item>

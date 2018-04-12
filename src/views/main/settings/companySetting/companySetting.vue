@@ -37,8 +37,8 @@
           <el-form-item label="企业地址" prop='address'>
             <el-input placeholder="请输入企业的地址" v-model="form.address"></el-input>
           </el-form-item>
-          <el-form-item label="联系电话" prop='phone'>
-            <el-input placeholder="请输入联系电话" v-model="form.phone"></el-input>
+          <el-form-item label="联系电话" prop='tel'>
+            <el-input placeholder="请输入联系电话" v-model="form.tel"></el-input>
           </el-form-item>
           <el-form-item label="官网" prop='website'>
             <el-input placeholder="HTTP://" v-model="form.website"></el-input>
@@ -115,7 +115,7 @@
           profile: '',
           logo: '',
           images: '',
-					phone: ''
+					tel: ''
         },
         logo: '',  // key
         images: [],  // key
@@ -135,7 +135,7 @@
             { required: true, message: '请输入简称', trigger: 'blur' },
             { pattern: /^.{2,10}$/, message: '简称长度必须为2~10位组成', trigger: 'blur' }
           ],
-          phone: [
+          tel: [
             { required: true, message: '请输入联系方式', trigger: 'blur' },
             { pattern: /^.{6,20}$/, message: '简称长度必须为6~20位组成', trigger: 'blur' }
           ],
@@ -169,66 +169,57 @@
     created () {
 			this.$axios({
 				type: 'get',
-				url: 'global.urlSelf.qiniu.token',
+				url: global.urlSelf.qiniu.token,
 				fuc: (res) => {
 					this.postData = {token: res.data}
 				}
 			})
       this.localData = JSON.parse(window.sessionStorage.getItem('localData'))
-      console.log(this.localData)
-      store.state.ajax({
-        url: global.urlSelf.company.getCompanyInfo,
+      this.$axios({
+        url: '/dabai-chaorenjob/company/getCompanyAndManagerByCid',
         type: 'get',
-        success: (res) => {
-          console.log(res)
-          if (res.code === 1) {
-            this.form.name_full = res.data.name_full
-            this.form.name_short = res.data.name_short
-            this.form.address = res.data.address
-            this.form.website = res.data.website
-            if (res.data.character !== 0) {
-              this.form.character = '' + res.data.character
-            }
-            if (res.data.character !== 0) {
-              this.form.fleet_size = '' + res.data.fleet_size
-            }
-            if (res.data.base_address !== '') {
-              for (let i in this.localData.area) {
-                for (let j in this.localData.area[i].children) {
-                  if (res.data.base_address === this.localData.area[i].children[j].code) {
-                    this.form.base_address = this.localData.area[i].children[j].code
-                    this.address = this.localData.area[i].code
-                    this.nowCity = this.localData.area[i].children
-                  }
-                }
-              }
-            }
-            this.form.profile = res.data.profile
-            this.form.cid = res.data.cid
-            if (res.data.logoUrl.length === 1) {
-                this.logo = res.data.logo
-                this.logoUrl = res.data.logoUrl[0]
-            }
-            this.images = res.data.images.split(',')
-            if (this.images.length < 3) {
-              document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'inline-block'
-            } else {
-              document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'none'
-            }
+				data: {cid: window.sessionStorage.getItem('cid')},
+        fuc: (res) => {
+					console.log(res)
+					this.form.name_full = res.data.company.name_full
+					this.form.name_short = res.data.company.name_short
+					this.form.address = res.data.company.address
+					this.form.website = res.data.company.website
+					this.form.tel = res.data.company.tel
+					if (res.data.character !== 0) {
+						this.form.character = '' + res.data.company.character
+					}
+					if (res.data.character !== 0) {
+						this.form.fleet_size = '' + res.data.company.fleet_size
+					}
+					if (res.data.base_address !== '') {
+						for (let i in this.localData.area) {
+							for (let j in this.localData.area[i].children) {
+								if (res.data.company.base_address === this.localData.area[i].children[j].code) {
+									this.form.base_address = this.localData.area[i].children[j].code
+									this.address = this.localData.area[i].code
+									this.nowCity = this.localData.area[i].children
+								}
+							}
+						}
+					}
+					this.form.profile = res.data.company.profile
+					this.form.cid = res.data.company.cid
+					if (res.data.company.logoUrl) {
+							this.logo = res.data.company.logo
+							this.logoUrl = res.data.company.logoUrl
+					}
+					this.images = res.data.company.images.split(',')
+					if (this.images.length < 3) {
+						document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'inline-block'
+					} else {
+						document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'none'
+					}
 //            let images = res.data.images.split(',')
-            for (let val of res.data.imagesUrl) {
-                this.imagesUrl.push({url: val})
-            }
-//              console.log(this.images)
-//            allName: '',
-//          abbreviation: '',
-//          adress: '',
-//          website: '',
-//          enterpriseNature: '',
-//          fleet: '',
-//          mainBase: '',
-//          textIntroduce: ''
-          }
+					for (let val of res.data.company.imagesUrl) {
+							this.imagesUrl.push({url: val})
+							console.log(this.imagesUrl)
+					}
         }
       })
     },
@@ -327,18 +318,15 @@
           }
           this.form.images = resultimages
           if (valid) {
-            store.state.ajax({
-              url: global.urlSelf.company.pullCompanyInfo,
+            this.$axios({
+              url: '/dabai-chaorenjob/company/updateCompany',
               type: 'post',
-              data: {data: JSON.stringify(this.form)},
-              success: (res) => {
-                if (res.code === 1) {
-                  this.$message({
-                    message: res.msg,
-                    duration: 1000
-                  })
-//                  this.$router.push('/adminIndex')
-                }
+              data: this.form,
+              fuc: (res) => {
+								this.$message({
+									message: res.msg,
+									duration: 1000
+								})
               }
             })
           } else {

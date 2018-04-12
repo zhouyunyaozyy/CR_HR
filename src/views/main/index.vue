@@ -332,7 +332,7 @@
     justify-content: center;
   }
   .content{
-    /*position: absolute;*/
+    position: relative;
     /*top: 40px;*/
     /*left: 0;*/
     /*right: 0;*/
