@@ -70,6 +70,7 @@ Vue.prototype.$axios = (params) => {
       .then(function(response){
         if (response.data.code != 1) {
           Message({
+						showClose: true,
             message: response.data.msg,
             type: 'error',
           });
@@ -79,6 +80,7 @@ Vue.prototype.$axios = (params) => {
       })
       .catch(function(error){
           Message({
+						showClose: true,
             message: error,
             type: 'error',
           });
@@ -94,6 +96,7 @@ Vue.prototype.$axios = (params) => {
       .then(function(response){
         if (response.data.code != 1) {
           Message({
+						showClose: true,
             message: response.data.msg,
             type: 'error',
           });
@@ -118,6 +121,7 @@ Vue.prototype.$axios = (params) => {
           console.log('Error', error.message);
         }
          Message({
+					showClose: true,
           message: error.message,
           type: 'error',
         });

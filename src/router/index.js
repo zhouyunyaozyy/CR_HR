@@ -94,6 +94,16 @@ const router1 = new Router({
           name: 'companySetting',
           component: resolve => require(['@/views/main/settings/companySetting/companySetting'], resolve)
         },
+        { // 系统反馈
+          path: '/feedback',
+          name: 'feedback',
+          component: resolve => require(['@/views/main/settings/feedback/feedback'], resolve)
+        },
+        { // 系统通知
+          path: '/talkwithSystem',
+          name: 'talkwithSystem',
+          component: resolve => require(['@/views/main/settings/talkWithSystem/talkwithSystem'], resolve)
+        },
         { // 职位沟通列表
           path: '/sealTalkList',
           name: 'sealTalkList',

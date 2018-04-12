@@ -37,6 +37,9 @@
           <el-form-item label="企业地址" prop='address'>
             <el-input placeholder="请输入企业的地址" v-model="form.address"></el-input>
           </el-form-item>
+          <el-form-item label="联系电话" prop='phone'>
+            <el-input placeholder="请输入联系电话" v-model="form.phone"></el-input>
+          </el-form-item>
           <el-form-item label="官网" prop='website'>
             <el-input placeholder="HTTP://" v-model="form.website"></el-input>
           </el-form-item>
@@ -72,7 +75,7 @@
             </el-col>
           </el-form-item>
           <el-form-item label="企业介绍" prop='profile'>
-            <el-input placeholder="请简单介绍下贵公司" type='textarea' :autosize="{ minRows: 1}" v-model="form.profile" :maxlength='800'></el-input>
+            <el-input placeholder="请简单介绍下贵公司" type='textarea' :autosize="{ minRows: 3, maxRows: 6}" v-model="form.profile" :maxlength='800'></el-input>
           </el-form-item>
         </el-form>
     </div>
@@ -111,7 +114,8 @@
           base_address: '', // 选择的市
           profile: '',
           logo: '',
-          images: ''
+          images: '',
+					phone: ''
         },
         logo: '',  // key
         images: [],  // key
@@ -130,6 +134,10 @@
           name_short: [
             { required: true, message: '请输入简称', trigger: 'blur' },
             { pattern: /^.{2,10}$/, message: '简称长度必须为2~10位组成', trigger: 'blur' }
+          ],
+          phone: [
+            { required: true, message: '请输入联系方式', trigger: 'blur' },
+            { pattern: /^.{6,20}$/, message: '简称长度必须为6~20位组成', trigger: 'blur' }
           ],
           address: [
             { required: true, message: '请确认企业地址', trigger: 'blur' },
@@ -438,14 +446,14 @@
     }
     .buttonClass>button{
         float: right;
-        width: 116px;
-        height: 36px;
-        background-color: #3e56b3;
+        width: 140px;
+        height: 40px;
+/*        background-color: #048adf;*/
         margin: 23px 30px;
-        cursor: pointer;
+/*        cursor: pointer;*/
     }
     .buttonClass>button:hover{
-        background-color: #5f73c3;
+/*        background-color: #3e56b3;*/
     }
     .basicBody>form{
         width: 740px;
