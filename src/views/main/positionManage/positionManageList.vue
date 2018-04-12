@@ -19,34 +19,54 @@
             min-width="140">
           </el-table-column>
           <el-table-column
-            prop="phone"
+            prop="education"
             label="学历要求"
-            min-width="150">
+            min-width="90">
+            <template slot-scope="scope">
+              <span>{{localData.education[parseInt(scope.row.education)-1].name}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="userName"
+            prop="address"
             label="工作地"
-            min-width="170">
+            min-width="150">
+            <template slot-scope="scope">
+              <span>{{selectCity(scope.row.address)}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="state"
+            prop="work_experience"
             label="经验要求"
             min-width="80">
+            <template slot-scope="scope">
+              <span>{{localData.offerExperience[parseInt(scope.row.work_experience)-1].name}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="state"
+            prop="wages"
             label="薪资范围"
             min-width="80">
+            <template slot-scope="scope">
+              <span>{{localData.wages[parseInt(scope.row.wages)-1].name}}</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="state"
+            prop="status"
             label="发布状态"
             min-width="80">
+            <template slot-scope="scope">
+              <span v-if="scope.row.status == 1">已发布</span>
+              <span v-else="scope.row.status == 0">待发布</span>
+            </template>
           </el-table-column>
           <el-table-column
-            prop="date"
+            prop="create_time"
             label="发布时间"
             min-width="140">
+            <template slot-scope="scope">
+              <span v-if='scope.row.create_time === 0'>未发布</span>
+              <span v-else>{{new Date(parseInt(scope.row.create_time)).toLocaleString().replace(/:\d{1,2}$/, '')}}</span>
+            </template>
           </el-table-column>
           <el-table-column width="240px">
             <template slot-scope="scope">
@@ -54,7 +74,8 @@
                 <el-button type="primary" plain>查看</el-button>
                 <el-button type="primary" plain>编辑</el-button>
                 <!--<el-button type="primary" plain>权限管理</el-button>-->
-                <el-button type="primary" plain>发布</el-button>
+                <el-button type="primary" v-if="scope.row.status == 1" plain>停止发布</el-button>
+                <el-button type="primary" v-else="scope.row.status == 0" plain>发布</el-button>
               </div>
             </template>
           </el-table-column>
@@ -80,37 +101,46 @@
       return {
         total:1000,
         size:15,
-        tableData: [{
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }, {
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }, {
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }, {
-          name: '王小虎',
-          phone: '13541377809',
-          userName: 'chaorenjob001',
-          state: '已激活',
-          date: '2016-05-02'
-        }]
+        tableData: [],
+        localData: JSON.parse(window.sessionStorage.getItem("localData"))
       }
+    },
+    activated () {
+      console.log(3)
+      let resultData = {
+        cid:window.sessionStorage.getItem("cid")
+      };
+      this.$axios({
+        type: 'get',
+        url: '/dabai-chaorenjob/job/queryAllJobListByCid',
+        data: resultData,
+        fuc: (res) => {
+          this.tableData= res.data.data;
+          console.log(this.tableData)
+          console.log( res)
+        }
+      })
     },
     methods:{
       addHr (){
         this.$router.push({path:'/jobDetail'})
       },
+      selectCity (code){
+        let cityName;
+        let s_code = "" + code;
+        s_code = s_code.slice(0,3)+"000";
+        this.localData.area.forEach((item) => {
+          if(item.code == s_code){
+            item.children.forEach((city) => {
+              if(city.code == code){
+                cityName = city.name;
+                return;
+              }
+            })
+          }
+        })
+        return cityName;
+      }
     }
   }
 </script>

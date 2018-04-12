@@ -37,16 +37,22 @@ export default {
     height: 100%;
   }
 	/* WebKit browsers */
-	.el-input__inner::-webkit-input-placeholder { color: #808080; }
+	.el-input__inner::-webkit-input-placeholder { color: #808080; font-size: 14px;}
 
 	/* Mozilla Firefox 4 to 18 */
-	.el-input__inner::-moz-placeholder { color:#808080; }
+	.el-input__inner::-moz-placeholder { color:#808080; font-size: 14px;}
 
 	/* Mozilla Firefox 19+ */
-	.el-input__inner::-moz-placeholder { color:#808080; }
+	.el-input__inner::-moz-placeholder { color:#808080; font-size: 14px;}
 
 	/* Internet Explorer 10+ */
-	.el-input__inner::-ms-input-placeholder { color:#808080; }
+	.el-input__inner::-ms-input-placeholder { color:#808080; font-size: 14px;}
+  .el-input__inner,.el-textarea__inner{
+    color:#333;
+    border-color:#bbb;
+    font-size: 14px;
+    height: 30px;
+  }
   *{
     margin: 0;
     padding: 0;

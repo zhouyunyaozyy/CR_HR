@@ -32,7 +32,7 @@
             label="状态"
             min-width="80">
             <template slot-scope="scope">
-              <span v-if='scope.row.status === 1'>已激活</span>
+              <span class="org" v-if='scope.row.status === 1'>已激活</span>
               <span v-else-if='scope.row.status === 2'>未激活</span>
               <span v-else-if='scope.row.status === 3'>封禁</span>
             </template>
@@ -49,7 +49,9 @@
           <el-table-column width="240px">
             <template slot-scope="scope">
               <div class="btn_cont">
-                <el-button type="primary" plain>冻结</el-button>
+                <el-button v-if="scope.row.status === 3" @click="thaw(scope.row)" type="primary" plain>解冻</el-button>
+                <el-button v-else @click="frozen(scope.row)" type="primary" plain>冻结</el-button>
+
                 <el-button type="primary" plain>删除</el-button>
                 <!--<el-button type="primary" plain>权限管理</el-button>-->
                 <el-button type="primary" plain>编辑</el-button>
@@ -76,8 +78,8 @@
     name: "accountManagement",
     data() {
       return {
-        total:1000,
-        size:15,
+        total: 0,
+        size: 0,
         tableData: []
       }
     },
@@ -90,15 +92,43 @@
         url: '/dabai-chaorenjob/company/queryAllChildrenByCid',
         data: resultData,
         fuc: (res) => {
-          this.tableData= res.data.data;
+          this.tableData = res.data.data;
+          this.total = res.data.count;
+          this.size = res.data.pageSize;
           console.log( res)
         }
       })
     },
     methods:{
-      addHr (){
+      addHr () {
         this.$router.push({path:'/hrDetail'})
       },
+      frozen (row) {
+        let resultData = {
+          uid:row.uid
+        };
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/company/freezingChildren',
+          data: resultData,
+          fuc: (res) => {
+            console.log( res)
+          }
+        })
+      },
+      thaw (row) {
+        let resultData = {
+          uid:row.uid
+        };
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/company/defrostingChildren',
+          data: resultData,
+          fuc: (res) => {
+            console.log( res)
+          }
+        })
+      }
     }
   }
 </script>
@@ -169,5 +199,8 @@
     text-align: right;
     padding-top: 20px;
     /*border-top: 1px solid #666666;*/
+  }
+  .hr_list .org{
+    color:#ff8955;
   }
 </style>

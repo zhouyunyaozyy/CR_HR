@@ -8,15 +8,17 @@
       class="hr_detail">
       <div class="account_info">
         <div class="account_title">账号信息</div>
-        <el-form-item label="真实姓名" prop="name">
-          <el-input v-model="hr_detail.name" placeholder="请输入HR真实姓名"></el-input>
-        </el-form-item>
-        <el-form-item label="手机号" prop="phone">
-          <el-input v-model="hr_detail.phone" placeholder="请输入手机号"></el-input>
-        </el-form-item>
-        <el-form-item label="用户名">
-          <el-input v-model="hr_detail.userName" placeholder="激活后系统自动生成"  :disabled="true"></el-input>
-        </el-form-item>
+        <div class="account_cont">
+          <el-form-item label="真实姓名" prop="name">
+            <el-input v-model="hr_detail.name" placeholder="请输入HR真实姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="手机号" prop="phone">
+            <el-input v-model="hr_detail.phone" placeholder="请输入手机号"></el-input>
+          </el-form-item>
+          <el-form-item label="用户名">
+            <el-input v-model="hr_detail.userName" placeholder="激活后系统自动生成"  :disabled="true"></el-input>
+          </el-form-item>
+        </div>
       </div>
       <div class="authority_title">权限配置</div>
       <div class="authority_cont">
@@ -122,6 +124,10 @@
     font-size: 24px;
     padding: 10px 0;
   }
+  .account_cont{
+    width: 630px;
+    margin: 0 auto;
+  }
   .account_info .el-form-item{
     /*margin-bottom: 5px;*/
   }
@@ -134,6 +140,10 @@
     font-size: 24px;
     color:#333;
     padding-left: 15px;
+  }
+  .authority_cont{
+    width: 630px;
+    margin: 0 auto;
   }
   .authority_cont .el-form-item--feedback{
     background-color: #fff;
