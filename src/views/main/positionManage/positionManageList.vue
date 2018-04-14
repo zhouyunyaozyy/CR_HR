@@ -71,7 +71,7 @@
           <el-table-column width="240px">
             <template slot-scope="scope">
               <div class="btn_cont">
-                <el-button type="primary" plain>查看</el-button>
+                <el-button @click="_see(scope.row.jid)" type="primary" plain>查看</el-button>
                 <el-button @click="_edit(scope.row.jid)" type="primary" plain>编辑</el-button>
                 <!--<el-button type="primary" plain>权限管理</el-button>-->
                 <el-button @click="_release(scope.row,2)" type="primary" v-if="scope.row.status == 1" plain>停止发布</el-button>
@@ -171,6 +171,11 @@
         })
       },
       _edit (jid){
+        this.$store.state.tj.seeState = false;
+        this.$router.push("/jobDetail/"+jid)
+      },
+      _see (jid){
+        this.$store.state.tj.seeState = true;
         this.$router.push("/jobDetail/"+jid)
       }
     }

@@ -3,7 +3,9 @@ const tj = {
       //标签列表
       label_list:JSON.parse(window.sessionStorage.getItem("label_list")) || [],
       //当前标签path
-      tabIndex: window.sessionStorage.getItem("tabIndex") || ""
+      tabIndex: window.sessionStorage.getItem("tabIndex") || "",
+      //是否是查看
+      seeState: false,
     },
     mutations: {
       addTab (state,key) {
@@ -12,7 +14,7 @@ const tj = {
         var label_arr = state.label_list;
 //        if(label_arr.length > 0){
 //          label_arr.forEach((item) => {
-//            
+//
 //          })
 //        }
 				console.log('key', key)
@@ -33,10 +35,12 @@ const tj = {
               pathName = key.path
               break;
             case "jobDetail":
-              if(Object.keys(key.params).length > 0){
-                titleName = "编辑职位"
-              }else{
+              if(key.params.jid == 1){
                 titleName = "添加职位"
+              }else if(state.seeState){
+                titleName = "查看职位"
+              }else{
+                titleName = "编辑职位"
               }
               pathName = key.path
               break;

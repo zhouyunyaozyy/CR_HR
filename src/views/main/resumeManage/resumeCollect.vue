@@ -46,7 +46,7 @@
             :show-overflow-tooltip="true"
             prop="jname"
             label="应聘职位"
-            min-width="180">
+            min-width="150">
             <template slot-scope="scope">
               <el-checkbox
                 :label="scope.row.jname"
@@ -69,22 +69,22 @@
           <el-table-column
             prop="gender"
             label="性别"
-            min-width="50">
+            min-width="55">
           </el-table-column>
           <el-table-column
             prop="age"
             label="年龄"
-            min-width="50">
+            min-width="55">
           </el-table-column>
           <el-table-column
             prop="height"
-            label="身高"
-            min-width="70">
+            label="身高(cm)"
+            min-width="95">
           </el-table-column>
           <el-table-column
             prop="weight"
-            label="体重"
-            min-width="70">
+            label="体重(kg)"
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="leftVision"
@@ -99,33 +99,33 @@
           <el-table-column
             prop="workExp"
             label="工作经验"
-            min-width="80">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="education"
             label="学历"
-            min-width="80">
+            min-width="60">
           </el-table-column>
           <el-table-column
             :show-overflow-tooltip="true"
             prop="lang"
             label="熟悉小语种"
-            min-width="100">
+            min-width="110">
           </el-table-column>
           <el-table-column
             prop="reservationState"
             label="预约确认"
-            min-width="80">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="review"
             label="评审结果"
-            min-width="80">
+            min-width="90">
           </el-table-column>
           <el-table-column
             prop="overVoteStatusEnum"
             label="简历状态"
-            min-width="80">
+            min-width="90">
           </el-table-column>
         </el-table>
       </div>

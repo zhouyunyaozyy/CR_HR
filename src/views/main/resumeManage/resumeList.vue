@@ -1,151 +1,26 @@
 <template>
   <el-row :gutter="10" class="resume_list">
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item">
+    <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item">
       <div class="resume_item_cont">
         <div class="resume_posi">
-          <div class="posi_name">飞行员招聘详情</div>
+          <div class="posi_name">{{item.name}}</div>
           <div class="pisi_sub"></div>
         </div>
         <div class="resume_cont">
           <div class="resume_state_item">
             <div class="state_title">全部简历</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button @click="_jump()" type="warning" size="small" plain>详情</el-button>
+            <div class="resume_num">共({{item.ALL}}份)</div>
+            <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
           </div>
           <div class="resume_state_item bor">
             <div class="state_title">预约面试</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button @click="_jump()" type="warning" size="small" plain>详情</el-button>
+            <div class="resume_num">共({{item.MIANSHI}}份)</div>
+            <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
           </div>
           <div class="resume_state_item">
             <div class="state_title">不合适</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button @click="_jump()" type="warning" size="small" plain>详情</el-button>
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item blue">
-      <div class="resume_item_cont">
-        <div class="resume_posi">
-          <div class="posi_name">飞行员招聘详情</div>
-          <div class="pisi_sub"></div>
-        </div>
-        <div class="resume_cont">
-          <div class="resume_state_item">
-            <div class="state_title">全部简历</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item bor">
-            <div class="state_title">预约面试</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">不合适</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button size="small" plain>详情</el-button>
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item">
-      <div class="resume_item_cont">
-        <div class="resume_posi">
-          <div class="posi_name">飞行员招聘详情</div>
-          <div class="pisi_sub"></div>
-        </div>
-        <div class="resume_cont">
-          <div class="resume_state_item">
-            <div class="state_title">全部简历</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item bor">
-            <div class="state_title">预约面试</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">不合适</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item blue">
-      <div class="resume_item_cont">
-        <div class="resume_posi">
-          <div class="posi_name">飞行员招聘详情</div>
-          <div class="pisi_sub"></div>
-        </div>
-        <div class="resume_cont">
-          <div class="resume_state_item">
-            <div class="state_title">全部简历</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item bor">
-            <div class="state_title">预约面试</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">不合适</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item">
-      <div class="resume_item_cont">
-        <div class="resume_posi">
-          <div class="posi_name">飞行员招聘详情</div>
-          <div class="pisi_sub"></div>
-        </div>
-        <div class="resume_cont">
-          <div class="resume_state_item">
-            <div class="state_title">全部简历</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item bor">
-            <div class="state_title">预约面试</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">不合适</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-        </div>
-      </div>
-    </el-col>
-    <el-col :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item blue">
-      <div class="resume_item_cont">
-        <div class="resume_posi">
-          <div class="posi_name">飞行员招聘详情</div>
-          <div class="pisi_sub"></div>
-        </div>
-        <div class="resume_cont">
-          <div class="resume_state_item">
-            <div class="state_title">全部简历</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item bor">
-            <div class="state_title">预约面试</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">不合适</div>
-            <div class="resume_num">共(140份)</div>
-            <el-button type="warning" size="small" plain>详情</el-button>
+            <div class="resume_num">共({{item.BUHESHI}}份)</div>
+            <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
           </div>
         </div>
       </div>
@@ -155,8 +30,29 @@
 <script>
   export default {
     name: "resumeList",
+    data () {
+      return{
+        resumeData:[],
+      }
+    },
+    activated () {
+      this.init();
+    },
     methods:{
-      _jump () {
+      init(){
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getHRResumeListGroupByJid',
+          fuc: (res) => {
+            this.resumeData= res.data;
+            console.log( res)
+          }
+        })
+      },
+      _jump (item) {
+        // console.log(jid)
+        window.sessionStorage.setItem("jid",item.jid)
+        window.sessionStorage.setItem("jobName",item.name)
         this.$router.push("/recruitList")
       }
     }

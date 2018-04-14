@@ -123,7 +123,7 @@
 				_form.area = area.area
 				console.log('_form', _form)
 				window.sessionStorage.setItem('localData', JSON.stringify(_form))
-				
+
 //				初始化融云
 				this.uid = window.sessionStorage.getItem('uid')
 				if (window.localStorage.getItem(this.uid)) {

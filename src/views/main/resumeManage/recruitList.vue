@@ -157,7 +157,7 @@
       </el-form>
     </div>
     <div class="recruit_list">
-      <div class="recruit_list_title">-飞行员招聘详情-</div>
+      <div class="recruit_list_title">-{{jobName}}-</div>
       <div class="recruit_list_btn">
         <div class="recruit_left_btn">
           <el-checkbox
@@ -207,7 +207,7 @@
                 </div>
                 <div class="chart_txt_item">
                   <span class="chart_txt_name">工作经验:</span>
-                  <span class="chart_txt_text">{{item.workExp}}</span>
+                  <span class="chart_txt_text">{{item.experience}}</span>
                 </div>
                 <div class="chart_txt_item">
                   <span class="chart_txt_name">简历状态:</span>
@@ -321,6 +321,7 @@
     name: "recruitList",
     data () {
       return {
+        jobName: window.sessionStorage.getItem("jobName"),
         screen:{
           name:11,
           gender: '',           //  性别
@@ -340,83 +341,31 @@
           status:"6",
           reservationState:"4"
         },
-        tableData:[
-          {
-            jname:"你打打你打打你打打你打打你打打你打打你打打",
-            headerUrl:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523611738229&di=e82e984379fa70616e2892697cab6a3a&imgtype=0&src=http%3A%2F%2Fwww.downxia.com%2Fuploadfiles%2F2015%2F1123%2F20151123043522156.jpg",
-            name:"糖糖",
-            gender:"男",
-            age:"31",
-            height:"185",
-            weight:"45",
-            leftVision:"1.0",
-            rightVision:"1.0",
-            workExp:"无经验",
-            education:"小学",
-            lang:"小学话",
-            reservationState:"未确",
-            review:"/",
-            overVoteStatusEnum:"未查看"
-          },
-          {
-            jname:"你打打你打打你打打你打打你打打你打打你打打",
-            headerUrl:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523611738229&di=e82e984379fa70616e2892697cab6a3a&imgtype=0&src=http%3A%2F%2Fwww.downxia.com%2Fuploadfiles%2F2015%2F1123%2F20151123043522156.jpg",
-            name:"糖糖",
-            gender:"男",
-            age:"31",
-            height:"185",
-            weight:"45",
-            leftVision:"1.0",
-            rightVision:"1.0",
-            workExp:"无经验",
-            education:"小学",
-            lang:"小学话",
-            reservationState:"未确",
-            review:"/",
-            overVoteStatusEnum:"未查看"
-          },
-          {
-            jname:"你打打你打打你打打你打打你打打你打打你打打",
-            headerUrl:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523611738229&di=e82e984379fa70616e2892697cab6a3a&imgtype=0&src=http%3A%2F%2Fwww.downxia.com%2Fuploadfiles%2F2015%2F1123%2F20151123043522156.jpg",
-            name:"糖糖",
-            gender:"男",
-            age:"31",
-            height:"185",
-            weight:"45",
-            leftVision:"1.0",
-            rightVision:"1.0",
-            workExp:"无经验",
-            education:"小学",
-            lang:"小学话",
-            reservationState:"未确",
-            review:"/",
-            overVoteStatusEnum:"未查看"
-          },
-          {
-            jname:"你打打你打打你打打你打打你打打你打打你打打",
-            headerUrl:"https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523611738229&di=e82e984379fa70616e2892697cab6a3a&imgtype=0&src=http%3A%2F%2Fwww.downxia.com%2Fuploadfiles%2F2015%2F1123%2F20151123043522156.jpg",
-            name:"糖糖",
-            gender:"男",
-            age:"31",
-            height:"185",
-            weight:"45",
-            leftVision:"1.0",
-            rightVision:"1.0",
-            workExp:"无经验",
-            education:"小学",
-            lang:"小学话",
-            reservationState:"未确",
-            review:"/",
-            overVoteStatusEnum:"未查看"
-          }
-        ],
+        tableData:[],
         checkItem: [],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
         checkAll:false,
         pattern:false,
       }
     },
+    activated () {
+      this.init();
+    },
     methods:{
+      init(){
+        let resultData = {
+          jid: window.sessionStorage.getItem("jid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getResumeReceivedListByJid',
+          data:resultData,
+          fuc: (res) => {
+            this.tableData = res.data.data;
+            console.log( res)
+          }
+        })
+      },
       changePattern (state) {
         this.pattern = state;
       },
