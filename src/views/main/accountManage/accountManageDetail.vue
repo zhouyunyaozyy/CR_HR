@@ -3,7 +3,6 @@
       :model="hr_detail"
       status-icon
       :rules="rules"
-      ref="hrDetail"
       label-width="130px"
       class="hr_detail">
       <div class="account_info">

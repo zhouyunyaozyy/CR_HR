@@ -112,7 +112,7 @@
         <el-form-item label='基本信息'>
           <el-row>
             <el-col :span='5'>
-              <el-select v-model='screen.gender' @change='selectCity' placeholder='性别'>
+              <el-select v-model='screen.gender' placeholder='性别'>
                 <el-option
                   v-for='item in localData.gender'
                   :label='item.name'
