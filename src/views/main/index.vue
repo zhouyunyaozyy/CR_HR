@@ -8,7 +8,7 @@
         </div>
         <div class="user_name">欢迎回来！ 旺旺</div>
         <div class="right_icon">
-          <div class="icon_item">
+          <div class="icon_item" @click='goSealTalkDetail'>
             <i class="iconfont icon-ai-message"></i>
             <span class="icon_txt">职位沟通</span>
           </div>
@@ -339,17 +339,18 @@
       },
 			watch: {
 				getlocalTalkData (obj) {
+					console.log('obj', obj)
 					this.localTalkData = obj
 				},
 				tabIndex (val) {
 					console.log('val', val)
-					if (val && val != 0) {
-						this.tabIndex = val
-						console.log('tabindex', Boolean(val))
-						this.$router.push({path: this.tabIndex});
-					} else {
-						this.$router.push({path: '/main'});
-					}
+//					if (val && val != 0) {
+//						this.tabIndex = val
+//						console.log('tabindex', Boolean(val))
+//						this.$router.push({path: this.tabIndex});
+//					} else {
+//						this.$router.push({path: '/main'});
+//					}
 				}
 			},
       methods: {
@@ -365,6 +366,7 @@
 							} else {
 								obj.showTime = false
 							}
+							
 							this.localTalkData[i].content.push(obj)
 							this.localTalkData[i].showIcon = true
 							this.localTalkData.unshift(this.localTalkData.splice(i, 1)[0])
@@ -397,9 +399,9 @@
         clickTab(VueComponent) {
           // console.log(VueComponent.name,VueComponent)
           this.$store.commit('changeTab',VueComponent.name)
-//          this.$router.push({
-//            path:VueComponent.name
-//          });
+          this.$router.push({
+            path:VueComponent.name
+          });
         },
         removeTab(targetName) {
           console.log(targetName)
@@ -408,6 +410,9 @@
         },
 				handleCommand (val) { // 设置跳转路由
 					this.$router.push(val)
+				},
+				goSealTalkDetail () {
+					this.$router.push('sealtalkDetail')
 				}
       }
     }

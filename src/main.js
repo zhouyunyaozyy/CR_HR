@@ -66,7 +66,7 @@ Vue.prototype.$axios = (params) => {
 //
   let baseUrl = global.configSelf.paramUrl
   if (params.type === 'get') {
-    axios.get(baseUrl + params.url, {params: params.data, withCredentials:false, headers: {"Content-Type": "application/x-www-form-urlencoded ", "Accept" : "*/*", 'CR-token': resultData}})
+    axios.get(baseUrl + params.url, {params: params.data, withCredentials:false, headers: {"Content-Type": "application/json ", "Accept" : "*/*", 'CR-token': resultData}})
       .then(function(response){
         if (response.data.code != 1) {
           Message({

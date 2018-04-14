@@ -18,136 +18,12 @@
 							<i></i>
 						</div>
 					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
+					<el-checkbox v-for='item in tabsList' :label="item.targetId" :key='item.targetId' :class='tabClassName'>
 						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
+							<img :src="item.url">
+							<p><span>{{item.name}}手拉手</span><time>{{item.time}}</time></p>
+							<p>{{item.content}}</p>
 							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 B">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢！已发送，请查收，谢谢！</p>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 B">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢！已发送，请查收，谢谢！</p>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 B">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢！已发送，请查收，谢谢！</p>
-						</div>
-					</el-checkbox>
-					<el-checkbox label="复选框 B">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢！已发送，请查收，谢谢！</p>
 						</div>
 					</el-checkbox>
 				</el-checkbox-group>
@@ -156,45 +32,14 @@
 			</div>
 			<div class="sealTalkContainBody">
 				<div class="sealTalkContainBodyContent">
-					<time>2018/3/21 13:56</time>
-					<div class="left">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-						<div class='text'>文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字</div>
-					</div>
-					<div class="right">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-						<div class='text'>文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字</div>
-					</div>
-					<div class="left">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-						<div class='text'>文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字</div>
-					</div>
-					<div class="right">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-						<div class='text'>文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字文字</div>
-					</div>
-					<div class="left">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-						<div class='image'>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-					</div>
-					<div class="left">
-						<div>
-							<img src="../../../imgs/logo_min.png">
-						</div>
-						<div class='video'>
-							<video controls src="../../../imgs/hei.mp4"></video>
+					<div v-for='item in talkData' :key='item.time'>
+						<time>{{item.time}}</time>
+						<div :class="item.class">
+							<div>
+								<img v-if="item.class == 'left'" :src="appUserUrl">
+								<img v-else :src="myImgUrl">
+							</div>
+							<div :class='item.type'>{{item.content}}</div>
 						</div>
 					</div>
 				</div>
@@ -206,7 +51,7 @@
 						<el-input placeholder='请输入内容' v-model='textareaData' type='textarea' :autosize="{ minRows: 2, maxRows: 2}"></el-input>
 					</div>
 					<div>
-						<el-button type='primary'>发送</el-button>
+						<el-button type='primary' @click='getMessage'>发送</el-button>
 						<span>按Ctrl+Enter可快捷发送</span>
 					</div>
 				</div>
@@ -236,14 +81,18 @@
 	</div>
 </template>
 <script>
+  let RongIMClient = RongIMLib.RongIMClient
 	export default {
 		data () {
 			return {
 				checkList: [], // 选中的用户聊天
 				tabClassName: '',
 				textareaData: '',
-				targetId: '',
-				rrid: '',
+				jobInfo: {},
+				myImgUrl: '',
+				appUserUrl: '',
+				targetId: '985070026325229568',
+				rrid: '985077615746351104',
 				talkData: [], // 当前聊天内容
 				localTalkData: [], // 本地聊天记录
 				tabsList: [] // 所有用户聊天信息
@@ -262,6 +111,18 @@
             this.talkData = val.content // 加载本地与应聘者会话记录
           }
         }
+				this.tabsList = []
+				for (let val of this.localTalkData) {
+					this.$axios({
+						url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
+						type: 'get',
+						data: {rrid: val.rrid},
+						fuc: (res) => {
+							let data = res.data
+							this.tabsList.push({url: data, name: data.name, targetId: val.targetId, time: val.content.length > 0 ? val.content[val.content.length - 1].time : new Date().getTime(), content: val.content.length > 0 ? val.content[val.content.length - 1].content : '暂无'})
+						}
+					})
+				}
 //        this.$nextTick(() => {
 //          let divArr = document.getElementsByClassName('detailBody')[0].children
 //          divArr[divArr.length-1].scrollIntoView()
@@ -269,9 +130,17 @@
 			}
 		},
 		activated () {
+			this.$axios({
+				url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
+				type: 'get',
+				data: {rrid: this.rrid},
+				fuc: (res) => {
+					this.appUserUrl = res.data
+				}
+			})
       this.localData = JSON.parse(window.sessionStorage.getItem('localData'))
-			this.targetId = this.$route.query.targetId
-			this.rrid = this.$route.query.rrid
+//			this.targetId = this.$route.query.targetId
+//			this.rrid = this.$route.query.rrid
       this.uid = window.sessionStorage.getItem('uid') // 公司信息
       this.emojisData = RongIMLib.RongIMEmoji.list // 表情包
       this.getJobInfo()
@@ -315,21 +184,20 @@
       for (let val of this.localTalkData) {
 				this.$axios({
 					url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
-					type: 'post',
+					type: 'get',
 					data: {rrid: val.rrid},
 					fuc: (res) => {
 						let data = res.data
-						this.tabsData.push({url: data.header, name: data.name, targetId: val.targetId})
+						this.tabsList.push({url: data, name: data.name, targetId: val.targetId, time: val.content.length > 0 ? val.content[val.content.length - 1].time : new Date().getTime(), content: val.content.length > 0 ? val.content[val.content.length - 1].content : '暂无'})
 					}
 				})
 			}
 			// 获取公司的图片信息等
 			this.$axios({
-				url: '/rong/hr/getUser',
-				type: 'post',
-				data: {uid: window.sessionStorage.getItem('uid')},
-				success: (res) => {
-					this.myImgUrl = res.data.header
+				url: '/dabai-chaorenjob/common/getHrHeader',
+				type: 'get',
+				fuc: (res) => {
+					this.myImgUrl = res.data
 				}
 			})
 			// 判断是否由新职位发起的会话
@@ -338,13 +206,13 @@
 					if (val.rrid !== this.rrid) {
 						console.log('新职位')
 						setTimeout(() => {
-							this.getMessage(false)
+//							this.getMessage(false)
 						}, 1000)
 					}
 					if (val.content.length === 0) {
 						console.log('新会话')
 						setTimeout(() => {
-								this.getMessage(false)
+//								this.getMessage(false)
 							}, 1000)
 					}
 				}
@@ -359,16 +227,16 @@
 			},
         // 获取当前简历的职位信息
       getJobInfo () {
-        this.$axios({
-					url: '/job/getJobByRRid',
-					type: 'post',
-					data: {rrid: this.rrid},
-					success: (res) => {
-						let localData = JSON.parse(window.localStorage.getItem('localData'))
-						this.jid = res.data.jid
-						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.name_full,'name': res.data.name,wages: res.data.wages}
-					}
-				})
+//        this.$axios({
+//					url: '/job/getJobByRRid',
+//					type: 'post',
+//					data: {rrid: this.rrid},
+//					success: (res) => {
+//						let localData = JSON.parse(window.localStorage.getItem('localData'))
+//						this.jid = res.data.jid
+//						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.name_full,'name': res.data.name,wages: res.data.wages}
+//					}
+//				})
       },
       getMessage (bool = true) { // 发送信息
             // 生成聊天内容
@@ -421,7 +289,7 @@
 										}
                     nowThis.localTalkData[i].content.push({content: message.content.content, class: 'right', type: 'text', time: message.sentTime, showTime: showTime})
                     nowThis.localTalkData.unshift(nowThis.localTalkData.splice(i, 1)[0])
-                    this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(nowThis.localTalkData))
+                    nowThis.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(nowThis.localTalkData))
                     window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
 
                     break
@@ -436,7 +304,7 @@
                   val.rrid = nowThis.rrid
                   val.content = [{content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: false}]
                   nowThis.localTalkData.unshift(nowThis.localTalkData.splice(nowThis.localTalkData.indexOf(val), 1)[0])
-                    this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(nowThis.localTalkData))
+                    nowThis.$store.state.zyy.localTalkData = nowThis.localTalkData
                     window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
 
 //                    setTimeout(() => {
@@ -676,7 +544,7 @@
 		height: calc(100% - 160px);
 /*		border-bottom: 1px solid lightgrey;*/
 	}
-	.sealTalkContainBodyContent>time{
+	.sealTalkContainBodyContent>div>time{
 /*		width: 100%;*/
 /*		text-align: center;*/
 		display: inline-block;
@@ -688,23 +556,23 @@
 		padding: 2px 4px;
 		border-radius: 4px;
 	}
-	.sealTalkContainBodyContent>.left{
+	.sealTalkContainBodyContent>div>.left{
 		margin-bottom: 20px;
 		overflow: hidden;
 		text-align: left;
 	}
-	.sealTalkContainBodyContent>.left>div:first-child{
+	.sealTalkContainBodyContent>div>.left>div:first-child{
 		width: 90px;
 		height: 50px;
 		float: left;
 	}
-	.sealTalkContainBodyContent>.left>div:first-child>img{
+	.sealTalkContainBodyContent>div>.left>div:first-child>img{
 		width: 50px;
 		height: 50px;
 		border-radius: 4px;
 		margin-left: 20px;
 	}
-	.sealTalkContainBodyContent>.left>.text{
+	.sealTalkContainBodyContent>div>.left>.text{
 		width: 420px;
 		float: left;
 		overflow: hidden;
@@ -714,36 +582,36 @@
 		color: white;
 		font-size: 12px;
 	}
-	.sealTalkContainBodyContent>.left>.image{
+	.sealTalkContainBodyContent>div>.left>.image{
 		float: left;
 		overflow: hidden;
 	}
-	.sealTalkContainBodyContent>.left>.image>img{
+	.sealTalkContainBodyContent>div>.left>.image>img{
 		width: 220px;
 	}
-	.sealTalkContainBodyContent>.left>.video{
+	.sealTalkContainBodyContent>div>.left>.video{
 		float: left;
 		overflow: hidden;
 	}
-	.sealTalkContainBodyContent>.left>.video>video{
+	.sealTalkContainBodyContent>div>.left>.video>video{
 		width: 220px;
 	}
-	.sealTalkContainBodyContent>.right{
+	.sealTalkContainBodyContent>div>.right{
 		margin-bottom: 20px;
 		overflow: hidden;
 	}
-	.sealTalkContainBodyContent>.right>div:first-child{
+	.sealTalkContainBodyContent>div>.right>div:first-child{
 		width: 90px;
 		height: 50px;
 		float: right;
 	}
-	.sealTalkContainBodyContent>.right>div:first-child>img{
+	.sealTalkContainBodyContent>div>.right>div:first-child>img{
 		width: 50px;
 		height: 50px;
 		border-radius: 4px;
 		margin-left: 20px;
 	}
-	.sealTalkContainBodyContent>.right>.text{
+	.sealTalkContainBodyContent>div>.right>.text{
 		width: 420px;
 		float: right;
 		overflow: hidden;
