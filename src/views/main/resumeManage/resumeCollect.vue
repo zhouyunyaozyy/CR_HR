@@ -34,7 +34,7 @@
           v-model="checkAll"
           @change="handleCheckAllChange">全选</el-checkbox>
         <div class="btn_cont">
-          <el-button  @click="" plain>导出word简历</el-button>
+          <el-button  @click="" plain>导出简历</el-button>
           <el-button  @click="" plain>导出excel名单</el-button>
         </div>
       </div>
@@ -263,7 +263,7 @@
     width: 130px;
     margin: 0 5px;
   }
-  .screen_cont .el-button{
+  .screen_cont .el-button,.collect_title .el-button{
     padding: 0;
   }
   .collect_cont .el-table th{
