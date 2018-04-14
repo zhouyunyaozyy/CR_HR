@@ -12,6 +12,7 @@
             <el-input
               placeholder="如乘务员、飞行员、机务等"
               maxlength="20"
+              :disabled="changeState"
               v-model="form.name"></el-input>
           </el-col>
         </el-form-item>
@@ -20,6 +21,7 @@
             <el-select v-model="form.rtid" placeholder="选择职能">
               <el-option
                 v-for='item in rcnidArr'
+                :disabled="changeState"
                 :key='item.code'
                 :label='item.name'
                 :value='item.rtid'></el-option>
@@ -31,6 +33,7 @@
             <el-select v-model="form.education" placeholder="选择学历">
               <el-option
                 v-for='item in localData.education'
+                :disabled="changeState"
                 :key='item.code'
                 :label='item.name'
                 :value='item.code'></el-option>
@@ -42,6 +45,7 @@
             <el-select v-model='address' @change='selectCity' placeholder='选择省份'>
               <el-option
                 v-for='item in localData.area'
+                :disabled="changeState"
                 :label='item.name'
                 :key='item.code'
                 :value='item.code'></el-option>
@@ -52,6 +56,7 @@
             <el-select v-model='address2' placeholder='选择市级'>
               <el-option
                 v-for='item in nowCity'
+                :disabled="changeState"
                 :label='item.name'
                 :key='item.code'
                 :value='item.code'></el-option>
@@ -63,6 +68,7 @@
             <el-select v-model="form.work_experience" placeholder="选择要求">
               <el-option
                 v-for='item in localData.offerExperience'
+                :disabled="changeState"
                 :label='item.name'
                 :value='item.code'
                 :key='item.code'></el-option>
@@ -85,6 +91,7 @@
             <el-input
               placeholder="输入招聘人数"
               type="number"
+              :disabled="changeState"
               v-model="form.hire_number"></el-input>
           </el-col>
         </el-form-item>
@@ -94,6 +101,7 @@
             placeholder="输入职位要求"
             type='textarea'
             v-model="form.profile"
+            :disabled="changeState"
             :maxlength='800'></el-input>
         </el-form-item>
       </div>
@@ -115,6 +123,7 @@
               <el-select v-model='screen.gender' placeholder='性别'>
                 <el-option
                   v-for='item in localData.gender'
+                  :disabled="changeState"
                   :label='item.name'
                   :key='item.code'
                   :value='item.code'></el-option>
@@ -124,6 +133,7 @@
               <el-select v-model='screen.education' placeholder='学历'>
                 <el-option
                   v-for='item in localData.education'
+                  :disabled="changeState"
                   :label='item.name'
                   :key='item.code'
                   :value='item.code'></el-option>
@@ -133,6 +143,7 @@
               <el-input
                 type="number"
                 placeholder="年龄(岁)"
+                :disabled="changeState"
                 v-model="screen.age"></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
@@ -140,6 +151,7 @@
               <el-input
                 type="number"
                 placeholder="年龄(岁)"
+                :disabled="changeState"
                 v-model="screen.age2"></el-input>
             </el-col>
           </el-row>
@@ -148,6 +160,7 @@
               <el-input
                 type="number"
                 placeholder="身高(cm)"
+                :disabled="changeState"
                 v-model="screen.height"></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
@@ -155,12 +168,14 @@
               <el-input
                 type="number"
                 placeholder="身高(cm)"
+                :disabled="changeState"
                 v-model="screen.height2"></el-input>
             </el-col>
             <el-col :span='5' :offset="1">
               <el-input
                 type="number"
                 placeholder="体重(kg)"
+                :disabled="changeState"
                 v-model="screen.weight"></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
@@ -168,6 +183,7 @@
               <el-input
                 type="number"
                 placeholder="体重(kg)"
+                :disabled="changeState"
                 v-model="screen.weight2"></el-input>
             </el-col>
           </el-row>
@@ -176,6 +192,7 @@
               <el-select v-model='screen.leftVision' placeholder='裸眼视力左眼'>
                 <el-option
                   v-for='item in localData.vision'
+                  :disabled="changeState"
                   :label='item.name'
                   :key='item.code'
                   :value='item.code'></el-option>
@@ -186,6 +203,7 @@
               <el-select v-model='screen.leftVision2' placeholder='裸眼视力左眼'>
                 <el-option
                   v-for='item in localData.vision'
+                  :disabled="changeState"
                   :label='item.name'
                   :key='item.code'
                   :value='item.code'></el-option>
@@ -195,6 +213,7 @@
               <el-select v-model='screen.rightVision' placeholder='裸眼视力右眼'>
                 <el-option
                   v-for='item in localData.vision'
+                  :disabled="changeState"
                   :label='item.name'
                   :key='item.code'
                   :value='item.code'></el-option>
@@ -205,6 +224,7 @@
               <el-select v-model='screen.rightVision2' placeholder='裸眼视力右眼'>
                 <el-option
                   v-for='item in localData.vision'
+                  :disabled="changeState"
                   :label='item.name'
                   :key='item.code'
                   :value='item.code'></el-option>
@@ -217,6 +237,7 @@
             <el-select v-model='screen.workExp' placeholder='工作经验'>
               <el-option
                 v-for='item in localData.offerExperience'
+                :disabled="changeState"
                 :label='item.name'
                 :key='item.code'
                 :value='item.code'></el-option>
@@ -225,6 +246,7 @@
           <el-col :span="5" :offset="1">
             <el-input
               placeholder="熟悉小语种"
+              :disabled="changeState"
               v-model="screen.lang"></el-input>
           </el-col>
         </el-form-item>
@@ -273,10 +295,15 @@
         address: '', // 选择的省
         address2: '', // 选择的市
         nowCity: [], // 对应的市
-        jid:this.$route.params.jid
       }
     },
     computed:{
+      tabIndex (){
+        return this.$store.state.tj.tabIndex;
+      },
+      changeState () {
+        return this.$store.state.tj.seeState;
+      }
     },
     activated () {
       this.getfuc();
@@ -356,9 +383,11 @@
         };
         let url='';
         if(this.$route.params.jid != 1){
+          console.log(31)
           url = '/dabai-chaorenjob/job/updateJob'
-          resultData.jid = this.jid;
+          resultData.jid = this.$route.params.jid;
         }else{
+          console.log(313)
           url = '/dabai-chaorenjob/job/insertJob'
         }
         this.$axios({
@@ -366,6 +395,9 @@
           url: url,
           data: resultData,
           fuc: (res) => {
+            if(res.code == 1){
+              this.removeTab();
+            }
             console.log( res)
           }
         })
@@ -445,6 +477,11 @@
             this.address2 = ''
           }
         }
+      },
+      removeTab() {
+        console.log(111)
+        this.$store.commit('removeTab',this.tabIndex)
+        this.$router.push({path: this.tabIndex});
       },
     }
   }
