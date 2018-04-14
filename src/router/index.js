@@ -52,15 +52,25 @@ const router1 = new Router({
           name: 'jobDetail',
           component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve)
         },
-        { // 简历列表
+        { // 职位简历列表
           path: '/resumeList',
           name: 'resumeList',
           component: resolve => require(['@/views/main/resumeManage/resumeList'], resolve)
+        },
+        { // 简历列表
+          path: '/recruitList',
+          name: 'recruitList',
+          component: resolve => require(['@/views/main/resumeManage/recruitList'], resolve)
         },
         { // 简历详情
           path: '/resumeDetail',
           name: 'resumeDetail',
           component: resolve => require(['@/views/main/resumeManage/resumeDetail'], resolve)
+        },
+        { // 招聘结果
+          path: '/recruitResult',
+          name: 'recruitResult',
+          component: resolve => require(['@/views/main/resumeManage/recruitResult'], resolve)
         },
         { // 简历收藏
           path: '/resumeCollect',

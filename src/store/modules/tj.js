@@ -49,6 +49,18 @@ const tj = {
               titleName = "添加账号"
               pathName = key.path
               break;
+            case "recruitList":
+              titleName = "简历列表"
+              pathName = key.path
+              break;
+            case "resumeDetail":
+              titleName = "简历详情"
+              pathName = key.path
+              break;
+            case "recruitResult":
+              titleName = "招聘结果"
+              pathName = key.path
+              break;
           }
           label_arr.push({
             title: titleName,
