@@ -10,16 +10,19 @@ const tj = {
         let titleName,pathName;
         let status = false;
         var label_arr = state.label_list;
-        if(label_arr.length > 0){
-          label_arr.forEach((item) => {
-            if(item.name === key.path || key.path === "/"){
-              console.log(2)
-              status = true;
-              return;
-            };
-          })
-        }
+//        if(label_arr.length > 0){
+//          label_arr.forEach((item) => {
+//            
+//          })
+//        }
+				console.log('key', key)
+				if(key.name == "login" || key.name == "register" || key.name == "forgetPwd" || key.name == "main"){
+					console.log(2)
+					status = true;
+					return;
+				};
         if(status == false){
+					console.log('false')
           switch (key.name){
             case "hrList":
               titleName = "账号管理"
@@ -61,20 +64,61 @@ const tj = {
               titleName = "招聘结果"
               pathName = key.path
               break;
+            case "sealTalkDetail":
+              titleName = "职位沟通"
+              pathName = key.path
+              break;
+            case "personSettingUser":
+              titleName = "个人信息"
+              pathName = key.path
+              break;
+            case "personSettingPwd":
+              titleName = "个人信息"
+              pathName = key.path
+              break;
+            case "personSettingPhone":
+              titleName = "个人信息"
+              pathName = key.path
+              break;
+            case "personSettingPhoneAfter":
+              titleName = "个人信息"
+              pathName = key.path
+              break;
+            case "companySetting":
+              titleName = "企业信息"
+              pathName = key.path
+              break;
+            case "feedback":
+              titleName = "反馈"
+              pathName = key.path
+              break;
+            case "talkwithSystem":
+              titleName = "系统通知"
+              pathName = key.path
+              break;
           }
-          label_arr.push({
-            title: titleName,
-            name: pathName,
-          })
+					let pushBool = false // 判断是否已经有标签页
+					for (let val of label_arr) {
+						if (val.title == titleName) {
+							pushBool = true
+							val.name = pathName
+						}
+					}
+					if (!pushBool) {
+						label_arr.push({
+							title: titleName,
+							name: pathName,
+						})
+					}
           // console.log(label_arr)
           window.sessionStorage.setItem("label_list",JSON.stringify(label_arr))
           window.sessionStorage.setItem("tabIndex",pathName)
           state.label_list = label_arr;
           state.tabIndex = pathName
         }else{
-          // console.log(key)
-          window.sessionStorage.setItem("tabIndex",pathName)
-          state.tabIndex = pathName
+				  console.log('true')
+//          window.sessionStorage.setItem("tabIndex",pathName)
+//          state.tabIndex = pathName
         }
       },
       changeTab (state,key){
@@ -90,7 +134,9 @@ const tj = {
               let nextTab = tabs[index + 1] || tabs[index - 1];
               if (nextTab) {
                 activeName = nextTab.name;
-              }
+              } else {
+								activeName = ''
+							}
             }
           });
         }

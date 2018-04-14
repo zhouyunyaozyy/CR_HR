@@ -13,17 +13,17 @@
             <span class="icon_txt">职位沟通</span>
           </div>
           <div class="icon_item">
-            <el-dropdown>
+            <el-dropdown @command="handleCommand">
               <div class="el-dropdown-link">
                 <i class="iconfont icon-shezhi-tianchong"></i>
                 <span class="icon_txt">设置</span>
               </div>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item>个人信息</el-dropdown-item>
-                <el-dropdown-item>企业信息</el-dropdown-item>
-                <el-dropdown-item>系统通知</el-dropdown-item>
-                <el-dropdown-item>反馈</el-dropdown-item>
-                <el-dropdown-item>退出</el-dropdown-item>
+                <el-dropdown-item command="/personSettingUser">个人信息</el-dropdown-item>
+                <el-dropdown-item command="/companySetting">企业信息</el-dropdown-item>
+                <el-dropdown-item command="/talkWithSystem">系统通知</el-dropdown-item>
+                <el-dropdown-item command="/feedback">反馈</el-dropdown-item>
+                <el-dropdown-item command="a">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -340,6 +340,16 @@
 			watch: {
 				getlocalTalkData (obj) {
 					this.localTalkData = obj
+				},
+				tabIndex (val) {
+					console.log('val', val)
+					if (val && val != 0) {
+						this.tabIndex = val
+						console.log('tabindex', Boolean(val))
+						this.$router.push({path: this.tabIndex});
+					} else {
+						this.$router.push({path: '/main'});
+					}
 				}
 			},
       methods: {
@@ -387,15 +397,18 @@
         clickTab(VueComponent) {
           // console.log(VueComponent.name,VueComponent)
           this.$store.commit('changeTab',VueComponent.name)
-          this.$router.push({
-            path:VueComponent.name
-          });
+//          this.$router.push({
+//            path:VueComponent.name
+//          });
         },
         removeTab(targetName) {
           console.log(targetName)
           this.$store.commit('removeTab',targetName)
           this.$router.push({path: this.tabIndex});
-        }
+        },
+				handleCommand (val) { // 设置跳转路由
+					this.$router.push(val)
+				}
       }
     }
 </script>

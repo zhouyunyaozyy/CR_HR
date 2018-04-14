@@ -180,7 +180,7 @@
       </div>
       <div class="recruit_list_cont">
         <el-row v-if="!pattern" class="chart_list">
-          <el-col v-for="item in tableData" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="chart_item">
+          <el-col v-for="item in tableData" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='item.rrid' class="chart_item">
             <div class="chart_cont">
               <div class="chart_img">
                 <el-checkbox
