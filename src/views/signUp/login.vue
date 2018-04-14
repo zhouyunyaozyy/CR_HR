@@ -76,6 +76,7 @@
 								fuc: (res) => {
 									console.log('loginAfter', res)
 									window.sessionStorage.setItem('cid', res.data.cid)
+									window.sessionStorage.setItem('uid', res.data.uid)
 									this.$router.push('/main')
 								}
 							})

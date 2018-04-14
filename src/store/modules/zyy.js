@@ -1,6 +1,6 @@
 const zyy = {
     state: {
-      isTrue: 'yes'
+      localTalkData: JSON.parse(window.localStorage.getItem(window.sessionStorage.getItem('uid')))
 //        属性
     },
     mutations: {

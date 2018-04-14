@@ -203,7 +203,7 @@
 						<img src="../../../imgs/logo_min.png" v-popover:popover4>
 					</div>
 					<div>
-						<el-input placeholder='请输入内容' type='textarea' :autosize="{ minRows: 2, maxRows: 2}"></el-input>
+						<el-input placeholder='请输入内容' v-model='textareaData' type='textarea' :autosize="{ minRows: 2, maxRows: 2}"></el-input>
 					</div>
 					<div>
 						<el-button type='primary'>发送</el-button>
@@ -239,17 +239,251 @@
 	export default {
 		data () {
 			return {
-				checkList: [],
-				tabClassName: ''
+				checkList: [], // 选中的用户聊天
+				tabClassName: '',
+				textareaData: '',
+				targetId: '',
+				rrid: '',
+				talkData: [], // 当前聊天内容
+				localTalkData: [], // 本地聊天记录
+				tabsList: [] // 所有用户聊天信息
 			}
 		},
+    computed: {
+      getlocalTalkData () {
+        return this.$store.state.zyy.localTalkData
+      }
+    },
+		watch:{
+			getlocalTalkData (obj) {
+				this.localTalkData = obj
+        for (let val of this.localTalkData) {
+          if (this.targetId === val.targetId) {
+            this.talkData = val.content // 加载本地与应聘者会话记录
+          }
+        }
+//        this.$nextTick(() => {
+//          let divArr = document.getElementsByClassName('detailBody')[0].children
+//          divArr[divArr.length-1].scrollIntoView()
+//        })
+			}
+		},
+		activated () {
+      this.localData = JSON.parse(window.sessionStorage.getItem('localData'))
+			this.targetId = this.$route.query.targetId
+			this.rrid = this.$route.query.rrid
+      this.uid = window.sessionStorage.getItem('uid') // 公司信息
+      this.emojisData = RongIMLib.RongIMEmoji.list // 表情包
+      this.getJobInfo()
+//        // 若存在公司历史纪录
+      if (window.localStorage.getItem(this.uid)) {
+        this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
+        
+        // 检测历史有没有应聘者当前会话，若没有，则添加一个会话；若有，加载会话
+        let hasBool = false
+        for (let val of this.localTalkData) {
+//          this.tabsData.push({targetId: val.targetId,name: val.targetId})
+          if (this.targetId === val.targetId) {
+            this.talkData = val.content // 加载本地与应聘者会话记录
+            if (this.rrid !== val.rrid) {
+              val.rrid = this.rrid
+              window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+            }
+            hasBool = true
+          }
+        }
+        if (!hasBool) {
+          this.localTalkData.unshift({
+            targetId: this.targetId,
+            content: this.talkData,
+            rrid: this.rrid,
+						showIcon: false
+          })
+          window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+        }
+          // 若没有公司历史纪录
+      } else {
+				this.localTalkData.unshift({
+					targetId: this.targetId,
+					content: this.talkData,
+					rrid: this.rrid,
+					showIcon: false
+				})
+				window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+      }
+			// 获取曾有过会话的所有应聘者图片、姓名等信息
+      for (let val of this.localTalkData) {
+				this.$axios({
+					url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
+					type: 'post',
+					data: {rrid: val.rrid},
+					fuc: (res) => {
+						let data = res.data
+						this.tabsData.push({url: data.header, name: data.name, targetId: val.targetId})
+					}
+				})
+			}
+			// 获取公司的图片信息等
+			this.$axios({
+				url: '/rong/hr/getUser',
+				type: 'post',
+				data: {uid: window.sessionStorage.getItem('uid')},
+				success: (res) => {
+					this.myImgUrl = res.data.header
+				}
+			})
+			// 判断是否由新职位发起的会话
+			for (let val of this.localTalkData) {
+				if (val.targetId === this.targetId) {
+					if (val.rrid !== this.rrid) {
+						console.log('新职位')
+						setTimeout(() => {
+							this.getMessage(false)
+						}, 1000)
+					}
+					if (val.content.length === 0) {
+						console.log('新会话')
+						setTimeout(() => {
+								this.getMessage(false)
+							}, 1000)
+					}
+				}
+			}
+    },
 		methods: {
 			manageSelect () {
 				this.tabClassName = 'tabActived'
 			},
 			deleteSelect () {
 				this.tabClassName = ''
-			}
+			},
+        // 获取当前简历的职位信息
+      getJobInfo () {
+        this.$axios({
+					url: '/job/getJobByRRid',
+					type: 'post',
+					data: {rrid: this.rrid},
+					success: (res) => {
+						let localData = JSON.parse(window.localStorage.getItem('localData'))
+						this.jid = res.data.jid
+						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.name_full,'name': res.data.name,wages: res.data.wages}
+					}
+				})
+      },
+      getMessage (bool = true) { // 发送信息
+            // 生成聊天内容
+  //            $('.content_box').append( 。。。)
+            // 在页面追加你要生成的内容
+
+            // 定义消息类型,文字消息使用 RongIMLib.TextMessage
+        var messageName = "PersonMessage" // 消息名称。
+        var objectName = "s:person" // 消息内置名称，请按照此格式命名。
+        var mesasgeTag = new RongIMLib.MessageTag(true,true) // 消息是否保存是否计数，true true 保存且计数，false false 不保存不计数。
+        var propertys = ["job"] // 消息类中的属性名。
+        RongIMClient.registerMessageType(messageName,objectName,mesasgeTag,propertys)
+				let msg = ''
+        if (bool) {
+          let value = this.textareaData
+          if (value.replace(/\s+/g, "").replace(/<\/?.+?>/g,"").replace(/[\r\n]/g, "").length>0) {
+            msg = new RongIMLib.TextMessage({content: RongIMLib.RongIMEmoji.symbolToEmoji(this.textareaData), extra: this.jobInfo})
+          } else {
+            this.$message({
+              message: '发送消息内容不能为空',
+              duration: 1000
+            })
+            return
+          }
+        } else {
+          msg = new RongIMClient.RegisterMessage.PersonMessage({job: this.jobInfo})
+        }
+        
+//        
+        var conversationtype = RongIMLib.ConversationType.PRIVATE // 私聊
+//        var targetId = '905964700800385024' // 目标 Id I
+        var targetId = this.targetId // 目标 Id Q
+        var nowThis = this
+        RongIMClient.getInstance().sendMessage(conversationtype, targetId, msg, {
+            // 发送消息成功
+          onSuccess: function (message) {
+          // message 为发送的消息对象并且包含服务器返回的消息唯一Id和发送消息时间戳
+            console.log('Send successfully', message)
+            if (message.messageType === 'TextMessage') {
+              for (let i in nowThis.localTalkData) {
+                  if (nowThis.targetId === nowThis.localTalkData[i].targetId) {
+			//							判断聊天时间间隔
+										let objTime = new Date(parseInt(message.sentTime))
+										let lastedTime = new Date(parseInt(nowThis.localTalkData[i].content[nowThis.localTalkData[i].content.length - 1]))
+										let showTime = false
+										if (objTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] == lastedTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] && objTime.getHours() == lastedTime.getHours() && objTime.getMinutes() - lastedTime.getMinutes() < 5 ) { // 是否属于同一天
+											showTime = false
+										} else {
+											showTime = true
+										}
+                    nowThis.localTalkData[i].content.push({content: message.content.content, class: 'right', type: 'text', time: message.sentTime, showTime: showTime})
+                    nowThis.localTalkData.unshift(nowThis.localTalkData.splice(i, 1)[0])
+                    this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(nowThis.localTalkData))
+                    window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
+
+                    break
+                  }
+                }
+//              nowThis.talkData.push({content: message.content.content, class: 'right', type: 'text', time: message.sentTime})
+            } else if (message.messageType === 'PersonMessage') {
+                //
+//              nowThis.talkData.push({content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime})
+              for (let val of nowThis.localTalkData) {
+                if (nowThis.targetId === val.targetId) {
+                  val.rrid = nowThis.rrid
+                  val.content = [{content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: false}]
+                  nowThis.localTalkData.unshift(nowThis.localTalkData.splice(nowThis.localTalkData.indexOf(val), 1)[0])
+                    this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(nowThis.localTalkData))
+                    window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
+
+//                    setTimeout(() => {
+//                          let divArr = document.getElementsByClassName('detailBody')[0].children
+//                        divArr[divArr.length-1].scrollIntoView()
+//                        }, 10)
+                  break
+                }
+              }
+              //
+            }
+            nowThis.textareaData = ''
+//            nowThis.setLocalTalk()
+          },
+          onError: function (errorCode, message) {
+            var info = ''
+            switch (errorCode) {
+              case RongIMLib.ErrorCode.TIMEOUT:
+                info = '超时'
+                break
+              case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+                info = '未知错误'
+                break
+              case RongIMLib.ErrorCode.REJECTED_BY_BLACKLIST:
+                info = '在黑名单中，无法向对方发送消息'
+                break
+              case RongIMLib.ErrorCode.NOT_IN_DISCUSSION:
+                info = '不在讨论组中'
+                break
+              case RongIMLib.ErrorCode.NOT_IN_GROUP:
+                info = '不在群组中'
+                break
+              case RongIMLib.ErrorCode.NOT_IN_CHATROOM:
+                info = '不在聊天室中'
+                break
+              default:
+                info = 'x'
+                break
+            }
+            console.log('发送失败:' + info)
+            nowThis.$message({
+              message: '发送失败:' + info + '请重试',
+              duration: 1000
+            })
+          }
+        })
+      }
 		}
 	}
 </script>

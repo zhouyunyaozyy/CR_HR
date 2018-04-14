@@ -5,8 +5,8 @@ let urlSelf = {
       configJson: '/common/configJson'
     },
     rong: {
-      getToken: '/rong/hr/getToken',
-      getUser: '/rong/user/getUser'
+      getToken: '/dabai-chaorenjob/common/getHrRongToken',
+      getUser: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid'
     },
     hr: {
       insertChildren: '/hr/user/insertChildren', // 添加子账号

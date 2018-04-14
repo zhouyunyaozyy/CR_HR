@@ -26,7 +26,7 @@
 <script>
     /* eslint-disable */
   const global = require('@/global.js')
-  import store from '@/store'
+//  import store from '@/store'
   export default {
     data () {
       return {
@@ -70,13 +70,11 @@
       },
       handleAvatarSuccessImages (res){
           this.images.push(res.key)
-          store.state.ajax({
+          this.$axios({
             url: global.urlSelf.qiniu.url + res.key,
             type: 'get',
-            success: (res) => {
-              if (res.code === 1) {
-                this.imagesUrl.push({url: res.data})
-              }
+            fuc: (res) => {
+							this.imagesUrl.push({url: res.data})
             }
           })
           if (this.images.length < 3) {
@@ -135,7 +133,7 @@
         this.$axios({
           url: '/dabai-chaorenjob/feedback/insert',
           type: 'post',
-          data: {data: JSON.stringify(data)},
+          data: data,
           fuc: (res) => {
 						this.$message.success('操作成功')
 						this.imagesUrl = []

@@ -103,12 +103,16 @@
 	import '@/css/iconfont/iconfont.css'
 	import area from '@/area.json';
 	import Default from '@/default.json';
+  const global = require('@/global.js')
+  let RongIMClient = RongIMLib.RongIMClient
     export default {
       name: "index",
       data() {
         return {
           group_id:1,
           sub_show:false,
+					localTalkData: [],
+					uid: ''
         }
       },
       components:{
@@ -119,6 +123,203 @@
 				_form.area = area.area
 				console.log('_form', _form)
 				window.sessionStorage.setItem('localData', JSON.stringify(_form))
+				
+//				初始化融云
+				this.uid = window.sessionStorage.getItem('uid')
+				if (window.localStorage.getItem(this.uid)) {
+					this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
+				}
+				RongIMClient.init(global.configSelf.appKey) // 初始化融云程序
+				RongIMLib.RongIMEmoji.init() // 初始化融云表情包
+				// 设置连接状态监听
+				RongIMClient.setConnectionStatusListener({
+					onChanged: (status) => {
+						switch (status) {
+							// 链接成功
+							case RongIMLib.ConnectionStatus.CONNECTED:
+								console.log('链接成功')
+								break
+							// 正在链接
+							case RongIMLib.ConnectionStatus.CONNECTING:
+								console.log('正在链接')
+								break
+							// 重新链接
+							case RongIMLib.ConnectionStatus.DISCONNECTED:
+								console.log('断开连接')
+								break
+							// 其他设备登陆
+							case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
+								console.log('其他设备登陆')
+								this.$alert('该账号已在其他位置使用，点击确认按钮可重新登录。', '提示', {
+									confirmButtonText: '确定',
+									callback: action => {
+//											RongIMClient.connect(window.sessionStorage.getItem('rongToken'), {
+//											onSuccess: function (userId) {
+//												console.log('Login successfully.' + userId)
+//											// userId是申请token时的填写的id，到时候可以封装在下面的extra中传过去
+//											},
+//											onTokenIncorrect: function () {
+//												console.log(' token无效')
+//											},
+//											onError: function (errorCode) {
+//												var info = ''
+//												switch (errorCode) {
+//													case RongIMLib.ErrorCode.TIMEOUT:
+//														info = '超时'
+//														break
+//													case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+//														info = '未知错误'
+//														break
+//													case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+//														info = '不可接受的协议版本'
+//														break
+//													case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+//														info = 'appkey不正确'
+//														break
+//													case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+//														info = '服务器不可用'
+//														break
+//												}
+//												console.log(errorCode, info)
+//											}
+//										})
+									}
+								})
+								break
+							// 网络不可用
+							case RongIMLib.ConnectionStatus.NETWORK_UNAVAILABLE:
+	//              console.log('网络不可用')
+								this.$message({
+									message: '网络不可用，请刷新页面',
+									duration: 3000,
+									type: 'error'
+								})
+								break
+						}
+					}
+				})
+      	let nowThis = this
+      // 连接融云
+      	this.$axios({
+        url: global.urlSelf.rong.getToken,
+        type: 'get',
+        fuc: (res) => {
+					window.sessionStorage.setItem('rongToken', res.data)
+					RongIMClient.connect(res.data, {
+						onSuccess: function (userId) {
+							console.log('Login successfully.' + userId)
+						// userId是申请token时的填写的id，到时候可以封装在下面的extra中传过去
+						},
+						onTokenIncorrect: function () {
+							console.log(' token无效')
+							nowThis.$notify.error({
+								title: '错误',
+								message: '聊天页面token出错,请刷新页面重试或联系后台管理员'
+							})
+						},
+						onError: function (errorCode) {
+							var info = ''
+							switch (errorCode) {
+								case RongIMLib.ErrorCode.TIMEOUT:
+									info = '超时'
+									break
+								case RongIMLib.ErrorCode.UNKNOWN_ERROR:
+									info = '未知错误'
+									break
+								case RongIMLib.ErrorCode.UNACCEPTABLE_PaROTOCOL_VERSION:
+									info = '不可接受的协议版本'
+									break
+								case RongIMLib.ErrorCode.IDENTIFIER_REJECTED:
+									info = 'appkey不正确'
+									break
+								case RongIMLib.ErrorCode.SERVER_UNAVAILABLE:
+									info = '服务器不可用'
+									break
+							}
+							console.log(errorCode, info)
+						}
+					})
+        }
+      })
+      // 接收消息
+				RongIMClient.setOnReceiveMessageListener({
+							// 接收到的消息
+					onReceived: (message) => {
+							// 判断消息类型
+							let newObj = {}
+							let rrid = ''
+		// message接受到的消息（包含发送的信息，也可以在extra中添加要传递的值，如：时间等
+						console.log('res', message)
+						switch (message.messageType) {
+							case RongIMClient.MessageType.TextMessage:
+									// do something...
+									newObj = {content: RongIMLib.RongIMEmoji.emojiToHTML(message.content.content), class: 'left', type: 'text', time: message.receivedTime}
+									rrid = JSON.parse(message.content.extra).rrid
+								break
+							case RongIMClient.MessageType.VoiceMessage:
+									// do something...
+									newObj = {content: message.content.content, class: 'left', type: 'voice', time: message.receivedTime}
+									rrid = JSON.parse(message.content.extra).rrid
+								break
+							case RongIMClient.MessageType.ImageMessage:
+									// do something...
+									newObj = {url: message.content.imageUri, class: 'left', type: 'image', time: message.receivedTime}
+									rrid = JSON.parse(message.content.extra).rrid
+								break
+							case RongIMClient.MessageType.DiscussionNotificationMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.LocationMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.RichContentMessage:
+									// do something...
+								break
+		//            case RongIMClient.MessageType.DiscussionNotificationMessage:
+		//                // do something...
+		//              break
+							case RongIMClient.MessageType.InformationNotificationMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.ContactNotificationMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.ProfileNotificationMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.CommandNotificationMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.CommandMessage:
+									// do something...
+								break
+							case RongIMClient.MessageType.UnknownMessage:
+									// do something...
+								if (message.objectName === 'RC:SightMsg') {
+									newObj = {content: message.content.message.content.content, class: 'left', type: 'video', url: message.content.message.content.sightUrl, time: message.receivedTime}
+									if (message.content.message.content.extra) {
+										rrid = JSON.parse(message.content.message.content.extra).rrid
+									} else {
+										rrid = JSON.parse(message.content.message.content.name).rrid
+									}
+
+//                    if (message.senderUserId === this.targetId) {
+//                        this.talkData.push(newObj)
+//                    } else {
+//                        this.pushData(message.senderUserId, newObj)
+//                    }
+								}
+								break
+							default:
+							// 自定义消息
+							// do something...
+						}
+						if (newObj.class) {
+//							document.getElementsByClassName('talkList')[0].style.display = 'inline-block'
+							this.setLocalTalk(message.senderUserId ,rrid, newObj)
+						}
+					}
+				})
 			},
       computed:{
         label_list (){
@@ -130,10 +331,46 @@
           },
           set (newKey){
             this.$store.commit('changeTab',newKey)
-          }
+          },
+					getlocalTalkData () {
+						return this.$store.state.zyy.localTalkData
+					}
         }
       },
+			watch: {
+				getlocalTalkData (obj) {
+					this.localTalkData = obj
+				}
+			},
       methods: {
+        // 保存聊天记录
+				setLocalTalk (userId, rrid, obj) {
+					for (let i in this.localTalkData) {
+						if (userId === this.localTalkData[i].targetId) {
+//							判断聊天时间间隔
+							let objTime = new Date(parseInt(obj.time))
+							let lastedTime = new Date(parseInt(this.localTalkData[i].content[this.localTalkData[i].content.length - 1]))
+							if (objTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] == lastedTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] && objTime.getHours() == lastedTime.getHours() && objTime.getMinutes() - lastedTime.getMinutes() < 5 ) { // 是否属于同一天
+								obj.showTime = true
+							} else {
+								obj.showTime = false
+							}
+							this.localTalkData[i].content.push(obj)
+							this.localTalkData[i].showIcon = true
+							this.localTalkData.unshift(this.localTalkData.splice(i, 1)[0])
+							this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
+							window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+//							console.log('had', this.localTalkData[i])
+							return
+						}
+					}
+					let newArr = []
+					obj.showTime = true
+					newArr[0] = obj
+					this.localTalkData.unshift({targetId: userId, rrid: rrid, content: newArr, showIcon: true})
+					this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
+					window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+				},
         refresh(){
           this.$router.push({path: this.tabIndex});
         },
