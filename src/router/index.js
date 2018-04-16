@@ -68,7 +68,7 @@ const router1 = new Router({
           component: resolve => require(['@/views/main/resumeManage/resumeDetail'], resolve)
         },
         { // 招聘结果
-          path: '/recruitResult',
+          path: '/recruitResult/:resultState',
           name: 'recruitResult',
           component: resolve => require(['@/views/main/resumeManage/recruitResult'], resolve)
         },

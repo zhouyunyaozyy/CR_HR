@@ -126,9 +126,9 @@
 	"overVoteStatusEnum":[
 		{"code":"1","name":"未查看"},
 		{"code":"2","name":"已查看"},
-		{"code":"3","name":"预约面试"},
+		{"code":"3","name":"邀请面试"},
 		{"code":"4","name":"不合适"},
-		{"code":"5","name":"评审"},
+		{"code":"5","name":"待评审"},
 		{"code":"6","name":"所有"}
 	],
   "reservationState":[
