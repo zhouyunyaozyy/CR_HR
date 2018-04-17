@@ -196,7 +196,7 @@
                   </div>
                   <div class="chart_txt_item">
                     <span class="chart_txt_name">性别:</span>
-                    <span class="chart_txt_text">{{item.gender == 1?"男":"女"}}</span>
+                    <span v-for="item1 in localData.gender" v-if="item1.code == item.gender" class="chart_txt_text">{{item1.name}}</span>
                   </div>
                   <div class="chart_txt_item">
                     <span class="chart_txt_name">年龄:</span>
@@ -204,15 +204,15 @@
                   </div>
                   <div class="chart_txt_item">
                     <span class="chart_txt_name">学历:</span>
-                    <span class="chart_txt_text">{{localData.education[item.education-1].name}}</span>
+                    <span v-for="item1 in localData.education" v-if="item1.code == item.education" class="chart_txt_text">{{item1.name}}</span>
                   </div>
                   <div class="chart_txt_item">
                     <span class="chart_txt_name">工作经验:</span>
-                    <span class="chart_txt_text">{{localData.offerExperience[item.experience-1].name}}</span>
+                    <span v-for="item1 in localData.offerExperience" v-if="item1.code == item.experience" class="chart_txt_text">{{item1.name}}</span>
                   </div>
                   <div class="chart_txt_item">
                     <span class="chart_txt_name">简历状态:</span>
-                    <span class="chart_txt_text">{{localData.overVoteStatusEnum[item.status-1].name}}</span>
+                    <span v-for="item1 in localData.overVoteStatusEnum" v-if="item1.code == item.status" class="chart_txt_text">{{item1.name}}</span>
                   </div>
                   <div class="chart_txt_btn">
                     <el-button @click="_detail(item.rrid)" type="primary">查看</el-button>
@@ -248,7 +248,11 @@
                 prop="gender"
                 label="性别"
                 min-width="50">
-                <template slot-scope="scope">{{scope.row.gender == 1?"男":"女"}}</template>
+                <template slot-scope="scope">
+                  <span
+                    v-for="item1 in localData.gender"
+                    v-if="item1.code == scope.row.gender">{{item1.name}}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="age"
@@ -269,25 +273,41 @@
                 prop="vision_left"
                 label="裸眼视力(左眼)"
                 min-width="140">
-                <template slot-scope="scope">{{localData.vision[scope.row.vision_left-1].name}}</template>
+                <template slot-scope="scope">
+                  <span
+                    v-for="item1 in localData.vision"
+                    v-if="item1.code == scope.row.vision_left">{{item1.name}}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="vision_right"
                 label="裸眼视力(右眼)"
                 min-width="140">
-                <template slot-scope="scope">{{localData.vision[scope.row.vision_right-1].name}}</template>
+                <template slot-scope="scope">
+                  <span
+                    v-for="item1 in localData.vision"
+                    v-if="item1.code == scope.row.vision_right">{{item1.name}}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="experience"
                 label="工作经验"
                 min-width="80">
-                <template slot-scope="scope">{{localData.offerExperience[scope.row.experience-1].name}}</template>
+                <template slot-scope="scope">
+                  <span
+                    v-for="item1 in localData.offerExperience"
+                    v-if="item1.code == scope.row.experience">{{item1.name}}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="education"
                 label="学历"
                 min-width="80">
-                <template slot-scope="scope">{{localData.education[scope.row.education-1].name}}</template>
+                <template slot-scope="scope">
+                  <span
+                    v-for="item1 in localData.education"
+                    v-if="item1.code == scope.row.education">{{item1.name}}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 :show-overflow-tooltip="true"
@@ -307,7 +327,11 @@
                 prop="status"
                 label="简历状态"
                 min-width="80">
-                <template slot-scope="scope">{{localData.overVoteStatusEnum[scope.row.status-1].name}}</template>
+                <template slot-scope="scope">
+                  <span
+                    v-for="item1 in localData.overVoteStatusEnum"
+                    v-if="item1.code == scope.row.status">{{item1.name}}</span>
+                </template>
               </el-table-column>
               <el-table-column
                 min-width="80">
@@ -328,7 +352,8 @@
     name: "recruitList",
     data () {
       return {
-        jobName: window.sessionStorage.getItem("jobName"),
+        jobName: "",
+        jid:"",
         // screen:{
         //   name:11,
         //   gender: '',           //  性别
@@ -358,15 +383,19 @@
         checkedCities:[],
       }
     },
+    computed:{
+    },
     activated () {
+      this.jobName = window.sessionStorage.getItem("jobName");
+      this.jid = window.sessionStorage.getItem("jid")
       this.getDetail();
     },
     methods:{
       init(){
-        console.log(this.screenData)
         let screenArr = {
-          jid: window.sessionStorage.getItem("jid")
+          jid: this.jid
         }
+        console.log(this.jobName,screenArr)
         if(this.screenData.name){
           screenArr.name = this.screenData.name
         }
@@ -435,7 +464,7 @@
       },
       getDetail (){
         let resultData = {
-          jid:window.sessionStorage.getItem("jid")
+          jid:this.jid
         };
         this.$axios({
           type: 'get',

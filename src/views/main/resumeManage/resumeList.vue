@@ -50,7 +50,6 @@
         })
       },
       _jump (item) {
-        // console.log(jid)
         window.sessionStorage.setItem("jid",item.jid)
         window.sessionStorage.setItem("jobName",item.name)
         this.$router.push("/recruitList")

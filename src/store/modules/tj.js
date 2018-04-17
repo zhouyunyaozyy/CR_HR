@@ -6,9 +6,13 @@ const tj = {
       tabIndex: window.sessionStorage.getItem("tabIndex") || "",
       //是否是查看
       seeState: false,
+      includePageNames:[],
     },
     mutations: {
       addTab (state,key) {
+        if(key.name == "appBack"){
+          return;
+        }
         let titleName,pathName;
         let status = false;
         var label_arr = state.label_list;
@@ -113,6 +117,7 @@ const tj = {
 							title: titleName,
 							name: pathName,
 						})
+            // state.includePageNames.push(pathName)
 					}
           // console.log(label_arr)
           window.sessionStorage.setItem("label_list",JSON.stringify(label_arr))
@@ -146,10 +151,14 @@ const tj = {
         }
         console.log(activeName,key)
         tabs = tabs.filter(tab => tab.name !== key);
+        // state.includePageNames= state.includePageNames.filter(item => item !== key);
         window.sessionStorage.setItem("label_list",JSON.stringify(tabs))
         window.sessionStorage.setItem("tabIndex",activeName)
         state.tabIndex = activeName;
         state.label_list = tabs
+      },
+      refresh (state){
+        state.includePageNames= state.includePageNames.filter(item => item !== state.tabIndex);
       }
     }
 };

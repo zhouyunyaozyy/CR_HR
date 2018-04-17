@@ -22,21 +22,27 @@
             <i class="iconfont icon-xiaoxi"></i>
             在线沟通
           </el-button>
-          <el-button type="primary" plain>
+          <el-button @click="_collect()" type="primary" plain>
             <i class="iconfont icon-shoucang"></i>
             收藏
           </el-button>
           <el-button plain>导出简历</el-button>
         </div>
         <div class="head_review">
-          <div class="review_result">
+          <div class="review_result" v-if="detailData.status == 5">
             <span class="">评审结果：</span>
             <span class="review_num">2 通过</span>
             <span class="">&nbsp;(塔塔，全球) / &nbsp;</span>
             <span class="review_txt">1 否决</span>
             <span class="">&nbsp;(凯凯)</span>
           </div>
-          <el-button @click="_review()" type="primary" plain>待评审</el-button>
+          <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
+            <el-button @click="_review()" type="primary" plain>待评审</el-button>
+          </div>
+          <div class="review_btn" v-else-if="detailData.status == 5">
+            <el-button type="primary" plain>通过</el-button>
+            <el-button type="warning" plain>否决</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -204,7 +210,7 @@
           </div>
         </el-col>
         <el-col :xs="11" :sm="11" :md="11" :lg="11" :xl="11" class="detail_info_right">
-          <div class="image" v-if="detailData.imagesUrl.length > 0">
+          <div class="image" v-if="detailData.imagesUrl && detailData.imagesUrl.length > 0">
             <div class="detail_info_title">图片形象</div>
             <div class="image_cont">
               <div class="image_cont_item" v-for='(item,index) in detailData.imagesUrl'>
@@ -218,7 +224,7 @@
               <video controls :src="detailData.videoUrl"></video>
             </div>
           </div>
-          <div class="certificate" v-if="detailData.skillUrl.length > 0">
+          <div class="certificate" v-if="detailData.skillUrl && detailData.skillUrl.length > 0">
             <div class="detail_info_title">证书</div>
             <div class="image_cont">
               <div class="image_cont_item" v-for='(item,index) in detailData.skillUrl'>
@@ -232,8 +238,8 @@
         <div class="big_cover" @click="closeBig()"></div>
         <div class="big_cont">
           <span @click="closeBig()" class="big_close iconfont icon-cha"></span>
-          <span v-show="isHide" @click="changeBig('prev')" class="big_prev iconfont icon-tiaozhuanjiantou"></span>
-          <span v-show="isHide" @click="changeBig('next')" class="big_next iconfont icon-forward"></span>
+          <span v-show="isHide" @click="changeBig('prev')" class="big_prev iconfont icon-icon-test1"></span>
+          <span v-show="isHide" @click="changeBig('next')" class="big_next iconfont icon-icon-test"></span>
           <img :src="big_src">
         </div>
       </div>
@@ -339,6 +345,21 @@
             console.log( res)
           }
         })
+      },
+      _collect (){
+        let postData = {
+          rrid: this.detailData.rrid
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/favorites/insertResume',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+            }
+            console.log( res)
+          }
+        })
       }
     }
   }
@@ -400,7 +421,7 @@
   .head_review{
     flex: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
   .review_result{
     color:#4c4c4c;

@@ -112,7 +112,8 @@
           group_id:1,
           sub_show:false,
 					localTalkData: [],
-					uid: ''
+					uid: '',
+          g_state:true,
         }
       },
       components:{
@@ -121,7 +122,7 @@
 			created () {
 				let _form = Default
 				_form.area = area.area
-				console.log('_form', _form)
+				// console.log('_form', _form)
 				window.sessionStorage.setItem('localData', JSON.stringify(_form))
 
 //				初始化融云
@@ -322,6 +323,9 @@
 				})
 			},
       computed:{
+        includePageNames (){
+          return this.$store.state.tj.includePageNames
+        },
         label_list (){
           return this.$store.state.tj.label_list;
         },
@@ -343,7 +347,7 @@
 					this.localTalkData = obj
 				},
 				tabIndex (val) {
-					console.log('val', val)
+					// console.log('val', val)
 //					if (val && val != 0) {
 //						this.tabIndex = val
 //						console.log('tabindex', Boolean(val))
@@ -366,7 +370,7 @@
 							} else {
 								obj.showTime = false
 							}
-							
+
 							this.localTalkData[i].content.push(obj)
 							this.localTalkData[i].showIcon = true
 							this.localTalkData.unshift(this.localTalkData.splice(i, 1)[0])
@@ -384,17 +388,7 @@
 					window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
 				},
         refresh(){
-          this.$router.push({path: this.tabIndex});
-        },
-        handleSelect(key,keyPath){
-          console.log(this.$refs.elmenu)
-          // this.$store.commit('addTab',keyPath)
-        },
-        handleOpen(key, keyPath) {
-          console.log(key, keyPath);
-        },
-        handleClose(key, keyPath) {
-          console.log(key, keyPath);
+          this.$router.push("/appBack");
         },
         clickTab(VueComponent) {
           // console.log(VueComponent.name,VueComponent)
@@ -404,7 +398,6 @@
           });
         },
         removeTab(targetName) {
-          console.log(targetName)
           this.$store.commit('removeTab',targetName)
           this.$router.push({path: this.tabIndex});
         },
@@ -413,7 +406,7 @@
 				},
 				goSealTalkDetail () {
 					this.$router.push('sealtalkDetail')
-				}
+				},
       }
     }
 </script>

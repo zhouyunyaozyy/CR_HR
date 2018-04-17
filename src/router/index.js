@@ -77,6 +77,11 @@ const router1 = new Router({
           name: 'resumeCollect',
           component: resolve => require(['@/views/main/resumeManage/resumeCollect'], resolve)
         },
+        { // 刷新
+          path: '/appBack',
+          name: 'appBack',
+          component: resolve => require(['@/views/main/back/appBack'], resolve)
+        },
         { // 个人信息设置
           path: '/personSetting',
           name: 'personSetting',
