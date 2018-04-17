@@ -7,13 +7,13 @@
             <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523616118359&di=7be774622f3f9675cf6a4b437ce1ddc7&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3D88c8f471f9039245a1e0e90bb2a488f4%2F9a504fc2d5628535aedbd09d95ef76c6a7ef6356.jpg" alt="">
           </div>
           <div class="head_txt">
-            <div class="head_name">钱多多</div>
-            <div class="head_apply">应聘职位：<span>南航飞行员招聘</span></div>
+            <div class="head_name">{{detailData.name}}</div>
+            <div class="head_apply">应聘职位：<span>{{jobName}}</span></div>
           </div>
         </div>
         <div class="head_right">
-          <el-button @click="_result()" type="primary" plain>预约面试</el-button>
-          <el-button @click="_result()" type="primary" plain>不合适</el-button>
+          <el-button @click="_result(1)" type="primary" plain>邀请面试</el-button>
+          <el-button @click="_result(2)" type="primary" plain>不合适</el-button>
         </div>
       </div>
       <div class="head_btn">
@@ -22,21 +22,27 @@
             <i class="iconfont icon-xiaoxi"></i>
             在线沟通
           </el-button>
-          <el-button type="primary" plain>
+          <el-button @click="_collect()" type="primary" plain>
             <i class="iconfont icon-shoucang"></i>
             收藏
           </el-button>
           <el-button plain>导出简历</el-button>
         </div>
         <div class="head_review">
-          <div class="review_result">
+          <div class="review_result" v-if="detailData.status == 5">
             <span class="">评审结果：</span>
             <span class="review_num">2 通过</span>
             <span class="">&nbsp;(塔塔，全球) / &nbsp;</span>
             <span class="review_txt">1 否决</span>
             <span class="">&nbsp;(凯凯)</span>
           </div>
-          <el-button type="primary" plain>待评审</el-button>
+          <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
+            <el-button @click="_review()" type="primary" plain>待评审</el-button>
+          </div>
+          <div class="review_btn" v-else-if="detailData.status == 5">
+            <el-button type="primary" plain>通过</el-button>
+            <el-button type="warning" plain>否决</el-button>
+          </div>
         </div>
       </div>
     </div>
@@ -53,103 +59,187 @@
             <div class="detail_info_title">基本信息</div>
             <div class="job_want_cont">
               <div class="job_want_left">
-                <div class="job_want_item">姓名：<span>钱多多</span></div>
-                <div class="job_want_item">性别：<span>钱多多</span></div>
-                <div class="job_want_item">年龄：<span>钱多多</span></div>
-                <div class="job_want_item">民族：<span>钱多多</span></div>
-                <div class="job_want_item">籍贯：<span>钱多多</span></div>
-                <div class="job_want_item">婚姻状况：<span>钱多多</span></div>
-                <div class="job_want_item">政治面貌：<span>钱多多</span></div>
-                <div class="job_want_item">身高：<span>钱多多</span></div>
-                <div class="job_want_item">体重：<span>钱多多</span></div>
-                <div class="job_want_item">裸眼视力(左眼)：<span>钱多多</span></div>
-                <div class="job_want_item">裸眼视力(右眼)：<span>钱多多</span></div>
+                <div class="job_want_item">姓名：<span>{{detailData.name}}</span></div>
+                <div class="job_want_item"
+                     v-for='item in localData.gender'
+                     v-if='item.code == detailData.gender'>
+                  性别：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item">年龄：<span>{{detailData.age}}</span></div>
+                <div class="job_want_item"
+                     v-for='item in localData.ethnicity'
+                     v-if='item.code == detailData.ethnicity'>
+                  民族：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.area'
+                     v-if="item.code == (detailData.birthplace+'').slice(0,2)+'0000'">
+                  <div v-for='item1 in item.children'
+                       v-if="item1.code == (detailData.birthplace+'').slice(0,4)+'00'">
+                    <div v-for='item2 in item1.children'
+                         v-if='item2.code == detailData.birthplace'>
+                      籍贯：<span>{{item.name}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.wedding'
+                     v-if='item.code == detailData.wedding'>
+                  婚姻状况：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.political'
+                     v-if='item.code==detailData.political_status'>
+                  政治面貌：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item">身高：<span>{{detailData.height}}CM</span></div>
+                <div class="job_want_item">体重：<span>{{detailData.weight}}KG</span></div>
+                <div class="job_want_item"
+                     v-for='item in localData.vision'
+                     v-if='item.code == detailData.vision_left'>
+                  裸眼视力(左眼)：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.vision'
+                     v-if='item.code == detailData.vision_right'>
+                  裸眼视力(右眼)：<span>{{item.name}}</span>
+                </div>
               </div>
               <div class="job_want_right">
-                <div class="job_want_item">普通话水平：<span>一般</span></div>
-                <div class="job_want_item">英语水平：<span>专四</span></div>
-                <div class="job_want_item">熟练小语种：<span>一般</span></div>
-                <div class="job_want_item">最高学历：<span>一般</span></div>
-                <div class="job_want_item">工作经验：<span>一般</span></div>
-                <div class="job_want_item">任职状态：<span>一般</span></div>
-                <div class="job_want_item">联系电话：<span>一般</span></div>
-                <div class="job_want_item">身份证：<span>510921199904054654</span></div>
+                <div class="job_want_item"
+                     v-for='item in localData.mandarin'
+                     v-if='item.code==detailData.mandarin'>
+                  普通话水平：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.english'
+                     v-if='item.code==detailData.english'>
+                  英语水平：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item">熟练小语种：
+                  <span>{{detailData.language || "无"}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.education'
+                     v-if='item.code==detailData.education'>
+                  最高学历：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.offerExperience'
+                     v-if='item.code==detailData.experience'>
+                  工作经验：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item"
+                     v-for='item in localData.offerState'
+                     v-if='item.code==detailData.status_resume'>
+                  任职状态：<span>{{item.name}}</span>
+                </div>
+                <div class="job_want_item">联系电话：<span>{{detailData.tel}}</span></div>
+                <div class="job_want_item">身份证：<span>{{detailData.idno}}</span></div>
               </div>
             </div>
           </div>
-          <div class="job_exp">
+          <div class="job_exp" v-if="experience_item.length > 0">
             <div class="detail_info_title">工作经历</div>
             <div class="job_exp_cont">
-              <div class="job_exp_cont_item">
-                <div class="job_exp_item">任职时间：<span>2015.4-2016.8</span></div>
-                <div class="job_exp_item">任职公司：<span>南航</span></div>
-                <div class="job_exp_item">职 位：<span>飞行员</span></div>
-                <div class="job_exp_item">工作描述：<span>发士大夫暗室逢灯阿斯蒂芬暗室逢灯啊</span></div>
+              <div class="job_exp_cont_item"
+                   v-for='item in experience_item'>
+                <div class="job_exp_item" v-if='item.endtime==88888888888888'>
+                  任职时间：<span>{{
+                  new Date(parseInt(item.starttime)).getFullYear()
+                  +'.'
+                  +(new Date(parseInt(item.starttime)).getMonth()+1)
+                  +'-至今'
+                  }}</span>
+                </div>
+                <div v-else class="job_exp_item">
+                  任职时间：<span>{{
+                  new Date(parseInt(item.starttime)).getFullYear()
+                  +'.'
+                  +(new Date(parseInt(item.starttime)).getMonth()+1)
+                  +'-'
+                  +new Date(parseInt(item.endtime)).getFullYear()
+                  +'.'
+                  +(new Date(parseInt(item.endtime)).getMonth()+1)
+                  }}</span>
+                </div>
+                <div class="job_exp_item">任职公司：<span>{{item.cname}}</span></div>
+                <div class="job_exp_item">职 位：<span>{{item.job}}</span></div>
+                <div class="job_exp_item">
+                  工作描述：<span v-html="">{{item.profile}}</span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="job_exp">
+          <div class="job_exp" v-if="education_item.length > 0">
             <div class="detail_info_title">教育经历</div>
             <div class="job_exp_cont">
-              <div class="job_exp_cont_item">
-                <div class="job_exp_item">就读时间：<span>2015.4-2016.8</span></div>
-                <div class="job_exp_item">毕业学校：<span>南航</span></div>
-                <div class="job_exp_item">学 历：<span>飞行员</span></div>
-                <div class="job_exp_item">专 业：<span>发士大夫暗室逢暗室逢灯啊</span></div>
+              <div class="job_exp_cont_item"
+                   v-for='item in education_item'>
+                <div class="job_exp_item"
+                     v-if='item.graduation_time==88888888888888'>
+                  就读时间：<span>{{
+                  new Date(parseInt(item.admission_time)).getFullYear()
+                  +'.'
+                  +(new Date(parseInt(item.admission_time)).getMonth()+1)
+                  +'-至今'}}</span>
+                </div>
+                <div class="job_exp_item" v-else>
+                  就读时间：<span>{{
+                  new Date(parseInt(item.admission_time)).getFullYear()
+                  +'.'
+                  +(new Date(parseInt(item.admission_time)).getMonth()+1)
+                  +'-'
+                  +new Date(parseInt(item.graduation_time)).getFullYear()
+                  +'.'
+                  +(new Date(parseInt(item.graduation_time)).getMonth()+1)
+                  }}</span></div>
+                <div class="job_exp_item">毕业学校：<span>{{item.sname}}</span></div>
+                <div class="job_exp_item"
+                     v-for='item2 in localData.education'
+                     v-if='item2.code==item.education'>
+                  学 历：<span>{{item2.name}}</span>
+                </div>
+                <div class="job_exp_item">专 业：<span>{{item.majors}}</span></div>
               </div>
             </div>
           </div>
           <div class="describe">
             <div class="detail_info_title">自我描述</div>
-            <div class="describe_cont">发士大夫阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬阿斯蒂芬啊手动阀第三方阿飞阿三</div>
+            <div class="describe_cont">{{detailData.profile}}</div>
           </div>
         </el-col>
         <el-col :xs="11" :sm="11" :md="11" :lg="11" :xl="11" class="detail_info_right">
-          <div class="image">
+          <div class="image" v-if="detailData.imagesUrl && detailData.imagesUrl.length > 0">
             <div class="detail_info_title">图片形象</div>
             <div class="image_cont">
-              <div class="image_cont_item">
-                <img src="http://img4.imgtn.bdimg.com/it/u=275469757,3303267957&fm=27&gp=0.jpg" alt="">
-              </div>
-              <div class="image_cont_item">
-                <img src="http://img3.imgtn.bdimg.com/it/u=4279702637,1278251882&fm=27&gp=0.jpg" alt="">
-              </div>
-              <div class="image_cont_item">
-                <img src="http://img4.imgtn.bdimg.com/it/u=275469757,3303267957&fm=27&gp=0.jpg" alt="">
-              </div>
-              <div class="image_cont_item">
-                <img src="http://img4.imgtn.bdimg.com/it/u=275469757,3303267957&fm=27&gp=0.jpg" alt="">
+              <div class="image_cont_item" v-for='(item,index) in detailData.imagesUrl'>
+                <img @click="bigImg(item,index,1)" :src="item" alt="">
               </div>
             </div>
           </div>
-          <div class="video">
+          <div class="video" v-if="detailData.videoUrl">
             <div class="detail_info_title">视频形象</div>
             <div class="video_cont">
-              <video controls src="http://img.ppdl.net/FsSYsYX35QwEmsZtXeHxJK-njmVR?e=1523688463&token=ZmGrWm-CluEpn53M5lQE0uQI2EnHsyJoDRVSo-3m:YNwjpJUf27bfQvT1UiSL1Y5ayQc="></video>
+              <video controls :src="detailData.videoUrl"></video>
             </div>
           </div>
-          <div class="certificate">
+          <div class="certificate" v-if="detailData.skillUrl && detailData.skillUrl.length > 0">
             <div class="detail_info_title">证书</div>
             <div class="image_cont">
-              <div class="image_cont_item">
-                <img src="http://img4.imgtn.bdimg.com/it/u=275469757,3303267957&fm=27&gp=0.jpg" alt="">
-              </div>
-              <div class="image_cont_item">
-                <img src="http://img3.imgtn.bdimg.com/it/u=4279702637,1278251882&fm=27&gp=0.jpg" alt="">
-              </div>
-              <div class="image_cont_item">
-                <img src="http://img4.imgtn.bdimg.com/it/u=275469757,3303267957&fm=27&gp=0.jpg" alt="">
+              <div class="image_cont_item" v-for='(item,index) in detailData.skillUrl'>
+                <img @click="bigImg(item.skillUrl,index,2)" :src="item.skillUrl" alt="">
               </div>
             </div>
           </div>
         </el-col>
       </el-row>
       <div class="big_img" v-show="big_src">
-        <div class="big_cover"></div>
+        <div class="big_cover" @click="closeBig()"></div>
         <div class="big_cont">
-          <span class="big_close iconfont icon-cha"></span>
-          <span class="big_prev iconfont icon-tiaozhuanjiantou"></span>
-          <span class="big_next iconfont icon-forward"></span>
+          <span @click="closeBig()" class="big_close iconfont icon-cha"></span>
+          <span v-show="isHide" @click="changeBig('prev')" class="big_prev iconfont icon-icon-test1"></span>
+          <span v-show="isHide" @click="changeBig('next')" class="big_next iconfont icon-icon-test"></span>
           <img :src="big_src">
         </div>
       </div>
@@ -176,22 +266,100 @@
     name: "recruitDetail",
     data (){
       return {
+        jobName: window.sessionStorage.getItem("jobName"),
         state:1,
         big_src: "",
+        detailData: {},
+        localData: JSON.parse(window.sessionStorage.getItem("localData")),
+        experience_item:[],
+        education_item:[],
+        imgType: "",
+        imgIndex: "",
+        isHide:false,
       }
     },
+    activated () {
+      this.init();
+    },
     methods:{
-      _result (){
-        this.$router.push("/recruitResult")
+      init () {
+        let getData = {
+          rrid:window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getResumeVoteSnapshotVo',
+          data:getData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.detailData = res.data;
+              this.experience_item = JSON.parse(res.data.experience_item)
+              this.education_item = JSON.parse(res.data.education_item)
+              console.log(JSON.parse(res.data.education_item))
+            }
+            console.log( res)
+          }
+        })
       },
-      bigImg(src){
+      _result (type){
+        this.$router.push("/recruitResult/"+type)
+      },
+      bigImg(src,index,type){
+        if(type == 1 && this.detailData.imagesUrl.length > 1){
+          this.isHide = true;
+        }else if(type == 2 && this.detailData.skillUrl.length > 1){
+          this.isHide = true;
+        }else{
+          this.isHide = false;
+        }
+        this.imgType = type
+        this.imgIndex = index
         this.big_src = src;
       },
       closeBig(){
         this.big_src = "";
       },
-      changeBig(){
-
+      changeBig(btnType){
+        if(btnType == "prev"){
+          this.imgIndex = this.imgIndex - 1
+        }else if(btnType == "next"){
+          this.imgIndex = this.imgIndex + 1
+        }
+        if(this.imgType == 1){
+          this.big_src = this.detailData.imagesUrl[this.imgIndex];
+        }else{
+          this.big_src = this.detailData.skillUrl[this.imgIndex].skillUrl;
+        }
+      },
+      _review (){
+        let postData = {
+          rrid: this.detailData.rrid
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReceived/markReview',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+            }
+            console.log( res)
+          }
+        })
+      },
+      _collect (){
+        let postData = {
+          rrid: this.detailData.rrid
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/favorites/insertResume',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+            }
+            console.log( res)
+          }
+        })
       }
     }
   }
@@ -253,7 +421,7 @@
   .head_review{
     flex: 1;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
   }
   .review_result{
     color:#4c4c4c;

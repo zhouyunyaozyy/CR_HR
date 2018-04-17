@@ -28,24 +28,29 @@
             <span class="prev_info_txt">四川省成都市火车南站富森家具</span>
           </div>
         </div>
-        <div class="leav_info" :class="{refuse:status == 2}">
+        <div class="leav_info" :class="{refuse:resultState == 2}">
           <el-form
             :model="form"
             status-icon
             class="form_info">
-            <div class="info_title" v-if="status == 1">发送预约面试信息</div>
-            <div class="info_title" v-else="status == 2">不合适，请填写拒绝原因</div>
-            <el-form-item v-if="status == 1">
+            <div class="info_title" v-if="resultState == 1">发送预约面试信息</div>
+            <div class="info_title" v-else="resultState == 2">不合适，请填写拒绝原因</div>
+            <el-form-item v-if="resultState == 1">
               <span class="star"><b>*</b>面试时间:</span>
-              <el-input v-model="form.time" placeholder="年-月-日-时-分"></el-input>
+              <el-date-picker
+                v-model="form.time"
+                type="datetime"
+                value-format="timestamp"
+                placeholder="选择日期时间">
+              </el-date-picker>
             </el-form-item>
-            <el-form-item v-if="status == 1">
+            <el-form-item v-if="resultState == 1">
               <span class="star"><b>*</b>面试地址:</span>
               <el-input v-model="form.address" placeholder="请输入面试地址"></el-input>
             </el-form-item>
             <el-form-item>
-              <span class="star" v-if="status == 1">留言:</span>
-              <span class="star left" v-else="status == 2"><b>*</b>留言:</span>
+              <span class="star" v-if="resultState == 1">留言:</span>
+              <span class="star left" v-else="resultState == 2"><b>*</b>留言:</span>
               <el-input
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 6}"
@@ -54,7 +59,8 @@
             </el-form-item>
             <el-form-item>
               <div class="submit_btn">
-                <el-button type="primary">提交</el-button>
+                <el-button v-if="resultState == 1" @click="_invite()" type="primary">提交</el-button>
+                <el-button v-else @click="_mark()" type="primary">提交</el-button>
               </div>
             </el-form-item>
           </el-form>
@@ -74,14 +80,54 @@
           address:"",
           leav:""
         },
-        status:2,
+      }
+    },
+    computed:{
+      resultState () {
+        return this.$route.params.resultState
+      }
+    },
+    methods:{
+      _mark (){
+        let postData = {
+          rrid: window.sessionStorage.getItem("rrid"),
+          mark: this.form.leav
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReceived/markFail',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+            }
+            console.log( res)
+          }
+        })
+      },
+      _invite (){
+        let postData = {
+          rrid: window.sessionStorage.getItem("rrid"),
+          agreedtime: this.form.time,
+          agreedpath: this.form.address,
+          agreednote: this.form.leav,
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReceived/markSuccess',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+            }
+            console.log( res)
+          }
+        })
       }
     }
   }
 </script>
 <style>
   .form_info .el-input{
-    width: 170px;
+    width: 200px;
     height: 30px;
   }
   .form_info .el-textarea{

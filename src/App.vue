@@ -16,7 +16,7 @@ export default {
 					params:to.params
 				}
 				this.$store.commit('addTab',keyPath)
-				console.log(123, to,from)
+				// console.log(123, to,from)
 				// 执行ajax请求，但只希望在进入时请求，离开时不希望进行请求。
 				// this.getData()
 			}

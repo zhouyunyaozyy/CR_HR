@@ -68,7 +68,7 @@ const router1 = new Router({
           component: resolve => require(['@/views/main/resumeManage/resumeDetail'], resolve)
         },
         { // 招聘结果
-          path: '/recruitResult',
+          path: '/recruitResult/:resultState',
           name: 'recruitResult',
           component: resolve => require(['@/views/main/resumeManage/recruitResult'], resolve)
         },
@@ -76,6 +76,11 @@ const router1 = new Router({
           path: '/resumeCollect',
           name: 'resumeCollect',
           component: resolve => require(['@/views/main/resumeManage/resumeCollect'], resolve)
+        },
+        { // 刷新
+          path: '/appBack',
+          name: 'appBack',
+          component: resolve => require(['@/views/main/back/appBack'], resolve)
         },
         { // 个人信息设置
           path: '/personSetting',

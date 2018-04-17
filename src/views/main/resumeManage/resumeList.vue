@@ -13,7 +13,7 @@
             <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
           </div>
           <div class="resume_state_item bor">
-            <div class="state_title">预约面试</div>
+            <div class="state_title">邀请面试</div>
             <div class="resume_num">共({{item.MIANSHI}}份)</div>
             <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
           </div>
@@ -50,7 +50,6 @@
         })
       },
       _jump (item) {
-        // console.log(jid)
         window.sessionStorage.setItem("jid",item.jid)
         window.sessionStorage.setItem("jobName",item.name)
         this.$router.push("/recruitList")

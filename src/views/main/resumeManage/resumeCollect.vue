@@ -31,103 +31,100 @@
     <div class="collect_list">
       <div class="collect_title">
         <el-checkbox
-          v-model="checkAll"
-          @change="handleCheckAllChange">全选</el-checkbox>
+          v-model="checkState"
+          @change="checkAll">全选</el-checkbox>
         <div class="btn_cont">
           <el-button  @click="" plain>导出简历</el-button>
           <el-button  @click="" plain>导出excel名单</el-button>
         </div>
       </div>
       <div class="collect_cont">
-        <el-table
-          :data="tableData"
-          style="width: 100%">
-          <el-table-column
-            :show-overflow-tooltip="true"
-            prop="jname"
-            label="应聘职位"
-            min-width="150">
-            <template slot-scope="scope">
-              <el-checkbox
-                :label="scope.row.jname"
-                :key="checkedCities[scope.$index]">{{scope.row.jname}}</el-checkbox>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="headerUrl"
-            label="照片"
-            min-width="60">
-            <template slot-scope="scope">
-              <img class="avatar" :src="scope.row.headerUrl" alt="">
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="name"
-            label="姓名"
-            min-width="80">
-          </el-table-column>
-          <el-table-column
-            prop="gender"
-            label="性别"
-            min-width="55">
-          </el-table-column>
-          <el-table-column
-            prop="age"
-            label="年龄"
-            min-width="55">
-          </el-table-column>
-          <el-table-column
-            prop="height"
-            label="身高(cm)"
-            min-width="95">
-          </el-table-column>
-          <el-table-column
-            prop="weight"
-            label="体重(kg)"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="leftVision"
-            label="裸眼视力(左眼)"
-            min-width="140">
-          </el-table-column>
-          <el-table-column
-            prop="rightVision"
-            label="裸眼视力(右眼)"
-            min-width="140">
-          </el-table-column>
-          <el-table-column
-            prop="workExp"
-            label="工作经验"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="education"
-            label="学历"
-            min-width="60">
-          </el-table-column>
-          <el-table-column
-            :show-overflow-tooltip="true"
-            prop="lang"
-            label="熟悉小语种"
-            min-width="110">
-          </el-table-column>
-          <el-table-column
-            prop="reservationState"
-            label="预约确认"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="review"
-            label="评审结果"
-            min-width="90">
-          </el-table-column>
-          <el-table-column
-            prop="overVoteStatusEnum"
-            label="简历状态"
-            min-width="90">
-          </el-table-column>
-        </el-table>
+        <el-checkbox-group v-model="checkedCities" @change="checkItem">
+          <el-table
+            :data="tableData"
+            style="width: 100%">
+            <el-table-column
+              :show-overflow-tooltip="true"
+              prop="jname"
+              label="应聘职位"
+              min-width="150">
+              <template slot-scope="scope">
+                <el-checkbox
+                  :label="scope.row.name"
+                >{{scope.row.jname}}</el-checkbox>
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="headerUrl"
+              label="照片"
+              min-width="60">
+              <template slot-scope="scope">
+                <img class="avatar" :src="scope.row.headerUrl" alt="">
+              </template>
+            </el-table-column>
+            <el-table-column
+              prop="name"
+              label="姓名"
+              min-width="80">
+            </el-table-column>
+            <el-table-column
+              prop="gender"
+              label="性别"
+              min-width="55">
+            </el-table-column>
+            <el-table-column
+              prop="age"
+              label="年龄"
+              min-width="55">
+            </el-table-column>
+            <el-table-column
+              prop="height"
+              label="身高(cm)"
+              min-width="95">
+            </el-table-column>
+            <el-table-column
+              prop="weight"
+              label="体重(kg)"
+              min-width="90">
+            </el-table-column>
+            <el-table-column
+              prop="leftVision"
+              label="裸眼视力(左眼)"
+              min-width="140">
+            </el-table-column>
+            <el-table-column
+              prop="rightVision"
+              label="裸眼视力(右眼)"
+              min-width="140">
+            </el-table-column>
+            <el-table-column
+              prop="workExp"
+              label="工作经验"
+              min-width="90">
+            </el-table-column>
+            <el-table-column
+              prop="education"
+              label="学历"
+              min-width="60">
+            </el-table-column>
+            <el-table-column
+              :show-overflow-tooltip="true"
+              prop="lang"
+              label="熟悉小语种"
+              min-width="110">
+            </el-table-column>
+            <el-table-column
+              prop="review"
+              label="评审结果"
+              min-width="90">
+            </el-table-column>
+            <el-table-column
+              prop="overVoteStatusEnum"
+              label="简历状态"
+              min-width="90">
+            </el-table-column>
+          </el-table>
+        </el-checkbox-group>
       </div>
     </div>
   </div>
@@ -144,9 +141,9 @@
         },
         tableData:[
           {
-            jname:"你打打你打打你打打你打打你打打你打打你打打",
+            jname:"你你打",
             headerUrl:"//www.baidu.com/img/bd_logo1.png?where=super",
-            name:"糖糖",
+            name:"糖糖1",
             gender:"男",
             age:"31",
             height:"185",
@@ -179,20 +176,38 @@
           }
         ],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
-        checkAll: false,
+        checkState: false,
+        checkSum: 0,
+        checkedAllName: [],
         checkedCities:[],
-        isIndeterminate: true
+      }
+    },
+    activated () {
+      for(let i = 0;i<this.tableData.length;i++){
+        this.checkedAllName[i] = this.tableData[i].name
       }
     },
     methods: {
-      handleCheckAllChange(val) {
-        this.checkedCities = val ? cityOptions : [];
-        this.isIndeterminate = false;
+      checkItem(val){
+        if(val){
+          this.checkSum++
+        }else{
+          this.checkSum--
+        }
+        if(this.tableData.length == this.checkSum){
+          this.checkState = true;
+        }else{
+          this.checkState = false;
+        }
       },
-      handleCheckedCitiesChange(value) {
-        let checkedCount = value.length;
-        this.checkAll = checkedCount === this.cities.length;
-        this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+      checkAll(val) {
+        if(val){
+          this.checkedCities = this.checkedAllName
+          this.checkSum = this.tableData.length;
+        }else{
+          this.checkedCities = [];
+          this.checkSum = 0;
+        }
       },
       updateExcell () {
         let nowData = {}
@@ -285,6 +300,10 @@
     width: 20px;
     height: 20px;
     border-radius: 50%;
+  }
+  .collect_list .el-checkbox__inner::after {
+    left: 7px;
+    height: 12px;
   }
   .collect_title .btn_cont .el-button{
     height: 25px;
