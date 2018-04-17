@@ -11,6 +11,7 @@
           <div class="icon_item" @click='goSealTalkDetail'>
             <i class="iconfont icon-ai-message"></i>
             <span class="icon_txt">职位沟通</span>
+						<i v-if='showIcon'></i>
           </div>
           <div class="icon_item">
             <el-dropdown @command="handleCommand">
@@ -112,7 +113,8 @@
           group_id:1,
           sub_show:false,
 					localTalkData: [],
-					uid: ''
+					uid: '',
+					showIcon: false // 职位沟通小红点
         }
       },
       components:{
@@ -128,6 +130,13 @@
 				this.uid = window.sessionStorage.getItem('uid')
 				if (window.localStorage.getItem(this.uid)) {
 					this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
+					for (let val of this.localTalkData) {
+						if (val.showIcon) {
+							this.showIcon = true
+						} else {
+							this.showIcon = false
+						}
+					}
 				}
 				RongIMClient.init(global.configSelf.appKey) // 初始化融云程序
 				RongIMLib.RongIMEmoji.init() // 初始化融云表情包
@@ -331,16 +340,21 @@
           },
           set (newKey){
             this.$store.commit('changeTab',newKey)
-          },
-					getlocalTalkData () {
-						return this.$store.state.zyy.localTalkData
-					}
-        }
+          }
+        },
+				getlocalTalkData () {
+					return this.$store.state.zyy.localTalkData
+				}
       },
 			watch: {
 				getlocalTalkData (obj) {
 					console.log('obj', obj)
 					this.localTalkData = obj
+					for (let val of this.localTalkData) {
+						if (val.showIcon) {
+							this.showIcon = true
+						}
+					}
 				},
 				tabIndex (val) {
 					console.log('val', val)
@@ -360,11 +374,11 @@
 						if (userId === this.localTalkData[i].targetId) {
 //							判断聊天时间间隔
 							let objTime = new Date(parseInt(obj.time))
-							let lastedTime = new Date(parseInt(this.localTalkData[i].content[this.localTalkData[i].content.length - 1]))
-							if (objTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] == lastedTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] && objTime.getHours() == lastedTime.getHours() && objTime.getMinutes() - lastedTime.getMinutes() < 5 ) { // 是否属于同一天
-								obj.showTime = true
-							} else {
+							let lastedTime = this.localTalkData[i].content.length > 0 ? new Date(parseInt(this.localTalkData[i].content[this.localTalkData[i].content.length - 1].time)) : 0
+							if (this.localTalkData[i].content.length > 0 && objTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] == lastedTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] && objTime.getHours() == lastedTime.getHours() && objTime.getMinutes() - lastedTime.getMinutes() < 5 ) { // 是否属于同一天
 								obj.showTime = false
+							} else {
+								obj.showTime = true
 							}
 							
 							this.localTalkData[i].content.push(obj)
@@ -406,7 +420,12 @@
         removeTab(targetName) {
           console.log(targetName)
           this.$store.commit('removeTab',targetName)
-          this.$router.push({path: this.tabIndex});
+					if (this.$store.state.tj.label_list.length < 1) {
+						this.$router.push({path: 'main'});
+					} else {
+						this.$router.push({path: this.tabIndex});
+					}
+          
         },
 				handleCommand (val) { // 设置跳转路由
 					this.$router.push(val)
@@ -468,8 +487,22 @@
     font-size: 14px;
     height: 30px;
   }
+	.index_cont .icon_item{
+		position: relative;
+	}
+	.index_cont .icon_item>i:nth-of-type(2){
+		width: 10px;
+		height: 10px;
+		display: inline-block;
+		border-radius: 10px;
+		position: absolute;
+		top: 0;
+		right: 35px;
+		background-color: #ff2121;
+	}
 </style>
 <style scoped>
+	
   .index_cont{
     height: 100%;
   }

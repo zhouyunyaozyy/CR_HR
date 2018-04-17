@@ -9,21 +9,16 @@
 -->
 		<div class="sealTalkContain">
 			<div class="sealTalkContainTab">
+				<span v-if='localTalkData.length < 1' style="margin: 100% 10px 0;display: inline-block;">暂无最新消息</span>
 				<el-checkbox-group v-model="checkList">
-					<el-checkbox label="复选框 A" :class='tabClassName'>
-						<div>
-							<img src="../../../imgs/logo_min.png">
-							<p><span>王三三</span><time>17:34</time></p>
-							<p>已发送，请查收，谢谢</p>
-							<i></i>
-						</div>
-					</el-checkbox>
-					<el-checkbox v-for='item in tabsList' :label="item.targetId" :key='item.targetId' :class='tabClassName'>
+					<el-checkbox v-for='item in tabsList' :label="item.targetId" @click.native='switchTab(item.targetId)' :key='item.targetId' :class='tabClassName' :id='item.targetId'>
 						<div>
 							<img :src="item.url">
-							<p><span>{{item.name}}手拉手</span><time>{{item.time}}</time></p>
-							<p>{{item.content}}</p>
-							<i></i>
+							<p><span>{{item.name}}</span><time>{{new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0] == new Date().toLocaleString('chinese', {hour12: false}).split(' ')[0] ? new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1] : new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[0] + '/' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[1] + ' ' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1]}}</time></p>
+							<p v-if="item.type == 'text'">{{item.content}}</p>
+							<p v-else-if="item.type == 'video'">[视频]</p>
+							<p v-else-if="item.type == 'image'">[图片]</p>
+							<i v-if='item.showIcon'></i>
 						</div>
 					</el-checkbox>
 				</el-checkbox-group>
@@ -33,22 +28,28 @@
 			<div class="sealTalkContainBody">
 				<div class="sealTalkContainBodyContent">
 					<div v-for='item in talkData' :key='item.time'>
-						<time>{{item.time}}</time>
+						<time v-if='item.showTime'>{{new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0] == new Date().toLocaleString('chinese', {hour12: false}).split(' ')[0] ? new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1] : new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[0] + '/' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[1] + ' ' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1]}}</time>
 						<div :class="item.class">
 							<div>
 								<img v-if="item.class == 'left'" :src="appUserUrl">
 								<img v-else :src="myImgUrl">
 							</div>
-							<div :class='item.type'>{{item.content}}</div>
+							<div :class='item.type' v-if="item.type == 'text'"><pre v-html='item.content'></pre></div>
+							<div :class='item.type' v-else-if="item.type == 'image'">
+								<img :src="item.url">
+							</div>
+							<div :class='item.type' v-else-if="item.type == 'video'">
+								<video controls :src="item.url"></video>
+							</div>
 						</div>
 					</div>
 				</div>
 				<div class="sealTalkContainInput">
-					<div>
-						<img src="../../../imgs/logo_min.png" v-popover:popover4>
+					<div v-popover:popover4>
+						<div v-if='emojisData.length > 0' v-html='emojisData[0].node.innerHTML'></div>
 					</div>
 					<div>
-						<el-input placeholder='请输入内容' v-model='textareaData' type='textarea' :autosize="{ minRows: 2, maxRows: 2}"></el-input>
+						<el-input placeholder='请输入内容' @keyup.ctrl.enter.native='getMessage' v-model='textareaData' type='textarea' :autosize="{ minRows: 2, maxRows: 2}"></el-input>
 					</div>
 					<div>
 						<el-button type='primary' @click='getMessage'>发送</el-button>
@@ -62,20 +63,7 @@
 			placement="top"
 			width="400"
 			trigger="click">
-			<div>
-				<img src="../../../imgs/logo_min.png">
-			</div>
-			<div>
-				<img src="../../../imgs/logo_min.png">
-			</div>
-			<div>
-				<img src="../../../imgs/logo_min.png">
-			</div>
-			<div>
-				<img src="../../../imgs/logo_min.png">
-			</div>
-			<div>
-				<img src="../../../imgs/logo_min.png">
+			<div v-for='item in emojisData' v-html='item.node.innerHTML' @click="getEmoji(item.symbol)">
 			</div>
 		</el-popover>
 	</div>
@@ -91,8 +79,9 @@
 				jobInfo: {},
 				myImgUrl: '',
 				appUserUrl: '',
-				targetId: '985070026325229568',
-				rrid: '985077615746351104',
+				emojisData: [],
+				targetId: '983683018335977472',
+				rrid: '985724022845079552',
 				talkData: [], // 当前聊天内容
 				localTalkData: [], // 本地聊天记录
 				tabsList: [] // 所有用户聊天信息
@@ -111,18 +100,30 @@
             this.talkData = val.content // 加载本地与应聘者会话记录
           }
         }
-				this.tabsList = []
-				for (let val of this.localTalkData) {
+				console.log('list', this.tabsList)
+//				this.tabsList = []
+				for (let val in this.localTalkData) {
+					let nowData = this.localTalkData[val]
+					this.$set(this.tabsList, val, {url: '', name: '', type: '', targetId: nowData.targetId, time: '', content: ''})
 					this.$axios({
-						url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
+						url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
 						type: 'get',
-						data: {rrid: val.rrid},
+						data: {rrid: nowData.rrid},
 						fuc: (res) => {
 							let data = res.data
-							this.tabsList.push({url: data, name: data.name, targetId: val.targetId, time: val.content.length > 0 ? val.content[val.content.length - 1].time : new Date().getTime(), content: val.content.length > 0 ? val.content[val.content.length - 1].content : '暂无'})
+							console.log(data.name, nowData)
+							this.$set(this.tabsList, val, {url: data.headerUrl, name: data.name, type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无'})
+							this.$nextTick(() => {
+								console.log('targetId', this.targetId)
+								if (document.getElementById(this.targetId)) {
+									document.getElementById(this.targetId).classList.add('actived')
+								}
+							})
 						}
 					})
 				}
+				
+				console.log('list', this.tabsList)
 //        this.$nextTick(() => {
 //          let divArr = document.getElementsByClassName('detailBody')[0].children
 //          divArr[divArr.length-1].scrollIntoView()
@@ -130,74 +131,86 @@
 			}
 		},
 		activated () {
-			this.$axios({
-				url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
-				type: 'get',
-				data: {rrid: this.rrid},
-				fuc: (res) => {
-					this.appUserUrl = res.data
-				}
-			})
       this.localData = JSON.parse(window.sessionStorage.getItem('localData'))
-//			this.targetId = this.$route.query.targetId
-//			this.rrid = this.$route.query.rrid
-      this.uid = window.sessionStorage.getItem('uid') // 公司信息
-      this.emojisData = RongIMLib.RongIMEmoji.list // 表情包
-      this.getJobInfo()
-//        // 若存在公司历史纪录
-      if (window.localStorage.getItem(this.uid)) {
-        this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
-        
-        // 检测历史有没有应聘者当前会话，若没有，则添加一个会话；若有，加载会话
-        let hasBool = false
-        for (let val of this.localTalkData) {
-//          this.tabsData.push({targetId: val.targetId,name: val.targetId})
-          if (this.targetId === val.targetId) {
-            this.talkData = val.content // 加载本地与应聘者会话记录
-            if (this.rrid !== val.rrid) {
-              val.rrid = this.rrid
-              window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
-            }
-            hasBool = true
-          }
-        }
-        if (!hasBool) {
-          this.localTalkData.unshift({
-            targetId: this.targetId,
-            content: this.talkData,
-            rrid: this.rrid,
+			this.uid = window.sessionStorage.getItem('uid') // 公司信息
+			this.emojisData = RongIMLib.RongIMEmoji.list // 表情包
+			if (this.$route.query.targetId) { // 从简历详情页进入聊天
+				this.targetId = this.$route.query.targetId
+				this.rrid = this.$route.query.rrid
+				this.getJobInfo()
+	//        // 若存在公司历史纪录
+				if (window.localStorage.getItem(this.uid)) {
+					this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
+
+					// 检测历史有没有应聘者当前会话，若没有，则添加一个会话；若有，加载会话
+					let hasBool = false
+					for (let val of this.localTalkData) {
+	//          this.tabsData.push({targetId: val.targetId,name: val.targetId})
+						if (this.targetId === val.targetId) {
+							this.talkData = val.content // 加载本地与应聘者会话记录
+							if (this.rrid !== val.rrid) {
+								val.rrid = this.rrid
+							}
+							val.showIcon = false
+							hasBool = true
+						}
+					}
+					if (!hasBool) {
+						this.localTalkData.unshift({
+							targetId: this.targetId,
+							content: this.talkData,
+							rrid: this.rrid,
+							showIcon: false
+						})
+						window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+					}
+						// 若没有公司历史纪录
+				} else {
+					this.localTalkData.unshift({
+						targetId: this.targetId,
+						content: this.talkData,
+						rrid: this.rrid,
 						showIcon: false
-          })
-          window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
-        }
-          // 若没有公司历史纪录
-      } else {
-				this.localTalkData.unshift({
-					targetId: this.targetId,
-					content: this.talkData,
-					rrid: this.rrid,
-					showIcon: false
-				})
-				window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
-      }
+					})
+					window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+				}
+				this.getAppUserHeader(this.rrid)
+			} else { // 从首页职位沟通进入
+				if (window.localStorage.getItem(this.uid)) {
+					this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
+					this.rrid = this.localTalkData[0].rrid
+					this.targetId = this.localTalkData[0].targetId
+					this.talkData = this.localTalkData[0].content // 加载本地与应聘者会话记录
+					this.getJobInfo()
+					this.getAppUserHeader(this.rrid)
+					this.localTalkData[0].showIcon = false
+				}
+			}
 			// 获取曾有过会话的所有应聘者图片、姓名等信息
       for (let val of this.localTalkData) {
 				this.$axios({
-					url: '/dabai-chaorenjob/resumeReceived/getHeaderByRrid',
+					url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
 					type: 'get',
 					data: {rrid: val.rrid},
 					fuc: (res) => {
 						let data = res.data
-						this.tabsList.push({url: data, name: data.name, targetId: val.targetId, time: val.content.length > 0 ? val.content[val.content.length - 1].time : new Date().getTime(), content: val.content.length > 0 ? val.content[val.content.length - 1].content : '暂无'})
+//						this.tabsList.push({url: data.headerUrl, name: data.name, type: val.content.length > 0 ? val.content[val.content.length - 1].type : '', targetId: val.targetId, time: val.content.length > 0 ? val.content[val.content.length - 1].time : new Date().getTime(), content: val.content.length > 0 ? val.content[val.content.length - 1].content : '暂无'})
+						this.$nextTick(() => {
+//							console.log(1234, document.getElementById(this.targetId))
+//							if (document.getElementById(this.targetId)) {
+//								document.getElementById(this.targetId).classList.add('actived')
+//							}
+						})
 					}
 				})
 			}
 			// 获取公司的图片信息等
 			this.$axios({
-				url: '/dabai-chaorenjob/common/getHrHeader',
+				url: '/dabai-chaorenjob/common/getCompanyRongInfo',
 				type: 'get',
+				data: {uid: window.sessionStorage.getItem('uid')},
 				fuc: (res) => {
-					this.myImgUrl = res.data
+					this.myImgUrl = res.data.headerUrl
 				}
 			})
 			// 判断是否由新职位发起的会话
@@ -217,26 +230,65 @@
 					}
 				}
 			}
+			this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
+			window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
     },
 		methods: {
+			getAppUserHeader (rrid) {
+				this.$axios({
+					url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
+					type: 'get',
+					data: {rrid: rrid},
+					fuc: (res) => {
+						this.appUserUrl = res.data.headerUrl
+					}
+				})
+			},
+			switchTab (val) {
+				if (val == this.targetId) {
+					return
+				}
+				console.log(val, window.event)
+				document.getElementById(this.targetId).classList.remove('actived')
+				this.targetId = val
+				for (let val of this.localTalkData) {
+//          this.tabsData.push({targetId: val.targetId,name: val.targetId})
+					if (this.targetId === val.targetId) {
+						this.talkData = val.content // 加载本地与应聘者会话记录
+						this.rrid = val.rrid
+						val.showIcon = false
+						this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
+//						window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+						this.getAppUserHeader(this.rrid)
+					}
+				}
+				this.$nextTick(() => {
+//					if (document.getElementById(this.targetId)) {
+//						document.getElementById(this.targetId).classList.add('actived')
+//					}
+				})
+			},
 			manageSelect () {
 				this.tabClassName = 'tabActived'
 			},
+      getEmoji (name) {
+        this.textareaData += name
+      },
 			deleteSelect () {
 				this.tabClassName = ''
 			},
         // 获取当前简历的职位信息
       getJobInfo () {
-//        this.$axios({
-//					url: '/job/getJobByRRid',
-//					type: 'post',
-//					data: {rrid: this.rrid},
-//					success: (res) => {
+        this.$axios({
+					url: '/dabai-chaorenjob/job/getJobByRRid',
+					type: 'get',
+					data: {rrid: this.rrid},
+					success: (res) => {
 //						let localData = JSON.parse(window.localStorage.getItem('localData'))
-//						this.jid = res.data.jid
-//						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.name_full,'name': res.data.name,wages: res.data.wages}
-//					}
-//				})
+						this.jid = res.data.jid
+						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.name_full,'name': res.data.name,wages: res.data.wages}
+					}
+				})
       },
       getMessage (bool = true) { // 发送信息
             // 生成聊天内容
@@ -280,9 +332,9 @@
                   if (nowThis.targetId === nowThis.localTalkData[i].targetId) {
 			//							判断聊天时间间隔
 										let objTime = new Date(parseInt(message.sentTime))
-										let lastedTime = new Date(parseInt(nowThis.localTalkData[i].content[nowThis.localTalkData[i].content.length - 1]))
-										let showTime = false
-										if (objTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] == lastedTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] && objTime.getHours() == lastedTime.getHours() && objTime.getMinutes() - lastedTime.getMinutes() < 5 ) { // 是否属于同一天
+										let lastedTime = nowThis.localTalkData[i].content.length > 0 ? new Date(parseInt(nowThis.localTalkData[i].content[nowThis.localTalkData[i].content.length - 1].time)) : 0
+										let showTime = true
+										if (nowThis.localTalkData[i].content.length > 0 && objTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] == lastedTime.toLocaleString('chinese', {hour12: false}).split(' ')[0] && objTime.getHours() == lastedTime.getHours() && objTime.getMinutes() - lastedTime.getMinutes() < 5 ) { // 是否属于同一天
 											showTime = false
 										} else {
 											showTime = true
@@ -306,11 +358,10 @@
                   nowThis.localTalkData.unshift(nowThis.localTalkData.splice(nowThis.localTalkData.indexOf(val), 1)[0])
                     nowThis.$store.state.zyy.localTalkData = nowThis.localTalkData
                     window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
-
-//                    setTimeout(() => {
-//                          let divArr = document.getElementsByClassName('detailBody')[0].children
-//                        divArr[divArr.length-1].scrollIntoView()
-//                        }, 10)
+										this.$nextTick(() => {
+											let divArr = document.getElementsByClassName('sealTalkContainBodyContent')[0].children
+											divArr[divArr.length-1].scrollIntoView()
+										})
                   break
                 }
               }
@@ -362,7 +413,8 @@
 	.sealTalkContainTab>div>label>.el-checkbox__input{
 		width: 20px;
 		position: relative;
-		top: -25px;
+		float: left;
+		top: 35px;
 		left: 10px;
 		margin-right: 6px;
 /*		margin: 0px 10px;*/
@@ -443,7 +495,7 @@
 	}
 	.sealTalkContainTab{
 		width: 275px;
-		height: calc(100% - 99px);
+		height: 100%;
 		float: left;
 		background-color: #fff;
 		position: relative;
@@ -453,7 +505,7 @@
 	.sealTalkContainTab>div{
 		width: 100%;
 /*		overflow: hidden;*/
-		overflow-y: scroll;
+		overflow-y: auto;
 		overflow-x: hidden;
 		height: calc(100% - 40px);
 		width: calc(100% + 18px);
@@ -471,12 +523,24 @@
 	.sealTalkContainTab>div>label:hover{
 		background-color: #e5e5e5;
 	}
+	.sealTalkContainTab>div>.actived{
+		background-color: #e5e5e5;
+	}
 	.sealTalkContainTab>div>label>span>div{
 		padding: 20px 0;
-/*		overflow: hidden;*/
+/*
+		overflow-y: hidden;
+		overflow-x: auto;
+*/
+		clear: both;
 		width: 100%;
 		position: relative;
 	}
+	.sealTalkContainTab>div>label>span>div:after { 
+		content:""; 
+		display: block; 
+		clear: both; 
+	} 
 	.sealTalkContainTab>div>label>span>div>img{
 		width: 50px;
 		height: 50px;
@@ -490,6 +554,7 @@
 		margin-bottom: 14px;
 		width: calc(100% - 80px);
 		margin-left: 60px;
+		padding-right: 20px;
 	}
 	.sealTalkContainTab>div>label>span>div>p:first-of-type>time{
 		color: #666666;
@@ -532,7 +597,7 @@
 	.sealTalkContainBody{
 		width: calc(100% - 275px);
 		float: left;
-		height: calc(100% - 99px);
+		height: 100%;
 		background-color: #fafafa;
 		overflow: hidden
 	}

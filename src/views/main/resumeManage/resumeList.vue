@@ -1,6 +1,6 @@
 <template>
   <el-row :gutter="10" class="resume_list">
-    <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" class="resume_item">
+    <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='index' class="resume_item">
       <div class="resume_item_cont">
         <div class="resume_posi">
           <div class="posi_name">{{item.name}}</div>
