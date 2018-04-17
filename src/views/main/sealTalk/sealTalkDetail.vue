@@ -18,6 +18,7 @@
 							<p v-if="item.type == 'text'">{{item.content}}</p>
 							<p v-else-if="item.type == 'video'">[视频]</p>
 							<p v-else-if="item.type == 'image'">[图片]</p>
+							<p v-else-if="item.type == 'PersonMessage'">就此职位与您沟通</p>
 							<i v-if='item.showIcon'></i>
 						</div>
 					</el-checkbox>
@@ -40,6 +41,14 @@
 							</div>
 							<div :class='item.type' v-else-if="item.type == 'video'">
 								<video controls :src="item.url"></video>
+							</div>
+							<div :class='item.type' v-else-if="item.type == 'PersonMessage'">
+								<div>
+									<p>{{item.content.job.name}}</p>
+									<p>{{item.content.job.name_full}}</p>
+									<p v-for="val in localData.wages" v-if="item.content.job.wages == val.code">{{val.name}}</p>
+								</div>
+								<p>就此职位与您沟通</p>
 							</div>
 						</div>
 					</div>
@@ -80,6 +89,7 @@
 				myImgUrl: '',
 				appUserUrl: '',
 				emojisData: [],
+				jid: '',
 				targetId: '983683018335977472',
 				rrid: '985724022845079552',
 				talkData: [], // 当前聊天内容
@@ -115,7 +125,15 @@
 							this.$set(this.tabsList, val, {url: data.headerUrl, name: data.name, type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无'})
 							this.$nextTick(() => {
 								console.log('targetId', this.targetId)
+								if (document.getElementsByClassName('actived')[0]) {
+									document.getElementsByClassName('actived')[0].classList.remove('actived')
+								}
+								for (let val of document.getElementsByClassName('actived')) {
+									val.classList.remove('actived')
+								}
 								if (document.getElementById(this.targetId)) {
+									console.log(1, document.getElementsByClassName('actived')[0])
+//									document.getElementsByClassName('actived')[0].classList.remove('actived')
 									document.getElementById(this.targetId).classList.add('actived')
 								}
 							})
@@ -134,9 +152,10 @@
       this.localData = JSON.parse(window.sessionStorage.getItem('localData'))
 			this.uid = window.sessionStorage.getItem('uid') // 公司信息
 			this.emojisData = RongIMLib.RongIMEmoji.list // 表情包
-			if (this.$route.query.targetId) { // 从简历详情页进入聊天
-				this.targetId = this.$route.query.targetId
-				this.rrid = this.$route.query.rrid
+			if (window.sessionStorage.getItem('targetIdBool') == 'true') { // 从简历详情页进入聊天
+				console.log('targetIdTrue', Boolean(window.sessionStorage.getItem('targetIdBool')), false)
+				this.targetId = window.sessionStorage.getItem('targetId')
+				this.rrid = window.sessionStorage.getItem('rrid')
 				this.getJobInfo()
 	//        // 若存在公司历史纪录
 				if (window.localStorage.getItem(this.uid)) {
@@ -148,14 +167,15 @@
 	//          this.tabsData.push({targetId: val.targetId,name: val.targetId})
 						if (this.targetId === val.targetId) {
 							this.talkData = val.content // 加载本地与应聘者会话记录
-							if (this.rrid !== val.rrid) {
-								val.rrid = this.rrid
-							}
+//							if (this.rrid !== val.rrid) {
+//								val.rrid = this.rrid
+//							}
 							val.showIcon = false
 							hasBool = true
 						}
 					}
 					if (!hasBool) {
+						this.talkData = []
 						this.localTalkData.unshift({
 							targetId: this.targetId,
 							content: this.talkData,
@@ -176,6 +196,7 @@
 				}
 				this.getAppUserHeader(this.rrid)
 			} else { // 从首页职位沟通进入
+				console.log('targetIdfalse')
 				if (window.localStorage.getItem(this.uid)) {
 					this.localTalkData = JSON.parse(window.localStorage.getItem(this.uid))
 					this.rrid = this.localTalkData[0].rrid
@@ -219,13 +240,13 @@
 					if (val.rrid !== this.rrid) {
 						console.log('新职位')
 						setTimeout(() => {
-//							this.getMessage(false)
+							this.getMessage(false)
 						}, 1000)
 					}
 					if (val.content.length === 0) {
 						console.log('新会话')
 						setTimeout(() => {
-//								this.getMessage(false)
+								this.getMessage(false)
 							}, 1000)
 					}
 				}
@@ -283,10 +304,10 @@
 					url: '/dabai-chaorenjob/job/getJobByRRid',
 					type: 'get',
 					data: {rrid: this.rrid},
-					success: (res) => {
+					fuc: (res) => {
 //						let localData = JSON.parse(window.localStorage.getItem('localData'))
 						this.jid = res.data.jid
-						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.name_full,'name': res.data.name,wages: res.data.wages}
+						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': '找杨山','name': res.data.name,wages: res.data.wages}
 					}
 				})
       },
@@ -354,11 +375,11 @@
               for (let val of nowThis.localTalkData) {
                 if (nowThis.targetId === val.targetId) {
                   val.rrid = nowThis.rrid
-                  val.content = [{content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: false}]
+                  val.content = [{content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: true}]
                   nowThis.localTalkData.unshift(nowThis.localTalkData.splice(nowThis.localTalkData.indexOf(val), 1)[0])
                     nowThis.$store.state.zyy.localTalkData = nowThis.localTalkData
                     window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
-										this.$nextTick(() => {
+										nowThis.$nextTick(() => {
 											let divArr = document.getElementsByClassName('sealTalkContainBodyContent')[0].children
 											divArr[divArr.length-1].scrollIntoView()
 										})
@@ -638,7 +659,8 @@
 		margin-left: 20px;
 	}
 	.sealTalkContainBodyContent>div>.left>.text{
-		width: 420px;
+		width: auto;
+		max-width: 220px;
 		float: left;
 		overflow: hidden;
 		background-color: #509ee2;
@@ -677,7 +699,8 @@
 		margin-left: 20px;
 	}
 	.sealTalkContainBodyContent>div>.right>.text{
-		width: 420px;
+		width: auto;
+		max-width: 220px;
 		float: right;
 		overflow: hidden;
 		background-color: #f1f5f8;
@@ -686,7 +709,30 @@
 		font-size: 12px;
 		text-align: left;
 	}
-	
+	.sealTalkContainBodyContent>div>.right>.PersonMessage{
+		width: 220px;
+/*		max-width: 220px;*/
+		float: right;
+		overflow: hidden;
+		background-color: #f1f5f8;
+		padding: 20px 20px;
+		border-radius: 4px;
+		font-size: 12px;
+		text-align: right;
+	}
+	.sealTalkContainBodyContent>div>.right>.PersonMessage>div{
+		width: 100%;
+		box-sizing: border-box;
+		padding: 10px;
+		background-color: white;
+		text-align: right;
+		border-radius: 4px;
+		line-height: 20px;
+		margin-bottom: 10px;
+	}
+	.sealTalkContainBodyContent>div>.right>.PersonMessage>p{
+		font-weight: bold;
+	}
 /*	表情*/
 	.el-popover>div{
 		display: inline-block;
@@ -721,6 +767,10 @@
 		font-size: 12px;
 		display: inline-block;
 		margin: 20px 10px 0;
+	}
+	pre{
+		white-space: pre-wrap;
+		word-wrap: break-word;
 	}
 	
 	

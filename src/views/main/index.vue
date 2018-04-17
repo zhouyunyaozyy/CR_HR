@@ -424,6 +424,7 @@
 					this.$router.push(val)
 				},
 				goSealTalkDetail () {
+					window.sessionStorage.setItem('targetIdBool', false)
 					this.$router.push('sealtalkDetail')
 				},
       }

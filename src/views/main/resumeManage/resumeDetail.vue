@@ -18,7 +18,7 @@
       </div>
       <div class="head_btn">
         <div class="head_export_btn">
-          <el-button type="primary" plain>
+          <el-button type="primary" plain @click='goSealTalk'>
             <i class="iconfont icon-xiaoxi"></i>
             在线沟通
           </el-button>
@@ -282,6 +282,12 @@
       this.init();
     },
     methods:{
+			goSealTalk () {
+				console.log('data', this.detailData)
+				window.sessionStorage.setItem('targetId', this.detailData.uid)
+				window.sessionStorage.setItem('targetIdBool', true)
+				this.$router.push('sealtalkDetail')
+			},
       init () {
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
