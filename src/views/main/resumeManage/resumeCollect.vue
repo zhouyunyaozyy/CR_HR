@@ -199,6 +199,7 @@
         }else{
           this.checkState = false;
         }
+        console.log(this.checkedCities)
       },
       checkAll(val) {
         if(val){

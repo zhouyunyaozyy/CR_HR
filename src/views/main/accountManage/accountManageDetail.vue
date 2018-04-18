@@ -2,6 +2,7 @@
   <el-form
       :model="hr_detail"
       status-icon
+      ref="hrDetail"
       :rules="rules"
       label-width="130px"
       class="hr_detail">
@@ -24,23 +25,24 @@
         <div class="authority_cont">
           <el-form-item label="简历管理">
             <el-checkbox-group v-model="hr_detail.resume">
-              <el-checkbox label="评审简历" name="resume"></el-checkbox>
-              <el-checkbox label="参与评审" name="resume"></el-checkbox>
-              <el-checkbox label="预约面试" name="resume"></el-checkbox>
-              <el-checkbox label="不合适" name="resume"></el-checkbox>
+              <el-checkbox label="resume1" name="resume">查看简历</el-checkbox>
+              <el-checkbox label="resume2" name="resume">发起简历评审</el-checkbox>
+              <el-checkbox label="resume3" name="resume">参与简历评审</el-checkbox>
+              <el-checkbox label="resume4" name="resume">标记邀请面试</el-checkbox>
+              <el-checkbox label="resume5" name="resume">标记不合适</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="企业信息管理">
             <el-checkbox-group v-model="hr_detail.enterprise">
-              <el-checkbox label="查看信息" name="enterprise"></el-checkbox>
-              <el-checkbox label="编辑信息" name="enterprise"></el-checkbox>
+              <el-checkbox label="enterprise1" name="enterprise">编辑信息</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="职位管理">
             <el-checkbox-group v-model="hr_detail.job">
-              <el-checkbox label="查看职位" name="job"></el-checkbox>
-              <el-checkbox label="编辑职位" name="job"></el-checkbox>
-              <el-checkbox label="发布/关闭职位" name="job"></el-checkbox>
+              <el-checkbox label="job1" name="job">添加职位</el-checkbox>
+              <el-checkbox label="job2" name="job">查看职位</el-checkbox>
+              <el-checkbox label="job3" name="job">编辑职位</el-checkbox>
+              <el-checkbox label="job4" name="job">发布/关闭职位</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </div>
@@ -48,7 +50,7 @@
     <div class="btn_cont">
       <el-form-item>
         <el-button type="primary" @click="submitForm('hrDetail')">提交</el-button>
-        <el-button @click="resetForm('hrDetail')">重置</el-button>
+        <!--<el-button @click="resetForm('hrDetail')">重置</el-button>-->
       </el-form-item>
     </div>
     </el-form>
@@ -84,11 +86,43 @@
         this.$refs[formName].validate((valid) => {
           console.log(valid)
           if (valid){
+            let resume_list = this.hr_detail.resume;
+            let enterprise_list = this.hr_detail.enterprise;
+            let job_list = this.hr_detail.job;
+            let resume = {
+              "resume1":false,
+              "resume2":false,
+              "resume3":false,
+              "resume4":false,
+              "resume5":false
+            };
+            let enterprise = {
+              "enterprise1":false
+            };
+            let job = {
+              "job1":false,
+              "job2":false,
+              "job3":false,
+              "job4":false
+            };
+            for(let a = 0;a<resume_list.length;a++){
+              resume[resume_list[a]] = true;
+            }
+            for(let a = 0;a<enterprise_list.length;a++){
+              enterprise[enterprise_list[a]] = true;
+            }
+            for(let a = 0;a<job_list.length;a++){
+              job[job_list[a]] = true;
+            }
+            let config = [resume,enterprise,job]
             let resultData = {
               cid: window.sessionStorage.getItem("cid"),
               name: this.hr_detail.name,
-              mobile: this.hr_detail.phone
+              mobile: this.hr_detail.phone,
+              config:JSON.stringify(config)
             };
+            console.log(resultData);
+            // return;
             this.$axios({
               type: 'post',
               url: '/dabai-chaorenjob/company/addChildren',
@@ -127,7 +161,7 @@
   }
   .account_info .el-form-item__label{
     color:#4c4c4c;
-    font-size:18px;
+    font-size:16px;
   }
   .authority_cont .el-form-item__label{
     color:#333;
@@ -150,14 +184,14 @@
   }
   .account_title{
     color:#333;
-    font-size: 24px;
+    font-size: 18px;
     line-height: 40px;
     height: 40px;
     padding: 0 20px;
     border-bottom: 1px solid #ccc;
   }
   .account_cont{
-    width: 580px;
+    width: 830px;
     margin: 20px auto 0;
     padding-bottom: 1px;
   }
@@ -175,7 +209,7 @@
     padding-left: 15px;
   }
   .authority_cont{
-    width: 580px;
+    width: 830px;
     margin: 0 auto;
   }
   .authority_cont .el-form-item--feedback{
@@ -189,11 +223,11 @@
     line-height: 50px;
   }
   .btn_cont{
-    width: 580px;
+    width: 830px;
     margin: 0 auto;
-    text-align: center;
+    text-align: right;
     box-sizing: border-box;
-    padding-right: 130px;
+    /*padding-right: 130px;*/
   }
   .btn_cont .el-button{
     width: 140px;
