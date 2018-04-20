@@ -10,17 +10,17 @@
           <div class="resume_state_item">
             <div class="state_title">全部简历</div>
             <div class="resume_num">共({{item.ALL}}份)</div>
-            <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
+            <el-button @click="_jump(item,6)" type="warning" size="small" plain>详情</el-button>
           </div>
           <div class="resume_state_item bor">
             <div class="state_title">邀请面试</div>
             <div class="resume_num">共({{item.MIANSHI}}份)</div>
-            <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
+            <el-button @click="_jump(item,3)" type="warning" size="small" plain>详情</el-button>
           </div>
           <div class="resume_state_item">
             <div class="state_title">不合适</div>
             <div class="resume_num">共({{item.BUHESHI}}份)</div>
-            <el-button @click="_jump(item)" type="warning" size="small" plain>详情</el-button>
+            <el-button @click="_jump(item,4)" type="warning" size="small" plain>详情</el-button>
           </div>
         </div>
       </div>
@@ -49,9 +49,11 @@
           }
         })
       },
-      _jump (item) {
+      _jump (item,type) {
+        console.log(item)
         window.sessionStorage.setItem("jid",item.jid)
         window.sessionStorage.setItem("jobName",item.name)
+        window.sessionStorage.setItem("status",type)
         this.$router.push("/recruitList")
       }
     }

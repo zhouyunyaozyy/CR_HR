@@ -132,10 +132,10 @@
 		{"code":"6","name":"所有"}
 	],
   "reservationState":[
-    {"code":"1","name":"未预约"},
-    {"code":"2","name":"未确认"},
-    {"code":"3","name":"已确认"},
-    {"code":"4","name":"所有"}
+    {"code":"0","name":"未确认"},
+    {"code":"1","name":"已接受"},
+    {"code":"2","name":"已拒绝"},
+    {"code":"3","name":"所有"}
   ],
 	"userIdentityEnum":[
 		{"code":"1","name":"管理员"},

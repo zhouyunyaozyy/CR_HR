@@ -14,7 +14,7 @@
                 :key='item.code'
                 :value='item.code'></el-option>
             </el-select>
-            <el-select v-model='screen.reservationState' placeholder='所有'>
+            <el-select v-if="screen.status == 3" v-model='screen.reservationState' placeholder='所有'>
               <el-option
                 v-for='item in localData.reservationState'
                 :label='item.name'
@@ -137,7 +137,7 @@
       return {
         screen:{
           status:"6",
-          reservationState:"4"
+          reservationState:"3"
         },
         tableData:[
           {
@@ -183,11 +183,31 @@
       }
     },
     activated () {
+      this.init();
       for(let i = 0;i<this.tableData.length;i++){
         this.checkedAllName[i] = this.tableData[i].name
       }
     },
     methods: {
+      init (){
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/favorites/getResumeFavoritesList',
+          fuc: (res) => {
+            console.log( res)
+            if(res.code == 1){
+              // this.init();
+            }else{
+              this.$message({
+                type: 'error',
+                message: res.msg,
+                duration: 1000
+              })
+            }
+            // this.tableData[index].status ==
+          }
+        })
+      },
       checkItem(val){
         if(val){
           this.checkSum++

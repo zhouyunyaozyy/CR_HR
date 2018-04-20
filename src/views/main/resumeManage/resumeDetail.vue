@@ -37,9 +37,12 @@
             <span class="">&nbsp;(凯凯)</span>
           </div>
           <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
-            <el-button @click="_review()" type="primary" plain>待评审</el-button>
+            <el-button @click="_review()" type="primary" plain>发起评审</el-button>
           </div>
-          <div class="review_btn" v-else-if="detailData.status == 5">
+          <div class="review_btn" v-else-if="detailData.status == 5 && !review_btn">
+            <el-button @click="_change_review()" type="primary" plain>参与评审</el-button>
+          </div>
+          <div class="review_btn" v-else-if="detailData.status == 5 && review_btn">
             <el-button type="primary" plain>通过</el-button>
             <el-button type="warning" plain>否决</el-button>
           </div>
@@ -47,8 +50,8 @@
       </div>
     </div>
     <div class="detail_tab">
-      <span class="detail_tab_item">详细信息</span>
-      <span class="detail_tab_item is_active">处理记录</span>
+      <span @click="changeState(1)" class="detail_tab_item" :class="{is_active:state == 1}">详细信息</span>
+      <span @click="changeState(2)" class="detail_tab_item" :class="{is_active:state == 2}">处理记录</span>
     </div>
     <div class="detail_info" v-show="state == 1">
       <el-row>
@@ -245,16 +248,27 @@
       </div>
     </div>
     <div class="handle_record" v-show="state == 2">
-      <div class="handle_item">
+      <div class="handle_item" v-for="item in recordData">
         <div class="handle_time">
           <div class="time_txt">
-            <div class="date_text">2018/10/10</div>
-            <div class="time_text">16:16:16</div>
+            <div class="date_text">{{
+              new Date(parseInt(item.create_time)).getFullYear()+"/"
+              + (new Date(parseInt(item.create_time)).getMonth()+1) +"/"
+              + new Date(parseInt(item.create_time)).getDate()
+              }}</div>
+            <div class="time_text">{{
+              new Date(parseInt(item.create_time)).getHours()+":"
+              + new Date(parseInt(item.create_time)).getMinutes()+":"
+              + new Date(parseInt(item.create_time)).getSeconds()
+              }}</div>
           </div>
         </div>
         <div class="handle_info">
           <img class="dot" src="./../../../assets/dot.png" alt="">
-          <div class="info_txt">不合适</div>
+          <div class="info_txt"
+               v-for="item1 in localData.overVoteStatusEnum"
+               v-if="item1.code == item.type"
+          >{{item1.name}}</div>
         </div>
       </div>
     </div>
@@ -270,18 +284,40 @@
         state:1,
         big_src: "",
         detailData: {},
+        recordData: [],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
         experience_item:[],
         education_item:[],
         imgType: "",
         imgIndex: "",
         isHide:false,
+        review_btn:false
       }
     },
     activated () {
       this.init();
+      this.getRecord();
     },
     methods:{
+      changeState(type){
+        this.state = type;
+      },
+      getRecord (){
+        let getData = {
+          rrid:window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getResumeOperationListByRRid',
+          data:getData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.recordData = res.data;
+            }
+            console.log(1,res)
+          }
+        })
+      },
 			goSealTalk () {
 				console.log('data', this.detailData)
 				window.sessionStorage.setItem('targetId', this.detailData.uid)
@@ -352,16 +388,26 @@
           }
         })
       },
+      _change_review(){
+        this.review_btn = true;
+      },
       _collect (){
         let postData = {
           rrid: this.detailData.rrid
         }
+        let url;
+        if(this.detailData.isFavorite){
+          url = '/dabai-chaorenjob/favorites/cancelFavorites'
+        }else{
+          url = '/dabai-chaorenjob/favorites/insertResume'
+        }
         this.$axios({
           type: 'post',
-          url: '/dabai-chaorenjob/favorites/insertResume',
+          url: url,
           data: postData,
           fuc: (res) => {
             if(res.code == 1){
+
             }
             console.log( res)
           }

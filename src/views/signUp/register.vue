@@ -75,30 +75,30 @@
 //        resultData.mobile = encrypt.encrypt(this.form.phone) // RSAkey
         resultData.mobile = this.form.phone // RSAkey
 //        resultData.type = 1
-				this.$axios({
-					type: 'get',
-					url: '/dabai-chaorenjob/hr/registerVerificationCode',
-					data: resultData,
-					fuc: (res) => {
-						this.getNumBool = true
-						let num = 60
-						this.form.time = num-- + '秒'
-						let numTime = setInterval(() => {
-							this.form.time = num-- + '秒'
-							if (num < 0) {
-								this.getNumBool = false
-								this.form.time = '获取'
-								clearInterval(numTime)
-							}
-						}, 1000)
-						this.$message({
-							message: '发送成功,请注意查看',
-							duration: 1000
-						})
-						store.state.validationUid = res.data
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/hr/registerVerificationCode',
+          data: resultData,
+          fuc: (res) => {
+            this.getNumBool = true
+            let num = 60
+            this.form.time = num-- + '秒'
+            let numTime = setInterval(() => {
+              this.form.time = num-- + '秒'
+              if (num < 0) {
+                this.getNumBool = false
+                this.form.time = '获取'
+                clearInterval(numTime)
+              }
+            }, 1000)
+            this.$message({
+              message: '发送成功,请注意查看',
+              duration: 1000
+            })
+            store.state.validationUid = res.data
 //						this.getNum_bool = true
-					}
-				})
+          }
+        })
       },
 			forgetPwd () {
 				this.$router.push('/forgetPwd')

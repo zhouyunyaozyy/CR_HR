@@ -140,7 +140,7 @@
                 :value='item.code'></el-option>
             </el-select>
           </div>
-          <div class="md">
+          <div class="md" v-if="screenData.status == 3">
             <el-select v-model='screenData.sure' placeholder='所有'>
               <el-option
                 v-for='item in localData.reservationState'
@@ -152,7 +152,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="init()">查找</el-button>
-          <el-button @click="submitForm()" type="warning" plain>清空条件</el-button>
+          <el-button @click="clearScreen()" type="warning" plain>清空条件</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -168,11 +168,11 @@
         </div>
         <div class="recruit_right_btn">
           <div class="export_btn">
-            <el-button  @click="" plain>导出word简历</el-button>
+            <el-button  @click="" plain>导出简历</el-button>
             <el-button  @click="" plain>导出excel名单</el-button>
           </div>
           <div class="state_btn">
-            <el-button type="primary" @click="" plain>待评审</el-button>
+            <el-button type="primary" @click="" plain>发起评审</el-button>
             <el-button type="primary" @click="" plain>邀请面试</el-button>
             <el-button type="primary" @click="" plain>不合适</el-button>
           </div>
@@ -212,7 +212,11 @@
                   </div>
                   <div class="chart_txt_item">
                     <span class="chart_txt_name">简历状态:</span>
-                    <span v-for="item1 in localData.overVoteStatusEnum" v-if="item1.code == item.status" class="chart_txt_text">{{item1.name}}</span>
+                    <span
+                      v-for="item1 in localData.overVoteStatusEnum"
+                      v-if="item1.code == item.status" class="chart_txt_text">
+                      {{item1.name}}{{sure(item.status,item.sure)}}
+                    </span>
                   </div>
                   <div class="chart_txt_btn">
                     <el-button @click="_detail(item.rrid)" type="primary">查看</el-button>
@@ -330,7 +334,7 @@
                 <template slot-scope="scope">
                   <span
                     v-for="item1 in localData.overVoteStatusEnum"
-                    v-if="item1.code == scope.row.status">{{item1.name}}</span>
+                    v-if="item1.code == scope.row.status">{{item1.name}}{{sure(scope.row.status,scope.row.sure)}}</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -391,11 +395,23 @@
       this.getDetail();
     },
     methods:{
+      sure (state,type){
+        if(state != 3){
+          return;
+        }
+        switch (type){
+          case 0:
+            return "(未确认)"
+          case 1:
+            return "(已接受)"
+          case 2:
+            return "(已拒绝)"
+        }
+      },
       init(){
         let screenArr = {
           jid: this.jid
         }
-        console.log(this.jobName,screenArr)
         if(this.screenData.name){
           screenArr.name = this.screenData.name
         }
@@ -474,7 +490,11 @@
             // 获取详情
             if(res.code == 1){
               this.screenData = JSON.parse(res.data.search_config_json)
-
+              console.log(this.screenData)
+              let status = window.sessionStorage.getItem("status");
+              if(status){
+                this.screenData.status = status;
+              }
               this.init();
             }else{
               this.$message({
@@ -486,6 +506,9 @@
             console.log( res)
           }
         })
+      },
+      clearScreen(){
+        this.screenData = {};
       },
       changePattern (state) {
         this.pattern = state;
