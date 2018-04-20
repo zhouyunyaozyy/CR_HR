@@ -12,8 +12,8 @@
           </div>
         </div>
         <div class="head_right">
-          <el-button @click="_result(1)" type="primary" plain>邀请面试</el-button>
-          <el-button @click="_result(2)" type="primary" plain>不合适</el-button>
+          <el-button @click="_result(1)" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getMeet == true'>邀请面试</el-button>
+          <el-button @click="_result(2)" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getRefuse == true'>不合适</el-button>
         </div>
       </div>
       <div class="head_btn">
@@ -37,10 +37,10 @@
             <span class="">&nbsp;(凯凯)</span>
           </div>
           <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
-            <el-button @click="_review()" type="primary" plain>发起评审</el-button>
+            <el-button @click="_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
           </div>
           <div class="review_btn" v-else-if="detailData.status == 5 && !review_btn">
-            <el-button @click="_change_review()" type="primary" plain>参与评审</el-button>
+            <el-button @click="_change_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].joinReview == true'>参与评审</el-button>
           </div>
           <div class="review_btn" v-else-if="detailData.status == 5 && review_btn">
             <el-button type="primary" plain>通过</el-button>
@@ -291,10 +291,12 @@
         imgType: "",
         imgIndex: "",
         isHide:false,
-        review_btn:false
+        review_btn:false,
+				permissionConfig: [] // 权限管理
       }
     },
     activated () {
+			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.init();
       this.getRecord();
     },

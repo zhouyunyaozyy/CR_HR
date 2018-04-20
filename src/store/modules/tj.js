@@ -96,6 +96,10 @@ const tj = {
               titleName = "企业信息"
               pathName = key.path
               break;
+            case "checkCompany":
+              titleName = "查看企业信息"
+              pathName = key.path
+              break;
             case "feedback":
               titleName = "反馈"
               pathName = key.path

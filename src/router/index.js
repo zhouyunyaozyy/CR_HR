@@ -114,6 +114,11 @@ const router1 = new Router({
           name: 'companySetting',
           component: resolve => require(['@/views/main/settings/companySetting/companySetting'], resolve)
         },
+        { // 查看企业信息
+          path: '/checkCompany',
+          name: 'checkCompany',
+          component: resolve => require(['@/views/main/settings/companySetting/checkCompany'], resolve)
+        },
         { // 系统反馈
           path: '/feedback',
           name: 'feedback',

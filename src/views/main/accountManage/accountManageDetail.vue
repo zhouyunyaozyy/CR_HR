@@ -24,25 +24,25 @@
         <div class="account_title">权限配置</div>
         <div class="authority_cont">
           <el-form-item label="简历管理">
-            <el-checkbox-group v-model="hr_detail.resume">
-              <el-checkbox label="resume1" name="resume">查看简历</el-checkbox>
-              <el-checkbox label="resume2" name="resume">发起简历评审</el-checkbox>
-              <el-checkbox label="resume3" name="resume">参与简历评审</el-checkbox>
-              <el-checkbox label="resume4" name="resume">标记邀请面试</el-checkbox>
-              <el-checkbox label="resume5" name="resume">标记不合适</el-checkbox>
+            <el-checkbox-group v-model="hr_detail.resume" @change='checkChange'>
+              <el-checkbox label="seeRecruitDetail" name="resume">查看简历</el-checkbox>
+              <el-checkbox label="startReview" v-if='checkBool' name="resume">发起简历评审</el-checkbox>
+              <el-checkbox label="joinReview" v-if='checkBool' name="resume">参与简历评审</el-checkbox>
+              <el-checkbox label="getMeet" v-if='checkBool' name="resume">标记邀请面试</el-checkbox>
+              <el-checkbox label="getRefuse" v-if='checkBool' name="resume">标记不合适</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="企业信息管理">
             <el-checkbox-group v-model="hr_detail.enterprise">
-              <el-checkbox label="enterprise1" name="enterprise">编辑信息</el-checkbox>
+              <el-checkbox label="editCompany" name="enterprise">编辑信息</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
           <el-form-item label="职位管理">
-            <el-checkbox-group v-model="hr_detail.job">
-              <el-checkbox label="job1" name="job">添加职位</el-checkbox>
-              <el-checkbox label="job2" name="job">查看职位</el-checkbox>
-              <el-checkbox label="job3" name="job">编辑职位</el-checkbox>
-              <el-checkbox label="job4" name="job">发布/关闭职位</el-checkbox>
+            <el-checkbox-group v-model="hr_detail.job" @change='checkChangeJob'>
+              <el-checkbox label="seeJob" name="job">查看职位</el-checkbox>
+              <el-checkbox label="addJob" v-if='checkBoolJob' name="job">添加职位</el-checkbox>
+              <el-checkbox label="editJob" v-if='checkBoolJob' name="job">编辑职位</el-checkbox>
+              <el-checkbox label="onOrOffJob" v-if='checkBoolJob' name="job">发布/关闭职位</el-checkbox>
             </el-checkbox-group>
           </el-form-item>
         </div>
@@ -69,6 +69,8 @@
           enterprise:[],
           job:[]
         },
+				checkBool: false,
+				checkBoolJob: false,
         rules: {
           phone: [
             {required: true, message: '请填写手机号', trigger: 'blur'},
@@ -82,6 +84,28 @@
       };
     },
     methods: {
+			checkChange (data) {
+				if (data.length > 0) {
+					this.checkBool = true
+				}
+				for (let val of data) {
+					if (val == 'seeRecruitDetail') {
+						return
+					}
+				}
+				this.checkBool = false
+			},
+			checkChangeJob (data) {
+				if (data.length > 0) {
+					this.checkBoolJob = true
+				}
+				for (let val of data) {
+					if (val == 'seeJob') {
+						return
+					}
+				}
+				this.checkBoolJob = false
+			},
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           console.log(valid)
@@ -90,20 +114,20 @@
             let enterprise_list = this.hr_detail.enterprise;
             let job_list = this.hr_detail.job;
             let resume = {
-              "resume1":false,
-              "resume2":false,
-              "resume3":false,
-              "resume4":false,
-              "resume5":false
+              "seeRecruitDetail":false,
+              "startReview":false,
+              "joinReview":false,
+              "getMeet":false,
+              "getRefuse":false
             };
             let enterprise = {
-              "enterprise1":false
+              "editCompany":false
             };
             let job = {
-              "job1":false,
-              "job2":false,
-              "job3":false,
-              "job4":false
+              "addJob":false,
+              "seeJob":false,
+              "editJob":false,
+              "onOrOffJob":false
             };
             for(let a = 0;a<resume_list.length;a++){
               resume[resume_list[a]] = true;

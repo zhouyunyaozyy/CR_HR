@@ -172,9 +172,9 @@
             <el-button  @click="" plain>导出excel名单</el-button>
           </div>
           <div class="state_btn">
-            <el-button type="primary" @click="" plain>发起评审</el-button>
-            <el-button type="primary" @click="" plain>邀请面试</el-button>
-            <el-button type="primary" @click="" plain>不合适</el-button>
+            <el-button type="primary" @click="" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
+            <el-button type="primary" @click="" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getMeet == true'>邀请面试</el-button>
+            <el-button type="primary" @click="" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getRefuse == true'>不合适</el-button>
           </div>
         </div>
       </div>
@@ -385,11 +385,13 @@
         checkSum: 0,
         checkedAllName: [],
         checkedCities:[],
+				permissionConfig: []
       }
     },
     computed:{
     },
     activated () {
+			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.jobName = window.sessionStorage.getItem("jobName");
       this.jid = window.sessionStorage.getItem("jid")
       this.getDetail();
@@ -457,7 +459,7 @@
         if(this.screenData.lang){
           screenArr.language = this.screenData.lang
         }
-        if(this.screenData.status){
+        if(this.screenData.status && this.screenData.status != 6){
           screenArr.status = this.screenData.status
         }
         if(this.screenData.sure){

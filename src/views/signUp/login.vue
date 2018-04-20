@@ -75,6 +75,45 @@
 								url: '/dabai-chaorenjob/hr/getUserInfoByTickets',
 								fuc: (res) => {
 									console.log('loginAfter', res)
+									if (res.data.manager == 1) {
+										window.sessionStorage.setItem('permissionConfig', JSON.stringify([
+											{
+												"seeRecruitDetail": true,
+												"startReview": true,
+												"joinReview": true,
+												"getMeet": true,
+												"getRefuse": true
+											}, {
+												"editCompany": true
+											}, {
+												"addJob": true,
+												"seeJob": true,
+												"editJob": true,
+												"onOrOffJob": true
+											}
+										]))
+									} else {
+										if (res.data.permissions) {
+											window.sessionStorage.setItem('permissionConfig', res.data.permissions.config)
+										} else {
+											window.sessionStorage.setItem('permissionConfig', JSON.stringify([
+											{
+												"seeRecruitDetail": false,
+												"startReview": false,
+												"joinReview": false,
+												"getMeet": false,
+												"getRefuse": false
+											}, {
+												"editCompany": false
+											}, {
+												"addJob": false,
+												"seeJob": false,
+												"editJob": false,
+												"onOrOffJob": false
+											}
+										]))
+										}
+									}
 									window.sessionStorage.setItem('cid', res.data.cid)
 									window.sessionStorage.setItem('uid', res.data.uid)
 									this.$router.push('/main')

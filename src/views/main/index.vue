@@ -21,7 +21,7 @@
               </div>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="/personSettingUser">个人信息</el-dropdown-item>
-                <el-dropdown-item command="/companySetting">企业信息</el-dropdown-item>
+                <el-dropdown-item command="/checkCompany">企业信息</el-dropdown-item>
                 <el-dropdown-item command="/talkWithSystem">系统通知</el-dropdown-item>
                 <el-dropdown-item command="/feedback">反馈</el-dropdown-item>
                 <el-dropdown-item command="a">退出</el-dropdown-item>
@@ -51,7 +51,7 @@
                 <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
-              <el-submenu index="1">
+              <el-submenu index="1" v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
                 <template slot="title">
                   <i class="iconfont icon-wendang"></i>
                   <span>简历管理</span>
@@ -61,7 +61,7 @@
                   <el-menu-item index="/resumeCollect">简历收藏</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-menu-item index="/jobList">
+              <el-menu-item index="/jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
                 <i class="iconfont icon-pipeizhiwei"></i>
                 <span slot="title">职位管理</span>
               </el-menu-item>
@@ -115,13 +115,15 @@
 					localTalkData: [],
 					uid: '',
 					showIcon: false, // 职位沟通小红点
-          g_state:true
+          g_state:true,
+					permissionConfig: []
         }
       },
       components:{
         // WLabel
       },
 			created () {
+				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 				let _form = Default
 				_form.area = area.area
 				// console.log('_form', _form)

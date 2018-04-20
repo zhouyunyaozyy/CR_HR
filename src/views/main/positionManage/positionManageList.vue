@@ -4,7 +4,7 @@
       <el-header height="40px">
         <div class="hr_title">-职位管理-</div>
         <!--<div class="hr_num">当前账号数量（4）</div>-->
-        <div @click="addHr()" class="add_hr">
+        <div @click="addHr()" class="add_hr" v-if="permissionConfig.length > 0 && permissionConfig[2].addJob">
           <img src="@/assets/add.png" alt="">
           <span>添加职位</span>
         </div>
@@ -72,10 +72,10 @@
             <template slot-scope="scope">
               <div class="btn_cont">
                 <el-button @click="_see(scope.row.jid)" type="primary" plain>查看</el-button>
-                <el-button @click="_edit(scope.row.jid)" type="primary" plain>编辑</el-button>
+                <el-button @click="_edit(scope.row.jid)" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[2].editJob == true'>编辑</el-button>
                 <!--<el-button type="primary" plain>权限管理</el-button>-->
-                <el-button @click="_release(scope.row,2)" type="primary" v-if="scope.row.status == 1" plain>停止发布</el-button>
-                <el-button @click="_release(scope.row,1)" type="primary" v-else="scope.row.status == 0" plain>发布</el-button>
+                <el-button @click="_release(scope.row,2)" type="primary" v-if="scope.row.status == 1 && permissionConfig[2].onOrOffJob" plain>停止发布</el-button>
+                <el-button @click="_release(scope.row,1)" type="primary" v-if="scope.row.status == 0 && permissionConfig[2].onOrOffJob" plain>发布</el-button>
               </div>
             </template>
           </el-table-column>
@@ -102,10 +102,13 @@
         total:1000,
         size:15,
         tableData: [],
-        localData: JSON.parse(window.sessionStorage.getItem("localData"))
+        localData: JSON.parse(window.sessionStorage.getItem("localData")),
+				permissionConfig: [] //权限管理
       }
     },
     activated () {
+			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
+			console.log(this.permissionConfig[2].onOrOffJob)
       this.init();
     },
     methods:{
