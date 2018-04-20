@@ -3,7 +3,7 @@
     <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='index' class="resume_item">
       <div class="resume_item_cont">
         <div class="resume_posi">
-          <div class="posi_name">{{item.name}}</div>
+          <div class="posi_name wrap">{{item.name}}</div>
           <div class="pisi_sub"></div>
         </div>
         <div class="resume_cont">
