@@ -174,26 +174,8 @@
         })
       },
       _edit (row){
-        // let resultData = {
-        //   uid:row.uid
-        // };
-        // this.$axios({
-        //   type: 'get',
-        //   url: '/dabai-chaorenjob/hr/getUserHr',
-        //   data: resultData,
-        //   fuc: (res) => {
-        //     if(res.code == 1){
-        //       this.init();
-        //     }else{
-        //       this.$message({
-        //         type: 'error',
-        //         message: res.msg,
-        //         duration: 1000
-        //       })
-        //     }
-        //     console.log( res)
-        //   }
-        // })
+        window.sessionStorage.setItem("uid",row.uid)
+        this.$router.push({path:'/hrEdit'})
       }
     }
   }

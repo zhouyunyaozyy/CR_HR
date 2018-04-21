@@ -3,29 +3,30 @@
     <div class="user_info">
       <div class="center_cont user_cont">
         <div class="user_avatar">
-          <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523616118359&di=7be774622f3f9675cf6a4b437ce1ddc7&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3D88c8f471f9039245a1e0e90bb2a488f4%2F9a504fc2d5628535aedbd09d95ef76c6a7ef6356.jpg" alt="">
+          <img :src="dataInfo.headerUrl" alt="">
         </div>
         <div class="user_txt">
-          <div class="user_name">钱多多</div>
-          <div class="user_apply">应聘职位：<span>南航飞行员招聘</span></div>
+          <div class="user_name">{{dataInfo.name}}</div>
+          <div class="user_apply">应聘职位：<span>{{jobName}}</span></div>
         </div>
       </div>
     </div>
     <div class="info_cont">
       <div class="center_cont">
-        <div class="prev_info">
-          <div class="prev_info_title">已发送的预约面试信息</div>
-          <div class="prev_info_time">
+        <div class="prev_info" v-if="Object.keys(prevInfo).length > 0">
+          <div class="prev_info_title">{{prevInfo.title}}</div>
+          <div class="prev_info_time" v-if="prevInfo.agreedtime">
             <span class="prev_info_label">*面试时间：</span>
-            <span class="prev_info_txt">2018-12-31 14：00</span>
+            <span class="prev_info_txt">{{(new Date(prevInfo.agreedtime)).Format("yyyy-MM-dd hh:mm:ss")}}</span>
           </div>
-          <div class="prev_info_address">
+          <div class="prev_info_address" v-if="prevInfo.agreedpath">
             <span class="prev_info_label">*面试地址：</span>
-            <span class="prev_info_txt">四川省成都市火车南站富森家具</span>
+            <span class="prev_info_txt">{{prevInfo.agreedpath}}</span>
           </div>
           <div class="prev_info_leav">
             <span class="prev_info_label">留言：</span>
-            <span class="prev_info_txt">四川省成都市火车南站富森家具</span>
+            <span class="prev_info_txt" v-if="prevInfo.agreednote">{{prevInfo.agreednote}}</span>
+            <span class="prev_info_txt" v-else-if="prevInfo.mark">{{prevInfo.mark}}</span>
           </div>
         </div>
         <div class="leav_info" :class="{refuse:resultState == 2}">
@@ -80,6 +81,9 @@
           address:"",
           leav:""
         },
+        prevInfo:{},
+        dataInfo:{},
+        jobName:window.sessionStorage.getItem("jobName")
       }
     },
     computed:{
@@ -87,10 +91,69 @@
         return this.$route.params.resultState
       }
     },
+    activated () {
+      if(this.resultState == 1){
+        this.form.leav = ""
+      }else{
+        this.form.leav = "感谢您对我司的认同，经过综合评估，我司已确定了最适合的人选。非常遗憾未能与您成为同事，相信以您的优秀才干，一定能很快找到更适合的岗位，期待将来我们能有机会合作。"
+      }
+      this.initInfo();
+      this.init();
+    },
     methods:{
-      _mark (){
+      initInfo (){
         let postData = {
-          rrid: window.sessionStorage.getItem("rrid"),
+          rrid: window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.dataInfo = res.data;
+            }
+            console.log( res)
+          }
+        })
+      },
+      init (){
+        let postData = {
+          rrid: window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getResumeReceivedByRRid',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+              if(res.data.status == 3){
+                this.prevInfo.title = "已发送的预约面试信息"
+                this.prevInfo.agreedtime = res.data.agreedtime
+                this.prevInfo.agreedpath = res.data.agreedpath
+                this.prevInfo.agreednote = res.data.agreednote
+              }else if(res.data.status == 4){
+                this.prevInfo.title = "已发送的不合适信息"
+                this.prevInfo.mark = res.data.mark;
+              }else{
+                this.prevInfo = {};
+              }
+            }
+            console.log( res)
+          }
+        })
+      },
+      _mark (){
+        if(!this.form.leav){
+          this.$message({
+            type: 'error',
+            message: "留言不能为空",
+            duration: 1000
+          })
+          return;
+        }
+        let postData = {
+          rrids: JSON.parse(window.sessionStorage.getItem("rrids")),
           mark: this.form.leav
         }
         this.$axios({
@@ -105,8 +168,23 @@
         })
       },
       _invite (){
+        if(!this.form.time){
+          this.$message({
+            type: 'error',
+            message: "面试时间不能为空",
+            duration: 1000
+          })
+          return;
+        }else if(!this.form.address){
+          this.$message({
+            type: 'error',
+            message: "面试地址不能为空",
+            duration: 1000
+          })
+          return;
+        }
         let postData = {
-          rrid: window.sessionStorage.getItem("rrid"),
+          rrids: JSON.parse(window.sessionStorage.getItem("rrids")),
           agreedtime: this.form.time,
           agreedpath: this.form.address,
           agreednote: this.form.leav,
@@ -121,6 +199,16 @@
             console.log( res)
           }
         })
+      },
+      removeTab() {
+        this.$store.commit('removeTab',this.tabIndex)
+        this.clickTab();
+      },
+      clickTab() {
+        this.$store.commit('changeTab',"/resumeDetail")
+        this.$router.push({
+          path:"/resumeDetail"
+        });
       }
     }
   }

@@ -12,6 +12,11 @@
             <div class="resume_num">共({{item.ALL}}份)</div>
             <el-button @click="_jump(item,6)" type="warning" size="small" plain>详情</el-button>
           </div>
+          <div class="resume_state_item">
+            <div class="state_title">待评审</div>
+            <div class="resume_num">共({{item.DAIPINGSHEN}}份)</div>
+            <el-button @click="_jump(item,5)" type="warning" size="small" plain>详情</el-button>
+          </div>
           <div class="resume_state_item bor">
             <div class="state_title">邀请面试</div>
             <div class="resume_num">共({{item.MIANSHI}}份)</div>
@@ -102,14 +107,13 @@
     padding-bottom: 10px;
   }
   .resume_state_item{
-    flex: 0 0 33.3%;
+    flex: 0 0 25%;
     text-align: center;
-  }
-  .resume_state_item.bor{
-    flex: 0 0 33.4%;
-    border-left: 1px solid #ccc;
-    border-right: 1px solid #ccc;
     box-sizing: border-box;
+    border-left: 1px solid #ccc;
+  }
+  .resume_state_item:first-child{
+    border-left: 0;
   }
   .state_title{
     font-size: 16px;

@@ -51,7 +51,7 @@
               <template slot-scope="scope">
                 <el-checkbox
                   :label="scope.row.name"
-                >{{scope.row.jname}}</el-checkbox>
+                >{{scope.row.job_name}}</el-checkbox>
               </template>
             </el-table-column>
             <el-table-column
@@ -68,9 +68,12 @@
               min-width="80">
             </el-table-column>
             <el-table-column
-              prop="gender"
               label="性别"
               min-width="55">
+              <template slot-scope="scope">
+                <span v-for="item in localData.gender"
+                      v-if="item.code == scope.row.gender">{{item.name}}</span>
+              </template>
             </el-table-column>
             <el-table-column
               prop="age"
@@ -88,40 +91,61 @@
               min-width="90">
             </el-table-column>
             <el-table-column
-              prop="leftVision"
               label="裸眼视力(左眼)"
               min-width="140">
+              <template slot-scope="scope">
+                <span v-for="item in localData.vision"
+                      v-if="item.code == scope.row.vision_left">{{item.name}}</span>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="rightVision"
               label="裸眼视力(右眼)"
               min-width="140">
+              <template slot-scope="scope">
+                <span v-for="item in localData.vision"
+                      v-if="item.code == scope.row.vision_right">{{item.name}}</span>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="workExp"
               label="工作经验"
               min-width="90">
+              <template slot-scope="scope">
+                <span v-for="item in localData.offerExperience"
+                      v-if="item.code == scope.row.experience">{{item.name}}</span>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="education"
               label="学历"
               min-width="60">
+              <template slot-scope="scope">
+                <span v-for="item in localData.education"
+                      v-if="item.code == scope.row.education">{{item.name}}</span>
+              </template>
             </el-table-column>
             <el-table-column
               :show-overflow-tooltip="true"
-              prop="lang"
+              prop="language"
               label="熟悉小语种"
               min-width="110">
             </el-table-column>
             <el-table-column
-              prop="review"
               label="评审结果"
               min-width="90">
+              <template slot-scope="scope">
+                <span
+                  v-if="scope.row.status == 5"
+                >{{scope.row.auditor_fail + "/" + scope.row.auditor_success}}</span>
+                <span v-else>/</span>
+              </template>
             </el-table-column>
             <el-table-column
-              prop="overVoteStatusEnum"
               label="简历状态"
               min-width="90">
+              <template slot-scope="scope">
+                <span v-for="item in localData.overVoteStatusEnum"
+                  v-if="item.code == scope.row.status"
+                >{{item.name}}</span>
+              </template>
             </el-table-column>
           </el-table>
         </el-checkbox-group>
@@ -139,42 +163,7 @@
           status:"6",
           reservationState:"3"
         },
-        tableData:[
-          {
-            jname:"你你打",
-            headerUrl:"//www.baidu.com/img/bd_logo1.png?where=super",
-            name:"糖糖1",
-            gender:"男",
-            age:"31",
-            height:"185",
-            weight:"45",
-            leftVision:"1.0",
-            rightVision:"1.0",
-            workExp:"无经验",
-            education:"小学",
-            lang:"小学话",
-            reservationState:"未确",
-            review:"/",
-            overVoteStatusEnum:"未查看"
-          },
-          {
-            jname:"你打打你打打你打打你打打你打打你打打你打打",
-            headerUrl:"//www.baidu.com/img/bd_logo1.png?where=super",
-            name:"糖糖",
-            gender:"男",
-            age:"31",
-            height:"185",
-            weight:"45",
-            leftVision:"1.0",
-            rightVision:"1.0",
-            workExp:"无经验",
-            education:"小学",
-            lang:"小学话",
-            reservationState:"未确",
-            review:"/",
-            overVoteStatusEnum:"未查看"
-          }
-        ],
+        tableData:[],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
         checkState: false,
         checkSum: 0,
@@ -194,8 +183,9 @@
           type: 'get',
           url: '/dabai-chaorenjob/favorites/getResumeFavoritesList',
           fuc: (res) => {
-            console.log( res)
+            console.log(3,res)
             if(res.code == 1){
+              this.tableData = res.data.data;
               // this.init();
             }else{
               this.$message({

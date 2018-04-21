@@ -4,7 +4,7 @@
       <div class="head_info">
         <div class="head_left">
           <div class="head_avatar">
-            <img src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1523616118359&di=7be774622f3f9675cf6a4b437ce1ddc7&imgtype=0&src=http%3A%2F%2Fd.hiphotos.baidu.com%2Fzhidao%2Fwh%253D450%252C600%2Fsign%3D88c8f471f9039245a1e0e90bb2a488f4%2F9a504fc2d5628535aedbd09d95ef76c6a7ef6356.jpg" alt="">
+            <img :src="detailData.headerUrl" alt="">
           </div>
           <div class="head_txt">
             <div class="head_name">{{detailData.name}}</div>
@@ -215,11 +215,14 @@
         <el-col :xs="11" :sm="11" :md="11" :lg="11" :xl="11" class="detail_info_right">
           <div class="image" v-if="detailData.imagesUrl && detailData.imagesUrl.length > 0">
             <div class="detail_info_title">图片形象</div>
-            <div class="image_cont">
-              <div class="image_cont_item" v-for='(item,index) in detailData.imagesUrl'>
-                <img @click="bigImg(item,index,1)" :src="item" alt="">
-              </div>
-            </div>
+            <el-row :gutter="20" class="image_cont">
+              <el-col :xs="12" :sm="12" :md="8" :lg="8" :xl="8"
+                      v-for='(item,index) in detailData.imagesUrl'>
+                <div class="image_cont_item">
+                  <img @click="bigImg(item,index,1)" :src="item" alt="">
+                </div>
+              </el-col>
+            </el-row>
           </div>
           <div class="video" v-if="detailData.videoUrl">
             <div class="detail_info_title">视频形象</div>
@@ -229,11 +232,14 @@
           </div>
           <div class="certificate" v-if="detailData.skillUrl && detailData.skillUrl.length > 0">
             <div class="detail_info_title">证书</div>
-            <div class="image_cont">
-              <div class="image_cont_item" v-for='(item,index) in detailData.skillUrl'>
-                <img @click="bigImg(item.skillUrl,index,2)" :src="item.skillUrl" alt="">
-              </div>
-            </div>
+            <el-row :gutter="20" class="image_cont">
+              <el-col :xs="12" :sm="12" :md="8" :lg="8" :xl="8"
+                      v-for='(item,index) in detailData.skillUrl'>
+                <div class="image_cont_item">
+                  <img @click="bigImg(item.skillUrl,index,2)" :src="item.skillUrl" alt="">
+                </div>
+              </el-col>
+            </el-row>
           </div>
         </el-col>
       </el-row>
@@ -305,6 +311,7 @@
         this.state = type;
       },
       getRecord (){
+        //获取简历的操作记录
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
         }
@@ -321,12 +328,12 @@
         })
       },
 			goSealTalk () {
-				console.log('data', this.detailData)
 				window.sessionStorage.setItem('targetId', this.detailData.uid)
 				window.sessionStorage.setItem('targetIdBool', true)
 				this.$router.push('sealtalkDetail')
 			},
       init () {
+        //获取简历详情
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
         }
@@ -345,7 +352,26 @@
           }
         })
       },
+      getAvatar(){
+        //获取头像
+        let getData = {
+          rrid:window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
+          data:getData,
+          fuc: (res) => {
+            if(res.code == 1){
+              // this.headUrl = res.data.headUrl
+            }
+            console.log(3,res)
+          }
+        })
+      },
       _result (type){
+        let rrids = [this.detailData.rrid]
+        window.sessionStorage.setItem("rrids",JSON.stringify(rrids))
         this.$router.push("/recruitResult/"+type)
       },
       bigImg(src,index,type){
@@ -377,7 +403,7 @@
       },
       _review (){
         let postData = {
-          rrid: this.detailData.rrid
+          rrids: [this.detailData.rrid]
         }
         this.$axios({
           type: 'post',
@@ -395,13 +421,15 @@
       },
       _collect (){
         let postData = {
-          rrid: this.detailData.rrid
+          oid: this.detailData.rrid
         }
-        let url;
+        let url,msg;
         if(this.detailData.isFavorite){
           url = '/dabai-chaorenjob/favorites/cancelFavorites'
+          msg = "取消收藏"
         }else{
-          url = '/dabai-chaorenjob/favorites/insertResume'
+          url = '/dabai-chaorenjob/favorites/favoritesResume'
+          msg = "收藏"
         }
         this.$axios({
           type: 'post',
@@ -409,7 +437,18 @@
           data: postData,
           fuc: (res) => {
             if(res.code == 1){
-
+              this.detailData.isFavorite = !this.detailData.isFavorite
+              this.$message({
+                type: 'success',
+                message: msg+"成功",
+                duration: 1000
+              })
+            }else{
+              this.$message({
+                type: 'error',
+                message: msg+"失败",
+                duration: 1000
+              })
             }
             console.log( res)
           }
@@ -592,15 +631,13 @@
   /*image_cont*/
   .image_cont{
     padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    margin: 0 !important;
   }
   .image_cont_item{
-    flex: 0 0 30%;
-    width:30%;
+    /*flex: 0 0 30%;*/
+    /*width:100%;*/
     height:0;
-    padding-bottom:40%;
+    padding-bottom:132%;
     background-color: #333;
     overflow: hidden;
     /*display: table-cell;*/
@@ -615,7 +652,7 @@
     right:0;
     margin:auto;
     max-width: 100%;
-    /*max-height: 100%;*/
+    max-height: 100%;
   }
   /*job_exp*/
   .job_exp{

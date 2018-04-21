@@ -404,6 +404,7 @@
 					window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
 				},
         refresh(){
+				  this.$store.state.tj.isRefresh = true;
           this.$router.push("/appBack");
         },
         clickTab(VueComponent) {
@@ -420,7 +421,7 @@
 					} else {
 						this.$router.push({path: this.tabIndex});
 					}
-          
+
         },
 				handleCommand (val) { // 设置跳转路由
 					this.$router.push(val)
@@ -498,7 +499,7 @@
 	}
 </style>
 <style scoped>
-	
+
   .index_cont{
     height: 100%;
   }
@@ -607,15 +608,14 @@
   .label_cont{
     height: 40px;
     background: #fff;
-    /*padding-left: 10px;*/
+    width: 100%;
+    min-width: 1000px;
     display: flex;
     overflow: hidden;
-    /*margin-bottom: 10px;*/
-    position: fixed;
-    top:60px;
-    left: 200px;
-    right: 0;
-    z-index: 100;
+    /*position: fixed;*/
+    /*top:60px;*/
+    /*right: 0;*/
+    /*z-index: 100;*/
     border-bottom: 10px solid #eff9ff;
   }
   .label_main{
@@ -628,14 +628,13 @@
     justify-content: center;
   }
   .content{
-    position: relative;
-    /*top: 40px;*/
-    /*left: 0;*/
-    /*right: 0;*/
-    /*bottom: 0;*/
-    /*margin-top: 40px;*/
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
     min-height: calc(100% - 70px);
     overflow: auto;
-    margin: 50px 10px 10px;
+    margin: 0 10px 10px;
   }
 </style>

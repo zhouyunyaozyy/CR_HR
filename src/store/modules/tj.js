@@ -4,8 +4,8 @@ const tj = {
       label_list:JSON.parse(window.sessionStorage.getItem("label_list")) || [],
       //当前标签path
       tabIndex: window.sessionStorage.getItem("tabIndex") || "",
-      //是否是查看
-      seeState: false,
+      //是否刷新
+      isRefresh: false,
       includePageNames:[],
     },
     mutations: {
@@ -34,18 +34,28 @@ const tj = {
               titleName = "账号管理"
               pathName = key.path
               break;
+            case "hrDetail":
+              titleName = "添加账号"
+              pathName = key.path
+              break;
+            case "hrEdit":
+              titleName = "编辑账号"
+              pathName = key.path
+              break;
             case "jobList":
               titleName = "职位管理"
               pathName = key.path
               break;
             case "jobDetail":
-              if(key.params.jid == 1){
-                titleName = "添加职位"
-              }else if(state.seeState){
-                titleName = "查看职位"
-              }else{
-                titleName = "编辑职位"
-              }
+              titleName = "添加职位"
+              pathName = key.path
+              break;
+            case "jobEdit":
+              titleName = "编辑职位"
+              pathName = key.path
+              break;
+            case "jobSee":
+              titleName = "查看职位"
               pathName = key.path
               break;
             case "resumeList":
@@ -54,10 +64,6 @@ const tj = {
               break;
             case "resumeCollect":
               titleName = "简历收藏"
-              pathName = key.path
-              break;
-            case "hrDetail":
-              titleName = "添加账号"
               pathName = key.path
               break;
             case "recruitList":
