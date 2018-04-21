@@ -32,14 +32,14 @@
         rules: {
           name: [
             { required: true, message: '请输入姓名', trigger: 'blur' },
-            { pattern: /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]){2,4}$/, message: '姓名必须为2-4位汉字', trigger: 'blur' }
+            { pattern: /^([\u4E00-\uFA29]|[\uE7C7-\uE7F3]){2,6}$/, message: '姓名必须为2-6位汉字', trigger: 'blur' }
           ]
         }
       }
     },
     created () {
-      this.userName = window.sessionStorage.getItem('userName')
-      this.userPhone = window.sessionStorage.getItem('userPhone')
+      this.userName = window.sessionStorage.getItem('username')
+      this.userPhone = window.sessionStorage.getItem('mobile')
       if (window.sessionStorage.getItem('name')) {
         this.form.name = window.sessionStorage.getItem('name')
       }
@@ -48,19 +48,16 @@
       submitForm (addUserForm) {
         this.$refs[addUserForm].validate((valid) => {
           if (valid) {
-            store.state.ajax({
-              url: '/hr/user/changeUserInfo',
+            this.$axios({
+              url: '/dabai-chaorenjob/hr/changeName',
               type: 'post',
-              data: {data: JSON.stringify({name: this.form.name})},
-              success: (res) => {
-                if (res.code === 1) {
-                  window.sessionStorage.setItem('name', this.form.name)
-                  this.$message({
-                    message: res.msg,
-                    duration: 1000
-                  })
-//                  this.$router.push('/adminIndex')
-                }
+              data: {name: this.form.name},
+              fuc: (res) => {
+								window.sessionStorage.setItem('name', this.form.name)
+								this.$message({
+									message: res.msg,
+									duration: 1000
+								})
               }
             })
           } else {
