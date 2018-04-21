@@ -24,7 +24,7 @@
                 <el-dropdown-item command="/checkCompany">企业信息</el-dropdown-item>
                 <el-dropdown-item command="/talkWithSystem">系统通知</el-dropdown-item>
                 <el-dropdown-item command="/feedback">反馈</el-dropdown-item>
-                <el-dropdown-item command="a">退出</el-dropdown-item>
+                <el-dropdown-item command="/">退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>

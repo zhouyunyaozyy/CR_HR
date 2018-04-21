@@ -39,7 +39,7 @@
       }
     },
     created () {
-      this.phone = window.sessionStorage.getItem('userPhone')
+      this.phone = window.sessionStorage.getItem('mobile')
     },
     methods: {
       submitForm (addUserForm) {
@@ -54,24 +54,18 @@
               })
               return
             }
-            let encrypt = new JSEncrypt()
-            var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdIIlQzv3fb9ktUGphZ/4l0qQ87iMxLjn1Rc3yhWL0KlnTSY/tziRi0XRyoSCBovZe1hhWGXnfwSvgJRvkzBWRHrnGor0+6I18DnY1lnrckp6bmjirX0BvdqFWxmXgIoz985YjLnPGNqBzt58EBdC5YqUYYnATRgKMA4g0N0Cd6QIDAQAB'  // 从服务端接收到的公钥，缓存到本地
-            encrypt.setPublicKey(publicKey)
-//            let postVersion = encrypt.encrypt(store.state.validationUid + '.' + this.form.num) // postVersion
-            let phone = encrypt.encrypt(this.phone) // phone
-            store.state.ajax({
-              url: '/verificationCode/checkVerificationCode',
+            this.$axios({
+              url: '/dabai-chaorenjob/hr/changeMobileSureBeforeVerification',
               type: 'post',
-              data: {data: JSON.stringify({
-                mobile: phone,
-                postVersion: store.state.validationUid + '.' + this.form.num
-              })},
-              success: (res) => {
-                if (res.data === true) {
-                  store.state.oldVerification = this.form.num
-//                  this.$router.push('/adminSettingsPhoneNext')
-                  this.typeFuc('phoneAfter')
-                }
+              data: {
+                verificationId: this.$store.state.validationUid,
+                verificationCode: this.form.num
+              },
+              fuc: (res) => {
+								console.log("res1", res)
+								this.$store.state.oldVerification = res.data
+								this.$router.push('personSettingPhoneAfter')
+//                  this.typeFuc('phoneAfter')
               }
             })
           } else {
@@ -79,23 +73,10 @@
         })
       },
       timeFuc: function () {
-        let resultData = {}
-        let encrypt = new JSEncrypt()
-        var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdIIlQzv3fb9ktUGphZ/4l0qQ87iMxLjn1Rc3yhWL0KlnTSY/tziRi0XRyoSCBovZe1hhWGXnfwSvgJRvkzBWRHrnGor0+6I18DnY1lnrckp6bmjirX0BvdqFWxmXgIoz985YjLnPGNqBzt58EBdC5YqUYYnATRgKMA4g0N0Cd6QIDAQAB'  // 从服务端接收到的公钥，缓存到本地
-        encrypt.setPublicKey(publicKey)
-        resultData.mobile = encrypt.encrypt(this.phone) // RSAkey
-        resultData.type = 1
-        console.log(resultData)
-        store.state.ajax({
-          url: '/verificationCode/changeCompanyMobileGetOldVerificationId',
+        this.$axios({
+          url: '/dabai-chaorenjob/hr/changeMobileBeforeVerificationId',
           type: 'post',
-          data: {
-//            data: encodeURIComponent(JSON.stringify(resultData))
-            data: JSON.stringify(resultData)
-          },
-          success: (res) => {
-            console.log(res)
-            if (res.code === 1) {
+          fuc: (res) => {
               let num = 60
               let numTime = setInterval(() => {
                 this.time = num-- + '秒'
@@ -107,8 +88,8 @@
               }, 900)
               this.getNumBool = true
               this.getNum_bool = true
-              store.state.validationUid = res.data
-            }
+              this.$store.state.validationUid = res.data
+							this.$message('验证码发送成功')
           }
         })
       }
@@ -169,6 +150,8 @@
     .adduserBody>form button{
         background-color: white;
         border: 1px solid #3e56b3;
+				height: 30px;
+				line-height: 0;
     }
     .adduserBody>form button:hover{
 /*        background-color: #5f73c3;*/

@@ -133,7 +133,7 @@
           ],
           name_short: [
             { required: true, message: '请输入简称', trigger: 'blur' },
-            { pattern: /^.{2,10}$/, message: '简称长度必须为2~10位组成', trigger: 'blur' }
+            { pattern: /^.{4,8}$/, message: '简称长度必须为4~8位组成', trigger: 'blur' }
           ],
           tel: [
             { required: true, message: '请输入联系方式', trigger: 'blur' },

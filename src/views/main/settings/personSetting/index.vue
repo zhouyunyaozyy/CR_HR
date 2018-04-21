@@ -66,9 +66,6 @@
 				}
 				this.$router.push(name)
       },
-     typeFuc (str) {
-       this.type = str
-     },
      setPhone () {
        this.$router.push('/adminSettingsPhone')
      },

@@ -36,7 +36,7 @@
 </template>
 <script>
   import JSEncrypt from 'jsencrypt'
-	import store from '@/store'
+//	import store from '@/store'
 	export default {
 		data () {
 			return {
@@ -72,11 +72,10 @@
         let encrypt = new JSEncrypt()
         var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdIIlQzv3fb9ktUGphZ/4l0qQ87iMxLjn1Rc3yhWL0KlnTSY/tziRi0XRyoSCBovZe1hhWGXnfwSvgJRvkzBWRHrnGor0+6I18DnY1lnrckp6bmjirX0BvdqFWxmXgIoz985YjLnPGNqBzt58EBdC5YqUYYnATRgKMA4g0N0Cd6QIDAQAB'  // 从服务端接收到的公钥，缓存到本地
         encrypt.setPublicKey(publicKey)
-        resultData.mobile = encrypt.encrypt(this.form.phone) // RSAkey
-        resultData.type = 1
+        resultData.mobile = this.form.phone // RSA
 				this.$axios({
 					type: 'post',
-					url: '/verificationCode/hrActivate',
+					url: '/dabai-chaorenjob/hr/getForgetPasswordVerificationId',
 					data: resultData,
 					fuc: (res) => {
 						this.getNumBool = true
@@ -94,7 +93,7 @@
 							message: '发送成功,请注意查看',
 							duration: 1000
 						})
-						store.state.validationUid = res.data
+						this.$store.state.validationUid = res.data
 					}
 				})
       },
@@ -104,25 +103,27 @@
 			register () {
 				this.$refs['form'].validate((valid) => {
           if (valid) {
-            store.state.pageStatus = 'reg'
             let user = {}
-            user.phone = this.regForm.phone
-            user.pwd = this.regForm.pwd
-            user.name = this.regForm.name
-            user.num = this.regForm.num
-            store.commit('jiami', user)
-            let resultData = store.state.jiamiData
+						let encrypt = new JSEncrypt()
+						var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdIIlQzv3fb9ktUGphZ/4l0qQ87iMxLjn1Rc3yhWL0KlnTSY/tziRi0XRyoSCBovZe1hhWGXnfwSvgJRvkzBWRHrnGor0+6I18DnY1lnrckp6bmjirX0BvdqFWxmXgIoz985YjLnPGNqBzt58EBdC5YqUYYnATRgKMA4g0N0Cd6QIDAQAB'  // 从服务端接收到的公钥，缓存到本地
+						encrypt.setPublicKey(publicKey) // RSA
+            user.mobile = this.form.phone
+            user.password = encrypt.encrypt(this.form.pwd)
+            user.verificationId = this.$store.state.validationUid
+            user.verificationCode = this.form.num
+//            store.commit('jiami', user)
+//            let resultData = store.state.jiamiData
 						this.$axios({
 							type: 'post',
-							url: '/hr/register',
-							data: resultData,
+							url: '/dabai-chaorenjob/hr/forgetPassword',
+							data: user,
 							fuc: (res) => {
 								this.$message({
 									message: '激活成功，请进行登录',
 									duration: 1000
 								})
 								this.$router.push('/')
-								store.state.validationUid = res.data
+//								store.state.validationUid = res.data
 							}
 						})
           }

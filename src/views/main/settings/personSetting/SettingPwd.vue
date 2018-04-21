@@ -20,6 +20,7 @@
 </template>
 <script>
 //  import {ajax} from '@/components/js/tools'
+	import JSEncrypt from 'jsencrypt'
   import store from '@/store'
   export default {
     data () {
@@ -60,30 +61,22 @@
               this.form.pwdReapeat = ''
               return
             }
-            store.state.pageStatus = 'newPwd'
+//            store.state.pageStatus = 'newPwd'
             let user = {}
-            user.oldPwd = this.form.oldPwd
-            user.pwd = this.form.pwd
-            store.commit('jiami', user)
-            let resultData = store.state.jiamiData
-            store.state.ajax({
-              url: '/hr/changePassWord',
+						let encrypt = new JSEncrypt()
+						var publicKey = 'MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdIIlQzv3fb9ktUGphZ/4l0qQ87iMxLjn1Rc3yhWL0KlnTSY/tziRi0XRyoSCBovZe1hhWGXnfwSvgJRvkzBWRHrnGor0+6I18DnY1lnrckp6bmjirX0BvdqFWxmXgIoz985YjLnPGNqBzt58EBdC5YqUYYnATRgKMA4g0N0Cd6QIDAQAB'  // 从服务端接收到的公钥，缓存到本地
+						encrypt.setPublicKey(publicKey)
+						user.oldPassword = encrypt.encrypt(this.form.oldPwd)
+						user.newPassword = encrypt.encrypt(this.form.pwd)
+            this.$axios({
+              url: '/dabai-chaorenjob/hr/changePassword',
               type: 'post',
-              data: {
-//                  data: encodeURIComponent(resultData)
-                data: resultData
-              },
-              success: (res) => {
-                console.log(res)
-                if (res.code === 1) {
-                  this.$message({
-                    message: '成功修改密码，请重新登录',
-                    duration: 1000
-                  })
-                }
-//                if (res.code === 1) {
-//                  this.$router.push('/')
-//                }
+              data: user,
+              fuc: (res) => {
+								this.$message({
+									message: '成功修改密码，请重新登录',
+									duration: 1000
+								})
               }
             })
           } else {

@@ -100,6 +100,10 @@ Vue.prototype.$axios = (params) => {
             message: response.data.msg,
             type: 'error',
           });
+					console.log(1, response, params)
+					if (params.url == '/dabai-authority/authority/login' || params.url == '/dabai-chaorenjob/hr/getUserInfoByTickets') {
+						params.fuc(response.data)
+					}
         } else {
           params.fuc(response.data)
         }
