@@ -172,9 +172,9 @@
             <el-button  @click="" plain>导出excel名单</el-button>
           </div>
           <div class="state_btn">
-            <el-button type="primary" @click="" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
-            <el-button type="primary" @click="" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getMeet == true'>邀请面试</el-button>
-            <el-button type="primary" @click="" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getRefuse == true'>不合适</el-button>
+            <el-button type="primary" @click="_review()" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
+            <el-button type="primary" @click="changeState(1)" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getMeet == true'>邀请面试</el-button>
+            <el-button type="primary" @click="changeState(2)" plain v-if='permissionConfig.length > 0 && permissionConfig[0].getRefuse == true'>不合适</el-button>
           </div>
         </div>
       </div>
@@ -182,7 +182,8 @@
         <el-row v-if="!pattern" class="chart_list">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-col
-              v-for="item in tableData" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='item.rrid'
+              v-for="item in tableData"
+              :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='item.rrid'
               class="chart_item">
               <div class="chart_cont">
                 <div class="chart_img">
@@ -540,6 +541,21 @@
           this.checkSum = 0;
         }
       },
+      _review (){
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReceived/markReview',
+          data: this.checkedCities,
+          fuc: (res) => {
+            console.log( res)
+          }
+        })
+      },
+      changeState(type){
+        window.sessionStorage.setItem("rrids",JSON.stringify(this.checkedCities))
+        this.$router.push("/recruitResult/"+type)
+        console.log(this.checkedCities)
+      }
     }
   }
 </script>

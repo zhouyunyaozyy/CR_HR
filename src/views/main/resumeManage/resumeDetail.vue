@@ -333,7 +333,7 @@
 				this.$router.push('sealtalkDetail')
 			},
       init () {
-        //获取职位详情
+        //获取简历详情
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
         }
@@ -370,6 +370,8 @@
         })
       },
       _result (type){
+        let rrids = [this.detailData.rrid]
+        window.sessionStorage.setItem("rrids",JSON.stringify(rrids))
         this.$router.push("/recruitResult/"+type)
       },
       bigImg(src,index,type){
@@ -401,7 +403,7 @@
       },
       _review (){
         let postData = {
-          rrid: this.detailData.rrid
+          rrids: [this.detailData.rrid]
         }
         this.$axios({
           type: 'post',
