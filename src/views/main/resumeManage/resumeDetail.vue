@@ -217,7 +217,7 @@
             <div class="detail_info_title">图片形象</div>
             <el-row :gutter="20" class="image_cont">
               <el-col :xs="12" :sm="12" :md="8" :lg="8" :xl="8"
-                      v-for='(item,index) in detailData.imagesUrl'>
+                      v-for='(item,index) in detailData.imagesUrl' :key='index'>
                 <div class="image_cont_item">
                   <img @click="bigImg(item,index,1)" :src="item" alt="">
                 </div>
@@ -234,7 +234,7 @@
             <div class="detail_info_title">证书</div>
             <el-row :gutter="20" class="image_cont">
               <el-col :xs="12" :sm="12" :md="8" :lg="8" :xl="8"
-                      v-for='(item,index) in detailData.skillUrl'>
+                      v-for='(item,index) in detailData.skillUrl' :key='index'>
                 <div class="image_cont_item">
                   <img @click="bigImg(item.skillUrl,index,2)" :src="item.skillUrl" alt="">
                 </div>
