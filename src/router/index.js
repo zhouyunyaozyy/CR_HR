@@ -42,15 +42,30 @@ const router1 = new Router({
           name: 'hrDetail',
           component: resolve => require(['@/views/main/accountManage/accountManageDetail'], resolve)
         },
+        { // 编辑账号
+          path: '/hrEdit',
+          name: 'hrEdit',
+          component: resolve => require(['@/views/main/accountManage/accountManageEdit'], resolve)
+        },
         { // 职位管理列表
           path: '/jobList',
           name: 'jobList',
           component: resolve => require(['@/views/main/positionManage/positionManageList'], resolve)
         },
         { // 职位管理详情
-          path: '/jobDetail/:jid',
+          path: '/jobDetail',
           name: 'jobDetail',
           component: resolve => require(['@/views/main/positionManage/positionManageDetail'], resolve)
+        },
+        { // 编辑职位
+          path: '/jobEdit',
+          name: 'jobEdit',
+          component: resolve => require(['@/views/main/positionManage/positionManageEdit'], resolve)
+        },
+        { // 查看职位
+          path: '/jobSee',
+          name: 'jobSee',
+          component: resolve => require(['@/views/main/positionManage/positionManageSee'], resolve)
         },
         { // 职位简历列表
           path: '/resumeList',

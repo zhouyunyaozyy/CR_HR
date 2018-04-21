@@ -84,22 +84,11 @@
         uid:""
       };
     },
-    computed:{
-      isRefresh (){
-        return this.$store.state.tj.isRefresh;
-      }
-    },
     activated (){
-      if(this.isRefresh){
-        this.hr_detail.name = ''
-        this.hr_detail.mobile = ''
-        this.hr_detail.username = ''
-        this.hr_detail.resume = []
-        this.hr_detail.enterprise = []
-        this.hr_detail.job = []
-        this.checkBool = false
-        this.checkBoolJob = false
-        this.$store.state.tj.isRefresh = false;
+      this.uid = window.sessionStorage.getItem("uid");
+      console.log(this.uid)
+      if(this.uid){
+        this.init();
       }
     },
     methods: {
@@ -196,13 +185,12 @@
               cid: window.sessionStorage.getItem("cid"),
               name: this.hr_detail.name,
               mobile: this.hr_detail.mobile,
-              config:JSON.stringify(config)
+              config:JSON.stringify(config),
+              uid:this.uid
             };
-            // console.log(resultData);
-            // return;
             this.$axios({
               type: 'post',
-              url: "/dabai-chaorenjob/company/addChildren",
+              url: "/dabai-chaorenjob/company/updateChildrenDetail",
               data: resultData,
               fuc: (res) => {
                 console.log( res)

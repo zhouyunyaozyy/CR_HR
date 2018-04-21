@@ -127,7 +127,7 @@
         })
       },
       addHr (){
-        this.$router.push('/jobDetail/1')
+        this.$router.push('/jobDetail')
       },
       selectCity (code){
         let cityName;
@@ -174,12 +174,12 @@
         })
       },
       _edit (jid){
-        this.$store.state.tj.seeState = false;
-        this.$router.push("/jobDetail/"+jid)
+        window.sessionStorage.setItem("jid",jid)
+        this.$router.push("/jobEdit")
       },
       _see (jid){
-        this.$store.state.tj.seeState = true;
-        this.$router.push("/jobDetail/"+jid)
+        window.sessionStorage.setItem("jid",jid)
+        this.$router.push("/jobSee")
       }
     }
   }

@@ -268,6 +268,7 @@
           lang: '',             //  语种
         },
         rcnidArr: [],         //  职能列表
+        ageArr: [],           //  年龄列表
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
         address: '', // 选择的省
         address2: '', // 选择的市
@@ -284,22 +285,10 @@
     },
     activated () {
       this.getfuc();
-      if(this.isRefresh){
-        for(let a in this.form){
-          this.form[a] = ""
-        }
-        for(let a in this.screen){
-          this.screen[a] = ""
-        }
-        this.address = ""
-        this.address2 = ""
-        this.nowCity = []
-        this.$store.state.tj.isRefresh = false;
-      }
+      this.getDetail();
     },
     methods: {
       getfuc () {
-        // 获取职能
         let resultData = {
           cid:window.sessionStorage.getItem("cid")
         };
@@ -308,6 +297,7 @@
           url: '/dabai-chaorenjob/resumeTarget/getActiveResumeTarget',
           data: resultData,
           fuc: (res) => {
+            // 获取职能
             if(res.code == 1){
               this.rcnidArr = res.data;
             }else{
@@ -323,7 +313,7 @@
       },
       getDetail (){
         let resultData = {
-          jid:this.$route.params.jid
+          jid:window.sessionStorage.getItem("jid")
         };
         this.$axios({
           type: 'get',
@@ -365,11 +355,12 @@
           wages:this.form.wages,
           hire_number:this.form.hire_number,
           profile:this.form.profile,
-          search_config_json:JSON.stringify(this.screen)
+          search_config_json:JSON.stringify(this.screen),
+          jid:window.sessionStorage.getItem("jid")
         };
         this.$axios({
           type: 'post',
-          url: "/dabai-chaorenjob/job/insertJob",
+          url: "/dabai-chaorenjob/job/updateJob",
           data: resultData,
           fuc: (res) => {
             if(res.code == 1){
@@ -488,7 +479,7 @@
     font-size: 16px;
     color:#333;
     border-bottom: 1px solid #ccc;
-    line-height: 30px;
+    line-height: 40px;
     padding-left: 20px;
   }
   .job_detail_describe{

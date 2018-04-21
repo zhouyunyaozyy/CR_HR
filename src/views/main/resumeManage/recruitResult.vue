@@ -13,19 +13,20 @@
     </div>
     <div class="info_cont">
       <div class="center_cont">
-        <div class="prev_info">
-          <div class="prev_info_title">已发送的预约面试信息</div>
-          <div class="prev_info_time">
+        <div class="prev_info" v-if="Object.keys(prevInfo).length > 0">
+          <div class="prev_info_title">{{prevInfo.title}}</div>
+          <div class="prev_info_time" v-if="prevInfo.agreedtime">
             <span class="prev_info_label">*面试时间：</span>
-            <span class="prev_info_txt">2018-12-31 14：00</span>
+            <span class="prev_info_txt">{{(new Date(prevInfo.agreedtime)).Format("yyyy-MM-dd hh:mm:ss")}}</span>
           </div>
-          <div class="prev_info_address">
+          <div class="prev_info_address" v-if="prevInfo.agreedpath">
             <span class="prev_info_label">*面试地址：</span>
-            <span class="prev_info_txt">四川省成都市火车南站富森家具</span>
+            <span class="prev_info_txt">{{prevInfo.agreedpath}}</span>
           </div>
           <div class="prev_info_leav">
             <span class="prev_info_label">留言：</span>
-            <span class="prev_info_txt">四川省成都市火车南站富森家具</span>
+            <span class="prev_info_txt" v-if="prevInfo.agreednote">{{prevInfo.agreednote}}</span>
+            <span class="prev_info_txt" v-else-if="prevInfo.mark">{{prevInfo.mark}}</span>
           </div>
         </div>
         <div class="leav_info" :class="{refuse:resultState == 2}">
@@ -80,6 +81,9 @@
           address:"",
           leav:""
         },
+        prevInfo:{
+
+        },
       }
     },
     computed:{
@@ -87,7 +91,36 @@
         return this.$route.params.resultState
       }
     },
+    activated () {
+      this.init();
+    },
     methods:{
+      init (){
+        let postData = {
+          rrid: window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'get',
+          url: '/dabai-chaorenjob/resumeReceived/getResumeReceivedByRRid',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+              if(res.data.status == 3){
+                this.prevInfo.title = "已发送的预约面试信息"
+                this.prevInfo.agreedtime = res.data.agreedtime
+                this.prevInfo.agreedpath = res.data.agreedpath
+                this.prevInfo.agreednote = res.data.agreednote
+              }else if(res.data.status == 4){
+                this.prevInfo.title = "已发送的不合适信息"
+                this.prevInfo.mark = res.data.mark;
+              }else{
+                this.prevInfo = {};
+              }
+            }
+            console.log( res)
+          }
+        })
+      },
       _mark (){
         let postData = {
           rrid: window.sessionStorage.getItem("rrid"),
@@ -121,6 +154,16 @@
             console.log( res)
           }
         })
+      },
+      removeTab() {
+        this.$store.commit('removeTab',this.tabIndex)
+        this.clickTab();
+      },
+      clickTab() {
+        this.$store.commit('changeTab',"/resumeDetail")
+        this.$router.push({
+          path:"/resumeDetail"
+        });
       }
     }
   }
