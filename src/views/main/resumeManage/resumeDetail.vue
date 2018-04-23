@@ -35,21 +35,37 @@
             <span>&nbsp;/&nbsp;</span>
             <!--<span class=""-->
                   <!--v-if="success_list.length > 0">&nbsp;{{"("+success_list.join(",")+")"}}</span>-->
-            <span
-              class="review_txt" title="321321312321">{{detailData.audited_fail || 0}} 否决</span>
+            <span class="review_txt">{{detailData.audited_fail || 0}} 否决</span>
+            <span class="review_query">
+              <i class="iconfont icon-wenhao"></i>
+            </span>
             <div>
               <i class="iconfont icon"></i>
             </div>
           </div>
+          <div v-else></div>
           <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
             <el-button @click="_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
           </div>
-          <div class="review_btn" v-else-if="detailData.status == 5 && !review_btn">
-            <el-button @click="_change_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].joinReview == true'>参与评审</el-button>
-          </div>
-          <div class="review_btn" v-else-if="detailData.status == 5 && review_btn">
-            <el-button @click="_pass()" type="primary" plain>通过</el-button>
-            <el-button @click="_veto()" type="warning" plain>否决</el-button>
+          <div class="review_btn" v-else-if="detailData.status == 5 && permissionConfig.length > 0 && permissionConfig[0].joinReview == true">
+            <el-button
+              @click="_change_review()"
+              type="primary" plain
+              v-if='!review_btn && passState == 2'>参与评审</el-button>
+            <el-button
+              plain
+              v-else-if='passState == 0'>已投否决</el-button>
+            <el-button
+              plain
+              v-else-if='passState == 1'>已投通过</el-button>
+            <el-button
+              v-else-if="review_btn && passState == 2"
+              @click="_pass()"
+              type="primary" plain>通过</el-button>
+            <el-button
+              v-else-if="review_btn && passState == 2"
+              @click="_veto()"
+              type="warning" plain>否决</el-button>
           </div>
         </div>
       </div>
@@ -305,7 +321,8 @@
         review_btn:false,
 				permissionConfig: [], // 权限管理
         fail_list:[],
-        success_list:[]
+        success_list:[],
+        passState:2
       }
     },
     activated () {
@@ -316,6 +333,11 @@
     methods:{
       changeState(type){
         this.state = type;
+        if(type == 1){
+          this.init()
+        }else if(type == 2){
+          this.getRecord()
+        }
       },
       getRecord (){
         //获取简历的操作记录
@@ -360,6 +382,9 @@
                   this.success_list.push(res.data.reviewList[i].name)
                 }else if(res.data.reviewList[i].sure == 0){
                   this.fail_list.push(res.data.reviewList[i].name)
+                }
+                if(res.data.rrid == res.data.reviewList[i].rrid){
+                  this.passState = res.data.reviewList[i].sure
                 }
               }
               console.log(JSON.parse(res.data.education_item))
@@ -410,6 +435,7 @@
           data: postData,
           fuc: (res) => {
             if(res.code == 1){
+              this.init()
             }
             console.log( res)
           }

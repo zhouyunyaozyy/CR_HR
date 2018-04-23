@@ -1,7 +1,7 @@
 <template>
   <div class="recruit_result">
     <div class="user_info">
-      <div class="center_cont user_cont">
+      <div class="center_cont user_cont" v-if="rrids.length == 1">
         <div class="user_avatar">
           <img :src="dataInfo.headerUrl" alt="">
         </div>
@@ -10,6 +10,7 @@
           <div class="user_apply">应聘职位：<span>{{jobName}}</span></div>
         </div>
       </div>
+      <div class="center_cont user_cont" v-else>应聘职位：<span>{{jobName}}</span></div>
     </div>
     <div class="info_cont">
       <div class="center_cont">
@@ -84,7 +85,8 @@
         },
         prevInfo:{},
         dataInfo:{},
-        jobName:window.sessionStorage.getItem("jobName")
+        jobName:window.sessionStorage.getItem("jobName"),
+        rrids: JSON.parse(window.sessionStorage.getItem("rrids"))
       }
     },
     computed:{
@@ -98,13 +100,16 @@
       }else{
         this.form.leav = "感谢您对我司的认同，经过综合评估，我司已确定了最适合的人选。非常遗憾未能与您成为同事，相信以您的优秀才干，一定能很快找到更适合的岗位，期待将来我们能有机会合作。"
       }
-      this.initInfo();
-      this.init();
+      console.log(this.rrids)
+      if(this.rrids.length == 1){
+        this.init();
+        this.initInfo();
+      }
     },
     methods:{
       initInfo (){
         let postData = {
-          rrid: window.sessionStorage.getItem("rrid")
+          rrid: this.rrids[0]
         }
         this.$axios({
           type: 'get',

@@ -163,8 +163,8 @@
           <el-checkbox
             v-model="checkState"
             @change="checkAll">全选</el-checkbox>
-          <span @click="changePattern(false)"><i class="iconfont icon-ai-list"></i>大图</span>
-          <span @click="changePattern(true)"><i class="iconfont icon-liebiao"></i>列表</span>
+          <span @click="changePattern(false)" :class="{is_active:!pattern}"><i class="iconfont icon-ai-list"></i>大图</span>
+          <span @click="changePattern(true)" :class="{is_active:pattern}"><i class="iconfont icon-liebiao"></i>列表</span>
         </div>
         <div class="recruit_right_btn">
           <div class="export_btn">
@@ -545,7 +545,7 @@
         this.$axios({
           type: 'post',
           url: '/dabai-chaorenjob/resumeReceived/markReview',
-          data: this.checkedCities,
+          data: {rrids:this.checkedCities},
           fuc: (res) => {
             console.log( res)
           }
@@ -689,6 +689,14 @@
   }
   .recruit_left_btn{
     flex: 1;
+  }
+  .recruit_left_btn span{
+    font-size: 16px;
+    color:#333;
+    margin-left: 10px;
+  }
+  .recruit_left_btn span.is_active{
+    color:#048adf;
   }
   .recruit_right_btn{
     flex: 0 0 860px;

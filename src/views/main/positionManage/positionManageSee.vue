@@ -4,11 +4,11 @@
     <div class="job_info_list">
       <div class="job_info_cont">
         <div class="job_info_item">
-          <span class="job_info_name">职位名称</span>
+          <span class="job_info_name">职位名称：</span>
           <span class="job_info_text">{{jobInfo.name}}</span>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">职能</span>
+          <span class="job_info_name">职能：</span>
           <span
             class="job_info_text"
             v-for="item in rcnidArr"
@@ -16,7 +16,7 @@
           >{{item.name}}</span>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">最低学历要求</span>
+          <span class="job_info_name">最低学历要求：</span>
           <span
             class="job_info_text"
             v-for="item in localData.education"
@@ -24,7 +24,7 @@
           >{{item.name}}</span>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">工作地点</span>
+          <span class="job_info_name">工作地点：</span>
           <div
             class="job_info_text"
             v-for="item in localData.area"
@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">工作经验要求</span>
+          <span class="job_info_name">工作经验要求：</span>
           <span
             class="job_info_text"
             v-for="item in localData.offerExperience"
@@ -45,7 +45,7 @@
           >{{item.name}}</span>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">薪资范围</span>
+          <span class="job_info_name">薪资范围：</span>
           <span
             class="job_info_text"
             v-for="item in localData.wages"
@@ -53,12 +53,12 @@
           >{{item.name}}</span>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">招聘人数</span>
+          <span class="job_info_name">招聘人数：</span>
           <span class="job_info_text">{{jobInfo.hire_number+"人"}}</span>
         </div>
         <div class="job_info_item">
-          <span class="job_info_name">职位描述</span>
-          <span class="job_info_text">{{jobInfo.profile}}</span>
+          <span class="job_info_name">职位描述：</span>
+          <span class="job_info_text job_info_textarea">{{jobInfo.profile}}</span>
         </div>
       </div>
     </div>
@@ -141,17 +141,15 @@
     line-height: 40px;
     padding-left: 20px;
   }
-  .job_info_list{
-  }
   .job_info_cont{
     padding: 20px;
     margin: 0 auto;
   }
   .job_info_item{
+    line-height: 40px;
     display: flex;
-    align-items: center;
+    /*align-items: center;*/
     justify-content: center;
-    height: 40px;
     font-size: 16px;
     color:#4c4c4c;
   }
@@ -159,6 +157,11 @@
     flex: 0 0 150px;
   }
   .job_info_text{
-    flex: 0 0 300px;
+    flex: 0 0 400px;
+    max-height: 100px;
+    overflow: auto;
+  }
+  .job_info_textarea{
+    line-height: 20px;
   }
 </style>
