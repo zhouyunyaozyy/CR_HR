@@ -87,6 +87,7 @@
 										console.log('loginAfter', res)
 										if (res.code == 1) {
 											if (res.data.manager == 1) {
+												window.sessionStorage.setItem('mainOrChildren', 'main')
 												window.sessionStorage.setItem('permissionConfig', JSON.stringify([
 													{
 														"seeRecruitDetail": true,
@@ -104,6 +105,7 @@
 													}
 												]))
 											} else {
+												window.sessionStorage.setItem('mainOrChildren', 'children')
 												if (res.data.permissions) {
 													window.sessionStorage.setItem('permissionConfig', res.data.permissions.config)
 												} else {

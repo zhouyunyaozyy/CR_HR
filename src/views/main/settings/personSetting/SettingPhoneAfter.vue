@@ -24,7 +24,7 @@
   export default {
     data () {
       return {
-        phone: '',
+//        phone: '',
         time: '获取',
         getNum_bool: false,
         getNumBool: false,
@@ -47,7 +47,7 @@
       }
     },
     created () {
-      this.phone = window.sessionStorage.getItem('userPhone')
+//      this.phone = window.sessionStorage.getItem('userPhone')
     },
     methods: {
       submitForm (addUserForm) {
@@ -74,8 +74,8 @@
               type: 'post',
               data: user,
               fuc: (res) => {
-								window.sessionStorage.setItem('userPhone', this.form.phone)
-//                  this.$router.push('/adminIndex')
+								window.sessionStorage.setItem('mobile', this.form.phone)
+								this.$router.push('personSettingPhone')
                 this.$message({
                   message: res.msg,
                   duration: 1000

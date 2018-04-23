@@ -80,15 +80,17 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-pagination
-          background
-          layout="total, prev, pager, next"
-          :total="total"
-          :page-size="size"
-        >
-          <!--prev-text="上一页"-->
-          <!--next-text="下一页"-->
-        </el-pagination>
+				<div class="pagenationDiv">
+					<el-pagination
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange"
+						:current-page="pageData.start"
+						:page-sizes="[15]"
+						:page-size="pageData.pageSize"
+						layout="total, prev, pager, next, sizes"
+						:total="pageData.count">
+					</el-pagination>
+				</div>
       </el-main>
     </el-container>
   </div>
@@ -99,9 +101,8 @@
     name: "positionManagement",
     data() {
       return {
-        total:1000,
-        size:15,
         tableData: [],
+				pageData: {},
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
 				permissionConfig: [] //权限管理
       }
@@ -112,8 +113,18 @@
       this.init();
     },
     methods:{
+			handleSizeChange (val) {
+				this.$limit = val
+				this.init()
+			},
+			handleCurrentChange (val) {
+				this.$start = val
+				this.init()
+			},
       init(){
         let resultData = {
+					_limit: this.$limit,
+					_start: this.$start,
           cid:window.sessionStorage.getItem("cid")
         };
         this.$axios({
@@ -121,6 +132,7 @@
           url: '/dabai-chaorenjob/job/queryAllJobListByCid',
           data: resultData,
           fuc: (res) => {
+						this.pageData = res.data
             this.tableData= res.data.data;
             console.log( res)
           }
@@ -245,9 +257,9 @@
     padding: 0;
     border-radius: 2px;
   }
-  .posi_list .el-pagination{
-    text-align: right;
-    padding-top: 20px;
-    /*border-top: 1px solid #666666;*/
-  }
+</style>
+<style scoped="true">
+	.pagenationDiv{
+		margin-top: 25px;
+	}
 </style>

@@ -347,6 +347,17 @@
             </el-table>
           </el-checkbox-group>
         </div>
+				<div class="pagenationDiv">
+					<el-pagination
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange"
+						:current-page="pageData.start"
+						:page-sizes="[15, 30]"
+						:page-size="pageData.pageSize"
+						layout="total, prev, pager, next, sizes"
+						:total="pageData.count">
+					</el-pagination>
+				</div>
       </div>
     </div>
   </div>
@@ -386,7 +397,8 @@
         checkSum: 0,
         checkedAllName: [],
         checkedCities:[],
-				permissionConfig: []
+				permissionConfig: [],
+				pageData: {}
       }
     },
     computed:{
@@ -398,6 +410,14 @@
       this.getDetail();
     },
     methods:{
+			handleSizeChange (val) {
+				this.$limit = val
+				this.init()
+			},
+			handleCurrentChange (val) {
+				this.$start = val
+				this.init()
+			},
       sure (state,type){
         if(state != 3){
           return;
@@ -413,6 +433,8 @@
       },
       init(){
         let screenArr = {
+					_limit: this.$limit,
+					_start: this.$start,
           jid: this.jid
         }
         if(this.screenData.name){
@@ -472,6 +494,7 @@
           data:screenArr,
           fuc: (res) => {
             if(res.code == 1){
+							this.pageData = res.data
               this.tableData = res.data.data;
               for(let i = 0;i<this.tableData.length;i++){
                 this.checkedAllName[i] = this.tableData[i].rrid
@@ -643,6 +666,9 @@
   }
 </style>
 <style scoped>
+	.pagenationDiv{
+		margin-top: 25px;
+	}
   .recruit_screen{
     background-color: #fff;
     margin-bottom: 10px;

@@ -47,7 +47,7 @@
               background-color="#1f282d"
               text-color="#fff"
               active-text-color="#fff" >
-              <el-menu-item index="/hrList" v-if="group_id == 1">
+              <el-menu-item index="/hrList" v-if="mainOrChildren == 'main'">
                 <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
@@ -116,6 +116,7 @@
 					uid: '',
 					showIcon: false, // 职位沟通小红点
           g_state:true,
+					mainOrChildren: '',
 					permissionConfig: []
         }
       },
@@ -124,6 +125,7 @@
       },
 			created () {
 				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
+				this.mainOrChildren = window.sessionStorage.getItem('mainOrChildren')
 				let _form = Default
 				_form.area = area.area
 				// console.log('_form', _form)

@@ -133,6 +133,10 @@ Vue.prototype.$axios = (params) => {
   }
 }
 
+//分页
+Vue.prototype.$limit = 15
+Vue.prototype.$start = 1
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
