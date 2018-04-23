@@ -437,6 +437,13 @@
             duration: 1000
           })
           return;
+        }else if(/^\d{1,4}$/.test(this.form.hire_number) == false){
+          this.$message({
+            type: 'error',
+            message: '招聘人数为1-4位正整数',
+            duration: 1000
+          })
+          return;
         }else if(!this.form.profile){
           this.$message({
             type: 'error',

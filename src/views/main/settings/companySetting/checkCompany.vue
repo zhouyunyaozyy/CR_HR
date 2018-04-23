@@ -1,5 +1,5 @@
 <template>
-  <div class='basic'>
+  <div class='basicCheck'>
     <div class="basicBody">
       <h3>企业标志</h3>
 			<img v-if="logoUrl" :src="logoUrl" class="avatar">
@@ -217,6 +217,7 @@
 					}
 					this.images = res.data.company.images.split(',')
 //            let images = res.data.images.split(',')
+					this.imagesUrl = []
 					for (let val of res.data.company.imagesUrl) {
 							this.imagesUrl.push({url: val})
 							console.log(this.imagesUrl)
@@ -333,16 +334,16 @@
   }
 </script>
 <style>
-    .basic .basicBody .el-upload-list--picture-card .el-upload-list__item{
+    .basicCheck .basicBody .el-upload-list--picture-card .el-upload-list__item{
         width: 345px;
         height: 160px;
     }
-    .basic .basicBody:nth-of-type(2) img{
+    .basicCheck .basicBody:nth-of-type(2) img{
         width: 345px;
         height: 160px;
 			margin-left: 10px;
     }
-	.basic .el-upload {
+	.basicCheck .el-upload {
 		display: none;
 	}
     .avatar-uploader .el-upload {
@@ -370,7 +371,10 @@
       }
 </style>
 <style lang='css' scoped>
-    
+	pre{
+		white-space: pre-wrap;
+		word-wrap: break-word;
+	}
     .basicBody{
         width: 100%;
         overflow: hidden;

@@ -84,8 +84,11 @@
 									type: 'post',
 									url: '/dabai-chaorenjob/hr/getUserInfoByTickets',
 									fuc: (res) => {
-										console.log('loginAfter', res)
+										console.log('loginAfter', res.data.uid != window.sessionStorage.getItem('uid'))
 										if (res.code == 1) {
+											if (res.data.uid != window.sessionStorage.getItem('uid')) {
+												window.sessionStorage.removeItem('label_list')
+											}
 											if (res.data.manager == 1) {
 												window.sessionStorage.setItem('mainOrChildren', 'main')
 												window.sessionStorage.setItem('permissionConfig', JSON.stringify([
