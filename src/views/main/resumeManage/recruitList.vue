@@ -565,19 +565,61 @@
         }
       },
       _review (){
+			  for(let i = 0;i<this.tableData.length;i++){
+			    if(this.tableData[i].status == 3 || this.tableData[i].status == 4 || this.tableData[i].status == 5){
+			      for(let a = 0;a < this.checkedCities.length; a++){
+			        if(this.tableData[i].rrid == this.checkedCities[a]){
+                this.$message({
+                  type: 'error',
+                  message: "已被处理过的简历，不可发起评审。",
+                  duration: 1000
+                })
+                return;
+              }
+            }
+          }
+        }
         this.$axios({
           type: 'post',
           url: '/dabai-chaorenjob/resumeReceived/markReview',
           data: {rrids:this.checkedCities},
           fuc: (res) => {
+            if(res.code == 1){
+              this.checkSum = 0;
+              this.checkedCities = [];
+              this.getDetail();
+              this.$message({
+                type: 'success',
+                message: "操作成功",
+                duration: 1000
+              })
+            }
             console.log( res)
           }
         })
       },
       changeState(type){
+        for(let i = 0;i<this.tableData.length;i++){
+          if(this.tableData[i].status == 3 || this.tableData[i].status == 4){
+            for(let a = 0;a < this.checkedCities.length; a++){
+              if(this.tableData[i].rrid == this.checkedCities[a]){
+                this.$confirm('选中的简历包含已处理过的简历，继续进行将覆盖上次操作,是否继续?', '提示', {
+                  confirmButtonText: '确定',
+                  cancelButtonText: '取消',
+                  type: 'warning'
+                }).then(() => {
+                    window.sessionStorage.setItem("rrids",JSON.stringify(this.checkedCities))
+                    this.$router.push("/recruitResult/"+type)
+                }).catch(() => {
+                });
+                return;
+              }
+            }
+          }
+        }
         window.sessionStorage.setItem("rrids",JSON.stringify(this.checkedCities))
         this.$router.push("/recruitResult/"+type)
-        console.log(this.checkedCities)
+      //   console.log(this.checkedCities)
       }
     }
   }

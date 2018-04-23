@@ -10,7 +10,7 @@
           <div class="user_apply">应聘职位：<span>{{jobName}}</span></div>
         </div>
       </div>
-      <div class="center_cont user_cont" v-else>应聘职位：<span>{{jobName}}</span></div>
+      <div class="center_cont user_name" v-else>应聘职位：<span>{{jobName}}</span></div>
     </div>
     <div class="info_cont">
       <div class="center_cont">
@@ -86,7 +86,7 @@
         prevInfo:{},
         dataInfo:{},
         jobName:window.sessionStorage.getItem("jobName"),
-        rrids: JSON.parse(window.sessionStorage.getItem("rrids"))
+        rrids: []
       }
     },
     computed:{
@@ -100,10 +100,14 @@
       }else{
         this.form.leav = "感谢您对我司的认同，经过综合评估，我司已确定了最适合的人选。非常遗憾未能与您成为同事，相信以您的优秀才干，一定能很快找到更适合的岗位，期待将来我们能有机会合作。"
       }
+      this.rrids = JSON.parse(window.sessionStorage.getItem("rrids"))
       console.log(this.rrids)
       if(this.rrids.length == 1){
         this.init();
         this.initInfo();
+      }else{
+        this.dataInfo = {}
+        this.prevInfo = {}
       }
     },
     methods:{
@@ -125,7 +129,7 @@
       },
       init (){
         let postData = {
-          rrid: window.sessionStorage.getItem("rrid")
+          rrid: this.rrids[0]
         }
         this.$axios({
           type: 'get',
@@ -135,12 +139,12 @@
             if(res.code == 1){
               if(res.data.status == 3){
                 this.prevInfo.title = "已发送的预约面试信息"
-                this.prevInfo.agreedtime = res.data.agreedtime
-                this.prevInfo.agreedpath = res.data.agreedpath
-                this.prevInfo.agreednote = res.data.agreednote
+                this.prevInfo.agreedtime = res.data.agreedtime || ""
+                this.prevInfo.agreedpath = res.data.agreedpath || ""
+                this.prevInfo.agreednote = res.data.agreednote || ""
               }else if(res.data.status == 4){
                 this.prevInfo.title = "已发送的不合适信息"
-                this.prevInfo.mark = res.data.mark;
+                this.prevInfo.mark = res.data.mark || "";
               }else{
                 this.prevInfo = {};
               }
