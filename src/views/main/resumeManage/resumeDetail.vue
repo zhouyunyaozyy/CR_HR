@@ -24,17 +24,22 @@
           </el-button>
           <el-button @click="_collect()" type="primary" plain>
             <i class="iconfont icon-shoucang"></i>
-            收藏
+            {{detailData.isFavorite?"取消收藏":"收藏"}}
           </el-button>
           <el-button plain>导出简历</el-button>
         </div>
         <div class="head_review">
           <div class="review_result" v-if="detailData.status == 5">
             <span class="">评审结果：</span>
-            <span class="review_num">2 通过</span>
-            <span class="">&nbsp;(塔塔，全球) / &nbsp;</span>
-            <span class="review_txt">1 否决</span>
-            <span class="">&nbsp;(凯凯)</span>
+            <span class="review_num">{{detailData.audited_success || 0}} 通过</span>
+            <span>&nbsp;/&nbsp;</span>
+            <!--<span class=""-->
+                  <!--v-if="success_list.length > 0">&nbsp;{{"("+success_list.join(",")+")"}}</span>-->
+            <span
+              class="review_txt" title="321321312321">{{detailData.audited_fail || 0}} 否决</span>
+            <div>
+              <i class="iconfont icon"></i>
+            </div>
           </div>
           <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
             <el-button @click="_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
@@ -43,8 +48,8 @@
             <el-button @click="_change_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].joinReview == true'>参与评审</el-button>
           </div>
           <div class="review_btn" v-else-if="detailData.status == 5 && review_btn">
-            <el-button type="primary" plain>通过</el-button>
-            <el-button type="warning" plain>否决</el-button>
+            <el-button @click="_pass()" type="primary" plain>通过</el-button>
+            <el-button @click="_veto()" type="warning" plain>否决</el-button>
           </div>
         </div>
       </div>
@@ -298,7 +303,9 @@
         imgIndex: "",
         isHide:false,
         review_btn:false,
-				permissionConfig: [] // 权限管理
+				permissionConfig: [], // 权限管理
+        fail_list:[],
+        success_list:[]
       }
     },
     activated () {
@@ -346,31 +353,23 @@
               this.detailData = res.data;
               this.experience_item = JSON.parse(res.data.experience_item)
               this.education_item = JSON.parse(res.data.education_item)
+              for(let i = 0 ;i<res.data.reviewList.length;i++){
+                this.success_list = [];
+                this.fail_list = [];
+                if(res.data.reviewList[i].sure == 1){
+                  this.success_list.push(res.data.reviewList[i].name)
+                }else if(res.data.reviewList[i].sure == 0){
+                  this.fail_list.push(res.data.reviewList[i].name)
+                }
+              }
               console.log(JSON.parse(res.data.education_item))
             }
             console.log( res)
           }
         })
       },
-      getAvatar(){
-        //获取头像
-        let getData = {
-          rrid:window.sessionStorage.getItem("rrid")
-        }
-        this.$axios({
-          type: 'get',
-          url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
-          data:getData,
-          fuc: (res) => {
-            if(res.code == 1){
-              // this.headUrl = res.data.headUrl
-            }
-            console.log(3,res)
-          }
-        })
-      },
       _result (type){
-        let rrids = [this.detailData.rrid]
+        let rrids = [window.sessionStorage.getItem("rrid")]
         window.sessionStorage.setItem("rrids",JSON.stringify(rrids))
         this.$router.push("/recruitResult/"+type)
       },
@@ -403,7 +402,7 @@
       },
       _review (){
         let postData = {
-          rrids: [this.detailData.rrid]
+          rrids: [window.sessionStorage.getItem("rrid")]
         }
         this.$axios({
           type: 'post',
@@ -449,6 +448,38 @@
                 message: msg+"失败",
                 duration: 1000
               })
+            }
+            console.log( res)
+          }
+        })
+      },
+      _veto(){
+        let postData = {
+          rrid: window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReviewLog/markFail',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.init();
+            }
+            console.log( res)
+          }
+        })
+      },
+      _pass(){
+        let postData = {
+          rrid: window.sessionStorage.getItem("rrid")
+        }
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReviewLog/markSuccess',
+          data: postData,
+          fuc: (res) => {
+            if(res.code == 1){
+              this.init();
             }
             console.log( res)
           }
@@ -514,7 +545,7 @@
   .head_review{
     flex: 1;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
   .review_result{
     color:#4c4c4c;

@@ -1,8 +1,18 @@
 <template>
   <div class="posi_list">
     <el-container>
-      <el-header height="40px">
-        <div class="hr_title">-职位管理-</div>
+      <el-header height="60px">
+        <div class="job_tab">
+          <span @click="init(2)"
+                class="job_tab_item"
+                :class="{is_active:status == 2}">所有职位</span>
+          <span @click="init(0)"
+                class="job_tab_item"
+                :class="{is_active:status == 0}">待发布职位</span>
+          <span @click="init(1)"
+                class="job_tab_item"
+                :class="{is_active:status == 1}">已发布职位</span>
+        </div>
         <!--<div class="hr_num">当前账号数量（4）</div>-->
         <div @click="addHr()" class="add_hr" v-if="permissionConfig.length > 0 && permissionConfig[2].addJob">
           <img src="@/assets/add.png" alt="">
@@ -103,25 +113,30 @@
         size:15,
         tableData: [],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
-				permissionConfig: [] //权限管理
+				permissionConfig: [], //权限管理
+        status: 2
       }
     },
     activated () {
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 			console.log(this.permissionConfig[2].onOrOffJob)
-      this.init();
+      this.init(2);
     },
     methods:{
-      init(){
+      init(type){
         let resultData = {
           cid:window.sessionStorage.getItem("cid")
         };
+        if(type != 2){
+          resultData.status = type
+        }
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/job/queryAllJobListByCid',
           data: resultData,
           fuc: (res) => {
             this.tableData= res.data.data;
+            this.status = type
             console.log( res)
           }
         })
@@ -185,19 +200,33 @@
   }
 </script>
 
-<style>
+<style scoped>
   .posi_list .el-header{
     margin-bottom: 1px;
     display: flex;
     align-items: center;
-    /*background-color: #fff;*/
+    background-color: #fff;
     justify-content: space-between;
-    padding-bottom: 10px;
   }
-  .posi_list .hr_title{
-    font-size: 20px;
-    color:#333;
-    padding-right: 15px;
+  .job_tab{
+    display: flex;
+  }
+  .job_tab_item{
+    height: 60px;
+    line-height: 60px;
+    flex: 0 0 180px;
+    color:#666;
+    font-size: 16px;
+    text-align: center;
+    box-sizing: border-box;
+    border-right: 1px solid #e6e6e6;
+  }
+  .job_tab_item:first-child{
+    border-left: 1px solid #e6e6e6;
+  }
+  .job_tab_item.is_active{
+    color:#fff;
+    background-color: #048adf;
   }
   .posi_list .hr_num{
     font-size: 18px;
@@ -218,6 +247,7 @@
   }
   .posi_list .el-main{
     background-color: #fff;
+    padding: 0 20px 20px;
   }
   .posi_list th{
     color:#333;

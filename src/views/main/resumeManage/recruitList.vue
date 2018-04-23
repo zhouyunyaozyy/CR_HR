@@ -163,8 +163,8 @@
           <el-checkbox
             v-model="checkState"
             @change="checkAll">全选</el-checkbox>
-          <span @click="changePattern(false)"><i></i>大图</span>
-          <span @click="changePattern(true)"><i></i>列表</span>
+          <span @click="changePattern(false)"><i class="iconfont icon-ai-list"></i>大图</span>
+          <span @click="changePattern(true)"><i class="iconfont icon-liebiao"></i>列表</span>
         </div>
         <div class="recruit_right_btn">
           <div class="export_btn">

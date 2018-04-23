@@ -23,8 +23,8 @@
             </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="submitForm()">查找</el-button>
-          <el-button @click="submitForm()" type="warning" plain>清空条件</el-button>
+          <el-button type="primary" @click="init()">查找</el-button>
+          <el-button @click="clearForm()" type="warning" plain>清空条件</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -179,9 +179,18 @@
     },
     methods: {
       init (){
+        let dataPost = {};
+        if(this.screen.status == 6){
+        }else if(this.screen.status == 3 && this.screen.reservationState != 3){
+          dataPost.status = this.screen.status
+          dataPost.sure = this.screen.reservationState
+        }else{
+          dataPost.status = this.screen.status
+        }
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/favorites/getResumeFavoritesList',
+          data: dataPost,
           fuc: (res) => {
             console.log(3,res)
             if(res.code == 1){
@@ -219,6 +228,10 @@
           this.checkedCities = [];
           this.checkSum = 0;
         }
+      },
+      clearForm(){
+        this.screen.status = "6"
+        this.screen.reservationState = "3"
       },
       updateExcell () {
         let nowData = {}

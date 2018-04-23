@@ -47,7 +47,7 @@
             </el-form-item>
             <el-form-item v-if="resultState == 1">
               <span class="star"><b>*</b>面试地址:</span>
-              <el-input v-model="form.address" placeholder="请输入面试地址"></el-input>
+              <el-input v-model="form.address" maxlength="50" placeholder="请输入面试地址"></el-input>
             </el-form-item>
             <el-form-item>
               <span class="star" v-if="resultState == 1">留言:</span>
@@ -56,6 +56,7 @@
                 type="textarea"
                 :autosize="{ minRows: 4, maxRows: 6}"
                 placeholder="请输入内容"
+                maxlength="200"
                 v-model="form.leav"></el-input>
             </el-form-item>
             <el-form-item>
