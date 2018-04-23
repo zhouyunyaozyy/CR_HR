@@ -151,6 +151,17 @@
         </el-checkbox-group>
       </div>
     </div>
+		<div class="pagenationDiv">
+			<el-pagination
+				@size-change="handleSizeChange"
+				@current-change="handleCurrentChange"
+				:current-page="pageData.start"
+				:page-sizes="[15]"
+				:page-size="pageData.pageSize"
+				layout="total, prev, pager, next, sizes"
+				:total="pageData.count">
+			</el-pagination>
+		</div>
   </div>
 </template>
 
@@ -164,6 +175,7 @@
           reservationState:"3"
         },
         tableData:[],
+				pageData: {},
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
         checkState: false,
         checkSum: 0,
@@ -178,8 +190,19 @@
       }
     },
     methods: {
+			handleSizeChange (val) {
+				this.$limit = val
+				this.init()
+			},
+			handleCurrentChange (val) {
+				this.$start = val
+				this.init()
+			},
       init (){
-        let dataPost = {};
+        let dataPost = {
+					_limit: this.$limit,
+					_start: this.$start
+				};
         if(this.screen.status == 6){
         }else if(this.screen.status == 3 && this.screen.reservationState != 3){
           dataPost.status = this.screen.status
@@ -192,8 +215,8 @@
           url: '/dabai-chaorenjob/favorites/getResumeFavoritesList',
           data: dataPost,
           fuc: (res) => {
-            console.log(3,res)
             if(res.code == 1){
+							this.pageData = res.data
               this.tableData = res.data.data;
               // this.init();
             }else{
