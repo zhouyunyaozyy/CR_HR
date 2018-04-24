@@ -247,11 +247,10 @@
       },
       handleAvatarSuccess (res, file) {
           this.logo = res.key
-          console.log( 1, this.logoUrl)
-          store.state.ajax({
+          this.$axios({
             url: global.urlSelf.qiniu.url + res.key,
             type: 'get',
-            success: (res) => {
+            fuc: (res) => {
               if (res.code === 1) {
                 this.logoUrl = res.data
               }
@@ -260,11 +259,11 @@
       },
       handleAvatarSuccessImages (res){
           this.images.push(res.key)
-          store.state.ajax({
+          this.$axios({
             url: global.urlSelf.qiniu.url + res.key,
             type: 'get',
-            success: (res) => {
-              if (res.code === 1) {
+            fuc: (res) => {
+              if (res.code == 1) {
                 this.imagesUrl.push({url: res.data})
               }
             }

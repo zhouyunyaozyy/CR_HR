@@ -59,11 +59,11 @@
               plain
               v-else-if='passState == 1'>已投通过</el-button>
             <el-button
-              v-else-if="review_btn && passState == 2"
+              v-if="review_btn && passState == 2"
               @click="_pass()"
               type="primary" plain>通过</el-button>
             <el-button
-              v-else-if="review_btn && passState == 2"
+              v-if="review_btn && passState == 2"
               @click="_veto()"
               type="warning" plain>否决</el-button>
           </div>
@@ -373,7 +373,7 @@
           fuc: (res) => {
             if(res.code == 1){
               this.detailData = res.data;
-              this.experience_item = JSON.parse(res.data.experience_item)
+              this.experience_item = res.data.experience_item ?JSON.parse(res.data.experience_item) : []
               this.education_item = JSON.parse(res.data.education_item)
               for(let i = 0 ;i<res.data.reviewList.length;i++){
                 this.success_list = [];

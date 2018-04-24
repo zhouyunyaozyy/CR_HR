@@ -21,7 +21,7 @@ Vue.config.productionTip = false
 Vue.prototype.$axios = (params) => {
 
 //  cr-token算法
-  let resultData = 0
+  let resultData = ''
   // console.log(Base64)
   // console.log(CryptoJS)
   if(window.sessionStorage.getItem('ticketsSalt')){

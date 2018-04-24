@@ -24,7 +24,7 @@
                 <el-dropdown-item command="/checkCompany">企业信息</el-dropdown-item>
                 <el-dropdown-item command="/talkWithSystem">系统通知</el-dropdown-item>
                 <el-dropdown-item command="/feedback">反馈</el-dropdown-item>
-                <el-dropdown-item command="/">退出</el-dropdown-item>
+                <el-dropdown-item @click.native='quit'>退出</el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -376,6 +376,11 @@
 				}
 			},
       methods: {
+				quit () { // 退出
+					console.log('quit')
+					RongIMClient.getInstance().disconnect()
+					this.$router.push('/')
+				},
         // 保存聊天记录
 				setLocalTalk (userId, rrid, obj) {
 					for (let i in this.localTalkData) {
@@ -426,7 +431,9 @@
 
         },
 				handleCommand (val) { // 设置跳转路由
-					this.$router.push(val)
+					if (val) {
+						this.$router.push(val)
+					}
 				},
 				goSealTalkDetail () {
 					window.sessionStorage.setItem('targetIdBool', false)
@@ -480,7 +487,7 @@
     /*border-bottom: 3px solid transparent;*/
     /*color:#666;*/
   }
-  .el-input__inner,.el-textarea__inner{
+  .index_cont .el-input__inner,.el-textarea__inner{
     color:#333;
     border-color:#bbb;
     font-size: 14px;

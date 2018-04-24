@@ -12,7 +12,7 @@
           <el-form-item label="真实姓名" prop="name">
             <el-input v-model="hr_detail.name" placeholder="请输入HR真实姓名"></el-input>
           </el-form-item>
-          <el-form-item label="手机号" prop="phone">
+          <el-form-item label="手机号" prop="mobile">
             <el-input v-model="hr_detail.mobile" placeholder="请输入手机号"></el-input>
           </el-form-item>
           <el-form-item label="用户名">

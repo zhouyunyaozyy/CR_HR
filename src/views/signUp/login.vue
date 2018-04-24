@@ -42,7 +42,7 @@
 		data () {
 			return {
 				form: {
-					phone: '13512345678',
+					phone: '',
 					pwd: '123456'
 				},
 				showPlane: false,
@@ -88,6 +88,7 @@
 										if (res.code == 1) {
 											if (res.data.uid != window.sessionStorage.getItem('uid')) {
 												window.sessionStorage.removeItem('label_list')
+												this.$store.state.tj.label_list = []
 											}
 											if (res.data.manager == 1) {
 												window.sessionStorage.setItem('mainOrChildren', 'main')
