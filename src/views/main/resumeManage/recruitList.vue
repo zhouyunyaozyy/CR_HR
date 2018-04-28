@@ -12,8 +12,8 @@
         <el-form-item label='姓名搜索'>
           <div class="md">
             <el-input
-              placeholder="如乘务员、飞行员、机务等"
-              maxlength="20"
+              placeholder="请输入姓名"
+              maxlength="5"
               v-model="screenData.name"></el-input>
           </div>
         </el-form-item>
@@ -38,40 +38,40 @@
           </div>
           <div class="xl">
             <el-input
-              type="number"
+              type="text" @keyup.native="screenData.age = $inputKeyUp()" @afterpaste.native="screenData.age = $inputKeyUp()" :maxlength='2'
               placeholder="年龄(岁)"
               v-model="screenData.age"></el-input>
           </div>
           <span>至</span>
           <div class="xl">
             <el-input
-              type="number"
+              type="text" @keyup.native="screenData.age2 = $inputKeyUp()" @afterpaste.native="screenData.age2 = $inputKeyUp()" :maxlength='2'
               placeholder="年龄(岁)"
               v-model="screenData.age2"></el-input>
           </div>
           <div class="xl">
             <el-input
-              type="number"
+              type="text" @keyup.native="screenData.height = $inputKeyUp()" @afterpaste.native="screenData.height = $inputKeyUp()" :maxlength='3'
               placeholder="身高(cm)"
               v-model="screenData.height"></el-input>
           </div>
           <span>至</span>
           <div class="xl">
             <el-input
-              type="number"
+              type="text" @keyup.native="screenData.height2 = $inputKeyUp()" @afterpaste.native="screenData.height2 = $inputKeyUp()" :maxlength='3'
               placeholder="身高(cm)"
               v-model="screenData.height2"></el-input>
           </div>
           <div class="xl">
             <el-input
-              type="number"
+              type="text" @keyup.native="screenData.weight = $inputKeyUp()" @afterpaste.native="screenData.weight = $inputKeyUp()" :maxlength='3'
               placeholder="体重(kg)"
               v-model="screenData.weight"></el-input>
           </div>
           <span>至</span>
           <div class="xl">
             <el-input
-              type="number"
+              type="text" @keyup.native="screenData.weight2 = $inputKeyUp()" @afterpaste.native="screenData.weight2 = $inputKeyUp()" :maxlength='3'
               placeholder="体重(kg)"
               v-model="screenData.weight2"></el-input>
           </div>
@@ -127,7 +127,7 @@
           <div class="md">
             <el-input
               placeholder="熟悉小语种"
-              v-model="screenData.lang"></el-input>
+              v-model="screenData.lang" :maxlength='20'></el-input>
           </div>
         </el-form-item>
         <el-form-item label='状态筛选'>
@@ -151,7 +151,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="init()">查找</el-button>
+          <el-button type="primary" @click="init(1)">查找</el-button>
           <el-button @click="clearScreen()" type="warning" plain>清空条件</el-button>
         </el-form-item>
       </el-form>
@@ -268,11 +268,17 @@
                 prop="height"
                 label="身高"
                 min-width="70">
+                <template slot-scope="scope">
+                  <span>{{scope.row.height}}cm</span>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="weight"
                 label="体重"
                 min-width="70">
+                <template slot-scope="scope">
+                  <span>{{scope.row.weight}}kg</span>
+                </template>
               </el-table-column>
               <el-table-column
                 prop="vision_left"
@@ -431,7 +437,10 @@
             return "(已拒绝)"
         }
       },
-      init(){
+      init(data){
+				if (data) {
+					this.$start = 1
+				}
         let screenArr = {
 					_limit: this.$limit,
 					_start: this.$start,

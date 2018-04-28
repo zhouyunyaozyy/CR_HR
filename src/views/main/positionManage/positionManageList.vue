@@ -33,7 +33,7 @@
             label="学历要求"
             min-width="90">
             <template slot-scope="scope">
-              <span>{{localData.education[parseInt(scope.row.education)-1].name}}</span>
+              <span>{{scope.row.education ? localData.education[parseInt(scope.row.education)-1].name : '/'}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -41,7 +41,7 @@
             label="工作地"
             min-width="100">
             <template slot-scope="scope">
-              <span>{{selectCity(scope.row.address)}}</span>
+              <span>{{scope.row.address ? selectCity(scope.row.address) : '/'}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -49,7 +49,7 @@
             label="经验要求"
             min-width="80">
             <template slot-scope="scope">
-              <span>{{localData.offerExperience[parseInt(scope.row.work_experience)-1].name}}</span>
+              <span>{{scope.row.work_experience ? localData.offerExperience[parseInt(scope.row.work_experience)-1].name : '/'}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -57,7 +57,7 @@
             label="薪资范围"
             min-width="80">
             <template slot-scope="scope">
-              <span>{{localData.wages[parseInt(scope.row.wages)-1].name}}</span>
+              <span>{{scope.row.wages ? localData.wages[parseInt(scope.row.wages)-1].name : '/'}}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -74,8 +74,8 @@
             label="发布时间"
             min-width="140">
             <template slot-scope="scope">
-              <span v-if='scope.row.create_time === 0'>未发布</span>
-              <span v-else>{{new Date(parseInt(scope.row.create_time)).toLocaleString().replace(/:\d{1,2}$/, '')}}</span>
+              <span v-if='scope.row.modify_time === 0'>未发布</span>
+              <span v-else>{{new Date(parseInt(scope.row.modify_time)).toLocaleString().replace(/:\d{1,2}$/, '')}}</span>
             </template>
           </el-table-column>
           <el-table-column width="240px">
@@ -126,11 +126,11 @@
     methods:{
 			handleSizeChange (val) {
 				this.$limit = val
-				this.init()
+				this.init(this.status)
 			},
 			handleCurrentChange (val) {
 				this.$start = val
-				this.init()
+				this.init(this.status)
 			},
       init(type){
         let resultData = {

@@ -29,7 +29,7 @@
 				<el-button @click='register' type='primary'>确认</el-button>
 			</el-form-item>
 			<el-form-item>
-				<span style="float:right;color:#4D4D4D;font-size:20px;cursor:pointer;" @click='login'>取消</span>
+				<span style="float:right;color:#4D4D4D;font-size:14px;cursor:pointer;" @click='login'>取消</span>
 			</el-form-item>
 		</el-form>
   </div>
@@ -134,7 +134,10 @@
 </script>
 <style lang="css">
 	.forgetPwd input{
-		border-color: #808080;
+		border-color: #ddd;
+	}
+	.forgetPwd input:hover{
+		border-color: #b3b3b3;
 	}
 	.forgetPwd .el-input__suffix{
 		right: 0px;

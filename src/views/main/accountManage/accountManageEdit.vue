@@ -115,7 +115,7 @@
                 }else{
                   this.checkBool = false;
                 }
-                if(this.hr_detail.job > 0){
+                if(this.hr_detail.job.length > 0){
                   this.checkBoolJob = true;
                 }else{
                   this.checkBoolJob = false;

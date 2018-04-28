@@ -180,6 +180,27 @@ const router1 = new Router({
   ]
 })
 
+Vue.mixin({
+	beforeRouteLeave (to, from , next) {
+		console.log('from', from)
+		let arr = window.sessionStorage.getItem('label_list') ? JSON.parse(window.sessionStorage.getItem('label_list')) : []
+		if (from.path == '/' || from.path == '/register' || from.path == '/forgetPwd' || from.path == '/main') {
+			next()
+		} else {
+			let bool = true
+			for (let val of arr) {
+					if (val.name == from.path) {
+						bool = false
+					}
+			}
+			console.log('bool', bool, arr)
+			if (bool) {
+				this.$destroy()
+			}
+			next()
+		}
+	}
+})
 console.log(router1, Vue.prototype)
 let routerLoading
 router1.beforeEach((to, from, next) => {
@@ -194,5 +215,4 @@ router1.beforeEach((to, from, next) => {
 router1.afterEach(route => {
   routerLoading.close()
 })
-
 export let router = router1

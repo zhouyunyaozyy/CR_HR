@@ -6,7 +6,7 @@
           <img src="@/assets/logo.png" alt="">
           <span class="logo_txt">超人招聘企业管理平台</span>
         </div>
-        <div class="user_name">欢迎回来！ 旺旺</div>
+        <div class="user_name">欢迎回来！ {{name}}</div>
         <div class="right_icon">
           <div class="icon_item" @click='goSealTalkDetail'>
             <i class="iconfont icon-ai-message"></i>
@@ -110,6 +110,7 @@
       name: "index",
       data() {
         return {
+					name: window.sessionStorage.getItem('name'),
           group_id:1,
           sub_show:false,
 					localTalkData: [],
@@ -378,8 +379,14 @@
       methods: {
 				quit () { // 退出
 					console.log('quit')
-					RongIMClient.getInstance().disconnect()
-					this.$router.push('/')
+					try {
+						RongIMClient.getInstance().disconnect()
+						this.$router.push('/')
+					}
+					catch (err) {
+						this.$router.push('/')
+					}
+					
 				},
         // 保存聊天记录
 				setLocalTalk (userId, rrid, obj) {

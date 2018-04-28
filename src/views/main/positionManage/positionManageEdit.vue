@@ -241,6 +241,7 @@
     name: "accountManageDetail",
     data() {
       return {
+				status: 0, // 职位状态，若为1，则不能编辑
         form: {
           name: '',             //  JOB名称
           rtid: '',             //  职能
@@ -323,6 +324,7 @@
             // 获取详情
             if(res.code == 1){
               this.form.name = res.data.name
+              this.status = res.data.status
               this.form.rtid = res.data.rtid
               this.form.education = res.data.education+""
               this.address = (res.data.address+"").slice(0,3)+"000"
@@ -371,6 +373,13 @@
         })
       },
       submitForm() {
+				console.log('status', this.status)
+				if (this.status == 1) {
+					this.$message.warning("当前职位为已发布状态，暂不支持编辑")
+					this.removeTab();
+					return
+				}
+				
         console.log(this.form)
         if(!this.form.name){
           this.$message({

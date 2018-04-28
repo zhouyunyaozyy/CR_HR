@@ -19,13 +19,13 @@
 				</el-input>
 			</el-form-item>
 			<el-form-item>
-				<span @click='forgetPwd' style="float:right;color:#4D4D4D;font-size:22px;cursor:pointer;">忘记密码？</span>
+				<span @click='forgetPwd' style="float:right;color:#4D4D4D;font-size:14px;cursor:pointer;">忘记密码？</span>
 			</el-form-item>
 			<el-form-item>
 				<el-button type='primary' @click='login'>登录</el-button>
 			</el-form-item>
 			<el-form-item>
-				<p style="text-align:center;color:#4D4D4D;font-size:22px;">还没激活账号？</p>
+				<p style="text-align:center;color:#4D4D4D;font-size:14px;">还没激活账号？</p>
 			</el-form-item>
 			<el-form-item>
 				<el-button @click='register'>立即激活</el-button>
@@ -90,6 +90,11 @@
 												window.sessionStorage.removeItem('label_list')
 												this.$store.state.tj.label_list = []
 											}
+											window.sessionStorage.setItem('cid', res.data.cid)
+											window.sessionStorage.setItem('uid', res.data.uid)
+											window.sessionStorage.setItem('name', res.data.name)
+											window.sessionStorage.setItem('username', res.data.username)
+											window.sessionStorage.setItem('mobile', res.data.mobile)
 											if (res.data.manager == 1) {
 												window.sessionStorage.setItem('mainOrChildren', 'main')
 												window.sessionStorage.setItem('permissionConfig', JSON.stringify([
@@ -110,7 +115,7 @@
 												]))
 											} else {
 												window.sessionStorage.setItem('mainOrChildren', 'children')
-												if (res.data.permissions) {
+												if (res.data.permissions && res.data.permissions.config) {
 													window.sessionStorage.setItem('permissionConfig', res.data.permissions.config)
 												} else {
 													window.sessionStorage.setItem('permissionConfig', JSON.stringify([
@@ -131,11 +136,6 @@
 												]))
 												}
 											}
-											window.sessionStorage.setItem('cid', res.data.cid)
-											window.sessionStorage.setItem('uid', res.data.uid)
-											window.sessionStorage.setItem('name', res.data.name)
-											window.sessionStorage.setItem('username', res.data.username)
-											window.sessionStorage.setItem('mobile', res.data.mobile)
 											this.showPlane = false
 											this.$router.push('/main')
 										} else {
@@ -166,7 +166,10 @@
 </script>
 <style lang="css">
 	.login input{
-		border-color: #808080;
+		border-color: #ddd;
+	}
+	.login input:hover{
+		border-color: #b3b3b3;
 	}
 </style>
 <style scoped="true" lang='css'>
@@ -194,7 +197,7 @@
 		margin-bottom: 25px;
 	}
 	.login form .el-form-item:nth-of-type(6) button{
-		border-color: #808080;
+		border-color: #ddd;
 		color: #666;
 	}
 	.planeDiv{

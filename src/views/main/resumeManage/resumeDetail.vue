@@ -113,7 +113,7 @@
                 </div>
                 <div class="job_want_item"
                      v-for='item in localData.political'
-                     v-if='item.code==detailData.political_status'>
+                     v-if='item.code==detailData.politics'>
                   政治面貌：<span>{{item.name}}</span>
                 </div>
                 <div class="job_want_item">身高：<span>{{detailData.height}}CM</span></div>
@@ -167,7 +167,7 @@
             <div class="detail_info_title">工作经历</div>
             <div class="job_exp_cont">
               <div class="job_exp_cont_item"
-                   v-for='item in experience_item'>
+                   v-for='item in experience_item' style="padding-bottom:20px;">
                 <div class="job_exp_item" v-if='item.endtime==88888888888888'>
                   任职时间：<span>{{
                   new Date(parseInt(item.starttime)).getFullYear()
@@ -199,7 +199,7 @@
             <div class="detail_info_title">教育经历</div>
             <div class="job_exp_cont">
               <div class="job_exp_cont_item"
-                   v-for='item in education_item'>
+                   v-for='item in education_item' style="padding-bottom:20px;">
                 <div class="job_exp_item"
                      v-if='item.graduation_time==88888888888888'>
                   就读时间：<span>{{

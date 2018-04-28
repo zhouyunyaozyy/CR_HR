@@ -14,13 +14,13 @@
     </div>
     <div class="info_cont">
       <div class="center_cont">
-        <div class="prev_info" v-if="Object.keys(prevInfo).length > 0">
+        <div class="prev_info" v-if='Object.keys(prevInfo).length > 0'>
           <div class="prev_info_title">{{prevInfo.title}}</div>
-          <div class="prev_info_time" v-if="prevInfo.agreedtime">
+          <div class="prev_info_time" v-if='prevInfo.agreedtime'>
             <span class="prev_info_label">*面试时间：</span>
-            <span class="prev_info_txt">{{(new Date(prevInfo.agreedtime)).Format("yyyy-MM-dd hh:mm:ss")}}</span>
+            <span class="prev_info_txt">{{new Date(parseInt(prevInfo.agreedtime)).toLocaleString('chinese', {hour12: false})}}</span>
           </div>
-          <div class="prev_info_address" v-if="prevInfo.agreedpath">
+          <div class="prev_info_address" v-if='prevInfo.agreedpath'>
             <span class="prev_info_label">*面试地址：</span>
             <span class="prev_info_txt">{{prevInfo.agreedpath}}</span>
           </div>
@@ -92,6 +92,9 @@
     computed:{
       resultState () {
         return this.$route.params.resultState
+      },
+			tabIndex (){
+        return this.$store.state.tj.tabIndex;
       }
     },
     activated () {
@@ -101,7 +104,7 @@
         this.form.leav = "感谢您对我司的认同，经过综合评估，我司已确定了最适合的人选。非常遗憾未能与您成为同事，相信以您的优秀才干，一定能很快找到更适合的岗位，期待将来我们能有机会合作。"
       }
       this.rrids = JSON.parse(window.sessionStorage.getItem("rrids"))
-      console.log(this.rrids)
+      console.log('rrids', this.rrids)
       if(this.rrids.length == 1){
         this.init();
         this.initInfo();
@@ -138,18 +141,18 @@
           fuc: (res) => {
             if(res.code == 1){
               if(res.data.status == 3){
-                this.prevInfo.title = "已发送的预约面试信息"
-                this.prevInfo.agreedtime = res.data.agreedtime || ""
-                this.prevInfo.agreedpath = res.data.agreedpath || ""
-                this.prevInfo.agreednote = res.data.agreednote || ""
+								this.$set(this.prevInfo, 'title', '已发送的预约面试信息')
+								this.$set(this.prevInfo, 'agreedtime', res.data.agreedtime || "")
+								this.$set(this.prevInfo, 'agreedpath', res.data.agreedpath || "")
+								this.$set(this.prevInfo, 'agreednote', res.data.agreednote || "")
               }else if(res.data.status == 4){
-                this.prevInfo.title = "已发送的不合适信息"
-                this.prevInfo.mark = res.data.mark || "";
+								this.$set(this.prevInfo, 'title', '已发送的不合适信息')
+								this.$set(this.prevInfo, 'agreedtime', res.data.mark || "")
               }else{
                 this.prevInfo = {};
               }
             }
-            console.log( res)
+            console.log('res', this.prevInfo)
           }
         })
       },
@@ -172,6 +175,8 @@
           data: postData,
           fuc: (res) => {
             if(res.code == 1){
+							this.$message.success(res.msg)
+							this.removeTab()
             }
             console.log( res)
           }
@@ -205,6 +210,8 @@
           data: postData,
           fuc: (res) => {
             if(res.code == 1){
+							this.$message.success(res.msg)
+							this.removeTab()
             }
             console.log( res)
           }

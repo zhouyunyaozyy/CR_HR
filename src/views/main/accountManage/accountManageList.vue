@@ -165,23 +165,35 @@
         let resultData = {
           uid:row.uid
         };
-        this.$axios({
-          type: 'post',
-          url: '/dabai-chaorenjob/company/deleteChildren',
-          data: resultData,
-          fuc: (res) => {
-            if(res.code == 1){
-              this.init();
-            }else{
-              this.$message({
-                type: 'error',
-                message: res.msg,
-                duration: 1000
-              })
-            }
-            console.log( res)
-          }
-        })
+				this.$confirm('此操作将永久删除该账号, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+					this.$axios({
+						type: 'post',
+						url: '/dabai-chaorenjob/company/deleteChildren',
+						data: resultData,
+						fuc: (res) => {
+							if(res.code == 1){
+								this.$message({
+									type: 'success',
+									message: '删除成功!'
+								});
+								this.init();
+							}else{
+								this.$message({
+									type: 'error',
+									message: res.msg,
+									duration: 1000
+								})
+							}
+							console.log( res)
+						}
+					})
+        }).catch((err) => {
+					//
+				})
       },
       _edit (row){
         window.sessionStorage.setItem("uid",row.uid)

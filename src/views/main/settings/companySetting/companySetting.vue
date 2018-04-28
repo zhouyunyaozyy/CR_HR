@@ -137,7 +137,7 @@
           ],
           tel: [
             { required: true, message: '请输入联系方式', trigger: 'blur' },
-            { pattern: /^.{6,20}$/, message: '简称长度必须为6~20位组成', trigger: 'blur' }
+            { pattern: /^.{6,20}$/, message: '联系方式长度必须为6~20位组成', trigger: 'blur' }
           ],
           address: [
             { required: true, message: '请确认企业地址', trigger: 'blur' },

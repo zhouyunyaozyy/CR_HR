@@ -7,7 +7,7 @@
     <div class="job_detail_item">
       <div class="job_detail_title">职位信息</div>
       <div class="job_detail_cont">
-        <el-form-item label="职位名称">
+        <el-form-item label="职位名称" required>
           <el-col :span='10'>
             <el-input
               placeholder="如乘务员、飞行员、机务等"
@@ -83,7 +83,7 @@
         <el-form-item label="招聘人数">
           <el-col :span="5">
             <el-input
-              placeholder="输入招聘人数"
+              placeholder="输入招聘人数" :maxlength='10'
               type="number"
               v-model="form.hire_number"></el-input>
           </el-col>
@@ -388,70 +388,71 @@
             duration: 1000
           })
           return;
-        }else if(!this.form.rtid){
-          this.$message({
-            type: 'error',
-            message: '请选择职能',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.education){
-          this.$message({
-            type: 'error',
-            message: '请选择学历',
-            duration: 1000
-          })
-          return;
-        }else if(!this.address){
-          this.$message({
-            type: 'error',
-            message: '请选择省份',
-            duration: 1000
-          })
-          return;
-        }else if(!this.address2){
-          this.$message({
-            type: 'error',
-            message: '请选择城市',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.work_experience){
-          this.$message({
-            type: 'error',
-            message: '请选择工作经验',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.wages){
-          this.$message({
-            type: 'error',
-            message: '请选择薪资范围',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.hire_number){
-          this.$message({
-            type: 'error',
-            message: '请输入招聘人数',
-            duration: 1000
-          })
-          return;
-        }else if(/^\d{1,4}$/.test(this.form.hire_number) == false){
-          this.$message({
-            type: 'error',
-            message: '招聘人数为1-4位正整数',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.profile){
-          this.$message({
-            type: 'error',
-            message: '请输入职位描述',
-            duration: 1000
-          })
-          return;
         }
+//				else if(!this.form.rtid){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择职能',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.education){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择学历',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.address){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择省份',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.address2){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择城市',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.work_experience){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择工作经验',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.wages){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择薪资范围',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.hire_number){
+//          this.$message({
+//            type: 'error',
+//            message: '请输入招聘人数',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(/^\d{1,4}$/.test(this.form.hire_number) == false){
+//          this.$message({
+//            type: 'error',
+//            message: '招聘人数为1-4位正整数',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.profile){
+//          this.$message({
+//            type: 'error',
+//            message: '请输入职位描述',
+//            duration: 1000
+//          })
+//          return;
+//        }
         this.addJob();
       },
       selectCity () {

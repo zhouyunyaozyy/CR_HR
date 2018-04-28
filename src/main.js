@@ -18,6 +18,17 @@ Vue.config.productionTip = false
 
 //封装方法
 
+Vue.prototype.$inputKeyUp = () => { // 输入框限制
+  var event = window.event || arguments.callee.caller.arguments[0]
+  let target = event.srcElement || event.target
+  if (target.value.length === 1) {
+    target.value = target.value.replace(/[^1-9]/g, '')
+  } else {
+    target.value = target.value.replace(/\D/g, '')
+  }
+  return target.value
+}
+
 Vue.prototype.$axios = (params) => {
 
 //  cr-token算法
