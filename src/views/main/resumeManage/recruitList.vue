@@ -2,12 +2,13 @@
   <div class="recruit_detail">
     <div class="recruit_screen">
       <div class="recruit_title">
-        <span>简历筛选</span>
+        <span @click='showOrHideenForm'>简历筛选<i class="iconfont icon-sanjiaoxing-down" v-if='showFormBool'></i><i class="iconfont icon-sanjiaoxing-up" v-else></i></span>
       </div>
       <el-form
         :model="screenData"
         status-icon
         label-width="110px"
+				v-if='showFormBool'
         class="recruit_cont">
         <el-form-item label='姓名搜索'>
           <div class="md">
@@ -168,8 +169,9 @@
         </div>
         <div class="recruit_right_btn">
           <div class="export_btn">
-            <el-button  @click="" plain>导出简历</el-button>
-            <el-button  @click="" plain>导出excel名单</el-button>
+            <el-button  @click="" plain>导出选中简历</el-button>
+            <el-button  @click="outExcell" plain>导出全部名单</el-button>
+            <el-button  @click="outExcell" plain>导出选中名单</el-button>
           </div>
           <div class="state_btn">
             <el-button type="primary" @click="_review()" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
@@ -215,13 +217,18 @@
                     <span class="chart_txt_name">简历状态:</span>
                     <span
                       v-for="item1 in localData.overVoteStatusEnum"
-                      v-if="item1.code == item.status" class="chart_txt_text">
+                      v-if="item1.code == item.status && item.status == 3" class="chart_txt_text">
                       {{item1.name}}{{sure(item.status,item.sure)}}
+                    </span>
+										<span
+                      v-for="item1 in localData.overVoteStatusEnum"
+                      v-if="item1.code == item.status && item.status != 3" class="chart_txt_text">
+                      {{item1.name}}
                     </span>
                   </div>
                   <div class="chart_txt_btn">
                     <el-button @click="_detail(item.rrid)" type="primary">查看</el-button>
-                    <el-button type="warning" plain>拒绝</el-button>
+                    <el-button type="warning" @click="changeStatePerson(item.rrid)" plain>拒绝</el-button>
                   </div>
                 </div>
               </div>
@@ -341,7 +348,15 @@
                 <template slot-scope="scope">
                   <span
                     v-for="item1 in localData.overVoteStatusEnum"
-                    v-if="item1.code == scope.row.status">{{item1.name}}{{sure(scope.row.status,scope.row.sure)}}</span>
+                    v-if="item1.code == scope.row.status && scope.row.status == 3">
+										<span v-for="item2 in localData.meetSure"
+													v-if="item2.code == scope.row.sure">{{item1.name + item2.name}}</span>
+									</span>
+                  <span
+                    v-for="item1 in localData.overVoteStatusEnum"
+                    v-if="item1.code == scope.row.status && scope.row.status != 3">
+										{{item1.name}}
+									</span>
                 </template>
               </el-table-column>
               <el-table-column
@@ -357,7 +372,7 @@
 					<el-pagination
 						@size-change="handleSizeChange"
 						@current-change="handleCurrentChange"
-						:current-page="pageData.start"
+						:current-page.sync="$start"
 						:page-sizes="[15, 30]"
 						:page-size="pageData.pageSize"
 						layout="total, prev, pager, next, sizes"
@@ -397,14 +412,15 @@
         // },
         tableData:[],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
-        pattern:false,
+        pattern:true,
         screenData:{},
         checkState: false,
         checkSum: 0,
         checkedAllName: [],
         checkedCities:[],
 				permissionConfig: [],
-				pageData: {}
+				pageData: {},
+				showFormBool: false // 展示过滤条件
       }
     },
     computed:{
@@ -416,12 +432,22 @@
       this.getDetail();
     },
     methods:{
+			showOrHideenForm () {
+				this.showFormBool = !this.showFormBool
+			},
 			handleSizeChange (val) {
 				this.$limit = val
+				this.checkedCities = [];
+				this.checkSum = 0;
+				this.checkState = false;
 				this.init()
 			},
 			handleCurrentChange (val) {
+				console.log(val)
 				this.$start = val
+				this.checkedCities = [];
+				this.checkSum = 0;
+				this.checkState = false;
 				this.init()
 			},
       sure (state,type){
@@ -437,10 +463,104 @@
             return "(已拒绝)"
         }
       },
+      outExcell(){
+				this.$start = 1
+        let screenArr = {
+					_limit: 9999,
+					_start: this.$start,
+          jid: this.jid
+        }
+        if(this.screenData.name){
+          screenArr.name = this.screenData.name
+        }
+        if(this.screenData.gender){
+          screenArr.gender = this.screenData.gender
+        }
+        if(this.screenData.education){
+          screenArr.education = this.screenData.education
+        }
+        if(this.screenData.age){
+          screenArr.minAge = this.screenData.age
+        }
+        if(this.screenData.age2){
+          screenArr.maxAge = this.screenData.age2
+        }
+        if(this.screenData.height){
+          screenArr.minHeight = this.screenData.height
+        }
+        if(this.screenData.height2){
+          screenArr.maxHeight = this.screenData.height2
+        }
+        if(this.screenData.weight){
+          screenArr.minWeight = this.screenData.weight
+        }
+        if(this.screenData.weight2){
+          screenArr.maxWeight = this.screenData.weight2
+        }
+        if(this.screenData.leftVision){
+          screenArr.minVisionLeft = this.screenData.leftVision
+        }
+        if(this.screenData.leftVision2){
+          screenArr.maxVisionLeft = this.screenData.leftVision2
+        }
+        if(this.screenData.rightVision){
+          screenArr.minVisionRight = this.screenData.rightVision
+        }
+        if(this.screenData.rightVision2){
+          screenArr.maxVisionRight = this.screenData.rightVision2
+        }
+        if(this.screenData.workExp){
+          screenArr.experience = this.screenData.workExp
+        }
+        if(this.screenData.lang){
+          screenArr.language = this.screenData.lang
+        }
+        if(this.screenData.status && this.screenData.status != 6){
+          screenArr.status = this.screenData.status
+        }
+        if(this.screenData.sure && this.screenData.sure != 3){
+          screenArr.sure = this.screenData.sure
+        }
+				screenArr.excelCondition = JSON.stringify([
+					{code: 'name', name: '姓名'},
+					{code: 'gender', name: '性别', json: 'gender'},
+					{code: 'age', name: '年龄'},
+					{code: 'height', name: '身高'},
+					{code: 'vision_left', name: '裸眼视力(左眼)', json: 'vision'},
+					{code: 'vision_right', name: '裸眼视力(右眼)', json: 'vision'},
+					{code: 'experience', name: '工作经验', json: 'offerExperience'},
+					{code: 'education', name: '学历', json: 'education'},
+					{code: 'language', name: '熟悉小语种'},
+					{code: 'auditor_success', name: '评审通过人数'},
+					{code: 'auditor_fail', name: '评审否决人数'},
+					{code: 'status', name: '简历状态', json: 'overVoteStatusEnum'},
+					{code: 'sure', name: '是否接受面试邀请', json: 'meetSure', value: '/'}
+				])
+        this.$axios({
+          type: 'post',
+          url: '/dabai-chaorenjob/resumeReceived/getResumeReceivedListByJidByExcel',
+          data:screenArr,
+          fuc: (res) => {
+						console.log(res)
+						var eleLink = document.createElement('a')
+						eleLink.download = '简历列表.xls'
+						eleLink.style.display = 'none'
+						// 字符内容转变成blob地
+						var blob = res
+						eleLink.href = URL.createObjectURL(blob)
+						// 触发点击
+						document.body.appendChild(eleLink)
+						eleLink.click()
+						// 然后移除
+						document.body.removeChild(eleLink)
+          }
+        })
+      },
       init(data){
 				if (data) {
 					this.$start = 1
 				}
+				console.log('start', this.$start)
         let screenArr = {
 					_limit: this.$limit,
 					_start: this.$start,
@@ -494,7 +614,7 @@
         if(this.screenData.status && this.screenData.status != 6){
           screenArr.status = this.screenData.status
         }
-        if(this.screenData.sure){
+        if(this.screenData.sure && this.screenData.sure != 3){
           screenArr.sure = this.screenData.sure
         }
         this.$axios({
@@ -528,7 +648,8 @@
               console.log(this.screenData)
               let status = window.sessionStorage.getItem("status");
               if(status){
-                this.screenData.status = status;
+//                this.screenData.status = status;
+								this.$set(this.screenData, 'status', status)
               }
               this.init();
             }else{
@@ -553,11 +674,14 @@
         this.$router.push("/resumeDetail")
       },
       checkItem(val){
-        if(val){
-          this.checkSum++
-        }else{
-          this.checkSum--
-        }
+				console.log('sum', val)
+//        if(val){
+//          this.checkSum++
+//        }else{
+//          this.checkSum--
+//        }
+				this.checkSum = val.length
+				
         if(this.tableData.length == this.checkSum){
           this.checkState = true;
         }else{
@@ -574,6 +698,10 @@
         }
       },
       _review (){
+				if (this.checkedCities.length < 1) {
+					this.$message.warning('请先选择数据，再进行操作')
+					return
+				}
 			  for(let i = 0;i<this.tableData.length;i++){
 			    if(this.tableData[i].status == 3 || this.tableData[i].status == 4 || this.tableData[i].status == 5){
 			      for(let a = 0;a < this.checkedCities.length; a++){
@@ -607,7 +735,15 @@
           }
         })
       },
+			changeStatePerson (rrid) {
+				window.sessionStorage.setItem("rrids",JSON.stringify([rrid]))
+				this.$router.push("/recruitResult/"+2)
+			},
       changeState(type){
+				if (this.checkedCities.length < 1) {
+					this.$message.warning('请先选择数据，再进行操作')
+					return
+				}
         for(let i = 0;i<this.tableData.length;i++){
           if(this.tableData[i].status == 3 || this.tableData[i].status == 4){
             for(let a = 0;a < this.checkedCities.length; a++){

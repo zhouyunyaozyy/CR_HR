@@ -7,7 +7,7 @@
     <div class="job_detail_item">
       <div class="job_detail_title">职位信息</div>
       <div class="job_detail_cont">
-        <el-form-item label="职位名称">
+        <el-form-item label="职位名称" required>
           <el-col :span='10'>
             <el-input
               placeholder="如乘务员、飞行员、机务等"
@@ -324,16 +324,16 @@
             // 获取详情
             if(res.code == 1){
               this.form.name = res.data.name
-              this.status = res.data.status
-              this.form.rtid = res.data.rtid
-              this.form.education = res.data.education+""
-              this.address = (res.data.address+"").slice(0,3)+"000"
+              this.status = res.data.status ? res.data.status : ''
+              this.form.rtid = parseInt(res.data.rtid) ? res.data.rtid : ''
+              this.form.education = res.data.education ? res.data.education + '' : ''
+              this.address = res.data.address ? (res.data.address+"").slice(0,3)+"000" : ''
               this.selectCity();
-              this.address2 = res.data.address+""
-              this.form.work_experience = res.data.work_experience+""
-              this.form.wages = res.data.wages+""
-              this.form.hire_number = res.data.hire_number+""
-              this.form.profile = res.data.profile+""
+              this.address2 = res.data.address ? res.data.address+"" : ''
+              this.form.work_experience = res.data.work_experience ? res.data.work_experience + ""  : ''
+              this.form.wages = res.data.wages ? res.data.wages+"" : ''
+              this.form.hire_number = res.data.hire_number ? res.data.hire_number +"" : ''
+              this.form.profile = res.data.profile ? res.data.profile+"" : ''
               this.screen = JSON.parse(res.data.search_config_json)
               console.log(this.screen)
             }else{
@@ -388,63 +388,64 @@
             duration: 1000
           })
           return;
-        }else if(!this.form.rtid){
-          this.$message({
-            type: 'error',
-            message: '请选择职能',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.education){
-          this.$message({
-            type: 'error',
-            message: '请选择学历',
-            duration: 1000
-          })
-          return;
-        }else if(!this.address){
-          this.$message({
-            type: 'error',
-            message: '请选择省份',
-            duration: 1000
-          })
-          return;
-        }else if(!this.address2){
-          this.$message({
-            type: 'error',
-            message: '请选择城市',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.work_experience){
-          this.$message({
-            type: 'error',
-            message: '请选择工作经验',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.wages){
-          this.$message({
-            type: 'error',
-            message: '请选择薪资范围',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.hire_number){
-          this.$message({
-            type: 'error',
-            message: '请输入招聘人数',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.profile){
-          this.$message({
-            type: 'error',
-            message: '请输入职位描述',
-            duration: 1000
-          })
-          return;
-        }
+				}
+//        }else if(!this.form.rtid){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择职能',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.education){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择学历',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.address){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择省份',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.address2){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择城市',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.work_experience){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择工作经验',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.wages){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择薪资范围',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.hire_number){
+//          this.$message({
+//            type: 'error',
+//            message: '请输入招聘人数',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.profile){
+//          this.$message({
+//            type: 'error',
+//            message: '请输入职位描述',
+//            duration: 1000
+//          })
+//          return;
+//        }
         this.addJob();
       },
       selectCity () {

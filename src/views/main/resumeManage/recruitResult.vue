@@ -24,10 +24,10 @@
             <span class="prev_info_label">*面试地址：</span>
             <span class="prev_info_txt">{{prevInfo.agreedpath}}</span>
           </div>
-          <div class="prev_info_leav">
-            <span class="prev_info_label">留言：</span>
-            <span class="prev_info_txt" v-if="prevInfo.agreednote">{{prevInfo.agreednote}}</span>
-            <span class="prev_info_txt" v-else-if="prevInfo.mark">{{prevInfo.mark}}</span>
+          <div class="prev_info_leav" v-if="prevInfo.agreednote">
+            <span class="prev_info_label" v-if="prevInfo.agreedtime">留言：</span>
+            <span class="prev_info_label" v-else>拒绝原因：</span>
+            <span class="prev_info_txt">{{prevInfo.agreednote}}</span>
           </div>
         </div>
         <div class="leav_info" :class="{refuse:resultState == 2}">
@@ -147,7 +147,7 @@
 								this.$set(this.prevInfo, 'agreednote', res.data.agreednote || "")
               }else if(res.data.status == 4){
 								this.$set(this.prevInfo, 'title', '已发送的不合适信息')
-								this.$set(this.prevInfo, 'agreedtime', res.data.mark || "")
+								this.$set(this.prevInfo, 'agreednote', res.data.agreednote || "")
               }else{
                 this.prevInfo = {};
               }
@@ -167,7 +167,7 @@
         }
         let postData = {
           rrids: JSON.parse(window.sessionStorage.getItem("rrids")),
-          mark: this.form.leav
+          agreednote: this.form.leav
         }
         this.$axios({
           type: 'post',
@@ -224,7 +224,7 @@
       clickTab() {
         this.$store.commit('changeTab',"/resumeDetail")
         this.$router.push({
-          path:"/resumeDetail"
+          path:"/recruitList"
         });
       }
     }

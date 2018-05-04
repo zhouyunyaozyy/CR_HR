@@ -12,7 +12,7 @@
           <el-form-item label="真实姓名" prop="name">
             <el-input v-model="hr_detail.name" placeholder="请输入HR真实姓名"></el-input>
           </el-form-item>
-          <el-form-item label="手机号" prop="phone">
+          <el-form-item label="手机号" prop="mobile">
             <el-input v-model="hr_detail.mobile" placeholder="请输入手机号"></el-input>
           </el-form-item>
           <el-form-item label="用户名">
@@ -84,6 +84,11 @@
         uid:""
       };
     },
+		computed: {
+			tabIndex (){
+        return this.$store.state.tj.tabIndex;
+      }
+		},
     activated (){
       this.uid = window.sessionStorage.getItem("uid");
       console.log(this.uid)
@@ -102,7 +107,7 @@
               this.hr_detail.name = res.data.name;
               this.hr_detail.mobile = res.data.mobile;
               this.hr_detail.username = res.data.username;
-              let config = JSON.parse(res.data.config);
+              let config = res.data.config ? JSON.parse(res.data.config) : [];
               for(let i = 0;i<config.length;i++){
                 let config_key = i == 0? "resume":i == 1? "enterprise" : "job";
                 for(let key in config[i]){

@@ -13,12 +13,11 @@
 				<el-input
 					type='text'
 					placeholder="请输4位数验证码"
-					v-model='form.num'
-					@keydown.enter.native="login">
+					v-model='form.num'>
 					<el-button slot="suffix" type='primary'  style='float:right' :disabled='getNumBool' @click='timeFuc'>{{form.time}}</el-button>
 				</el-input>
 			</el-form-item>
-			<el-form-item>
+			<el-form-item prop='pwd'>
 				<el-input
 					type='password'
 					placeholder="请输入新密码"
@@ -119,7 +118,7 @@
 							data: user,
 							fuc: (res) => {
 								this.$message({
-									message: '激活成功，请进行登录',
+									message: '重置密码成功，请进行登录',
 									duration: 1000
 								})
 								this.$router.push('/')

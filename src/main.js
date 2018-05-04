@@ -102,22 +102,29 @@ Vue.prototype.$axios = (params) => {
       params.data,
       {
         withCredentials:false,
+				responseType: params.url == "/dabai-chaorenjob/resumeReceived/getResumeReceivedListByJidByExcel" ? 'blob' : 'json',
         headers: {"Content-Type": "application/json", "Accept" : "*/*", 'CR-token': resultData}
       })
       .then(function(response){
-        if (response.data.code != 1) {
-          Message({
-						showClose: true,
-            message: response.data.msg,
-            type: 'error',
-          });
-					console.log(1, response, params)
-					if (params.url == '/dabai-authority/authority/login' || params.url == '/dabai-chaorenjob/hr/getUserInfoByTickets') {
+				console.log('导出', params.url)
+				 if (params.url == "/dabai-chaorenjob/resumeReceived/getResumeReceivedListByJidByExcel") {
+						console.log('导出', response)
+//						response.data.blob().then((blobData) => {
+							params.fuc(response.data)
+//						})
+					} else if (response.data.code != 1) {
+						Message({
+							showClose: true,
+							message: response.data.msg,
+							type: 'error',
+						});
+						console.log(1, response, params)
+						if (params.url == '/dabai-authority/authority/login' || params.url == '/dabai-chaorenjob/hr/getUserInfoByTickets') {
+							params.fuc(response.data)
+						}
+					} else {
 						params.fuc(response.data)
 					}
-        } else {
-          params.fuc(response.data)
-        }
       })
       .catch(function(error){
         if (error.response) {

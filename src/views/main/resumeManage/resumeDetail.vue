@@ -31,11 +31,11 @@
         <div class="head_review">
           <div class="review_result" v-if="detailData.status == 5">
             <span class="">评审结果：</span>
-            <span class="review_num">{{detailData.audited_success || 0}} 通过</span>
+            <span class="review_num">{{detailData.auditor_success || 0}} 通过</span>
             <span>&nbsp;/&nbsp;</span>
             <!--<span class=""-->
                   <!--v-if="success_list.length > 0">&nbsp;{{"("+success_list.join(",")+")"}}</span>-->
-            <span class="review_txt">{{detailData.audited_fail || 0}} 否决</span>
+            <span class="review_txt">{{detailData.auditor_fail || 0}} 否决</span>
             <span class="review_query">
               <i class="iconfont icon-wenhao"></i>
             </span>
@@ -47,14 +47,14 @@
           <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
             <el-button @click="_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
           </div>
-          <div class="review_btn" v-else-if="detailData.status == 5 && permissionConfig.length > 0 && permissionConfig[0].joinReview == true">
+          <div class="review_btn" v-if="detailData.status == 5 && permissionConfig.length > 0 && permissionConfig[0].joinReview == true">
             <el-button
               @click="_change_review()"
               type="primary" plain
               v-if='!review_btn && passState == 2'>参与评审</el-button>
             <el-button
               plain
-              v-else-if='passState == 0'>已投否决</el-button>
+              v-if='passState == 0'>已投否决</el-button>
             <el-button
               plain
               v-else-if='passState == 1'>已投通过</el-button>
@@ -79,7 +79,7 @@
         <el-col :xs="13" :sm="13" :md="13" :lg="13" :xl="13" class="detail_info_left">
           <div class="job_wanted">
             <div class="detail_info_title">求职意向</div>
-            <div class="detail_info_job">飞行员</div>
+            <div class="detail_info_job">{{detailData.target_name}}</div>
             <div class="detail_info_title">基本信息</div>
             <div class="job_want_cont">
               <div class="job_want_left">
@@ -102,7 +102,7 @@
                        v-if="item1.code == (detailData.birthplace+'').slice(0,4)+'00'">
                     <div v-for='item2 in item1.children'
                          v-if='item2.code == detailData.birthplace'>
-                      籍贯：<span>{{item.name}}</span>
+                      籍贯：<span>{{item.name + item1.name + item2.name}}</span>
                     </div>
                   </div>
                 </div>
@@ -155,7 +155,7 @@
                 </div>
                 <div class="job_want_item"
                      v-for='item in localData.offerState'
-                     v-if='item.code==detailData.status_resume'>
+                     v-if='item.code==detailData.employ'>
                   任职状态：<span>{{item.name}}</span>
                 </div>
                 <div class="job_want_item">联系电话：<span>{{detailData.tel}}</span></div>
@@ -358,6 +358,7 @@
       },
 			goSealTalk () {
 				window.sessionStorage.setItem('targetId', this.detailData.uid)
+				window.sessionStorage.setItem('targetRrid', window.sessionStorage.getItem('rrid'))
 				window.sessionStorage.setItem('targetIdBool', true)
 				this.$router.push('sealtalkDetail')
 			},
@@ -366,6 +367,7 @@
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
         }
+				this.detailData = {}
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/resumeReceived/getResumeVoteSnapshotVo',
@@ -383,7 +385,7 @@
                 }else if(res.data.reviewList[i].sure == 0){
                   this.fail_list.push(res.data.reviewList[i].name)
                 }
-                if(res.data.rrid == res.data.reviewList[i].rrid){
+                if(window.sessionStorage.getItem('uid') == res.data.reviewList[i].uid){
                   this.passState = res.data.reviewList[i].sure
                 }
               }

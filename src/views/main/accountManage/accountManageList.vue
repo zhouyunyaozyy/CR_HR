@@ -180,6 +180,9 @@
 									type: 'success',
 									message: '删除成功!'
 								});
+								if (this.pageData.count % this.$limit == 1) {
+									this.$start--
+								}
 								this.init();
 							}else{
 								this.$message({

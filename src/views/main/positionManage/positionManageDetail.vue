@@ -7,7 +7,7 @@
     <div class="job_detail_item">
       <div class="job_detail_title">职位信息</div>
       <div class="job_detail_cont">
-        <el-form-item label="职位名称" required>
+        <el-form-item label="职位名称">
           <el-col :span='10'>
             <el-input
               placeholder="如乘务员、飞行员、机务等"
@@ -83,9 +83,10 @@
         <el-form-item label="招聘人数">
           <el-col :span="5">
             <el-input
-              placeholder="输入招聘人数" :maxlength='10'
-              type="number"
-              v-model="form.hire_number"></el-input>
+              placeholder="输入招聘人数"
+							:maxlength='3'
+              type="text"
+              v-model="form.hire_number" @keyup.native="form.hire_number = $inputKeyUp()" @afterpaste.native="form.hire_number = $inputKeyUp()"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="职位描述">
@@ -133,14 +134,14 @@
               <el-input
                 type="number"
                 placeholder="年龄(岁)"
-                v-model="screen.age"></el-input>
+                v-model="screen.age" @keyup.native="screen.age = $inputKeyUp()" @afterpaste.native="screen.age = $inputKeyUp()" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
                 type="number"
                 placeholder="年龄(岁)"
-                v-model="screen.age2"></el-input>
+                v-model="screen.age2" @keyup.native="screen.age2 = $inputKeyUp()" @afterpaste.native="screen.age2 = $inputKeyUp()" :maxlength='10'></el-input>
             </el-col>
           </el-row>
           <el-row>
@@ -148,27 +149,27 @@
               <el-input
                 type="number"
                 placeholder="身高(cm)"
-                v-model="screen.height"></el-input>
+                v-model="screen.height" @keyup.native="screen.height = $inputKeyUp()" @afterpaste.native="screen.height = $inputKeyUp()" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
                 type="number"
                 placeholder="身高(cm)"
-                v-model="screen.height2"></el-input>
+                v-model="screen.height2" @keyup.native="screen.height2 = $inputKeyUp()" @afterpaste.native="screen.height2 = $inputKeyUp()" :maxlength='10'></el-input>
             </el-col>
             <el-col :span='5' :offset="1">
               <el-input
                 type="number"
                 placeholder="体重(kg)"
-                v-model="screen.weight"></el-input>
+                v-model="screen.weight" @keyup.native="screen.weight = $inputKeyUp()" @afterpaste.native="screen.weight = $inputKeyUp()" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
                 type="number"
                 placeholder="体重(kg)"
-                v-model="screen.weight2"></el-input>
+                v-model="screen.weight2" @keyup.native="screen.weight2 = $inputKeyUp()" @afterpaste.native="screen.weight2 = $inputKeyUp()" :maxlength='10'></el-input>
             </el-col>
           </el-row>
           <el-row>

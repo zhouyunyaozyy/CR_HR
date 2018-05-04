@@ -85,6 +85,9 @@
       };
     },
     computed:{
+			tabIndex (){
+        return this.$store.state.tj.tabIndex;
+      },
       isRefresh (){
         return this.$store.state.tj.isRefresh;
       }

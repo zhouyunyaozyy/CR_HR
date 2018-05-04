@@ -14,15 +14,16 @@
 						<i v-if='showIcon'></i>
           </div>
           <div class="icon_item">
-            <el-dropdown @command="handleCommand">
+            <el-dropdown @command="handleCommand" trigger="click">
               <div class="el-dropdown-link">
                 <i class="iconfont icon-shezhi-tianchong"></i>
                 <span class="icon_txt">设置</span>
+								<i v-if='showSystemIcon'></i>
               </div>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="/personSettingUser">个人信息</el-dropdown-item>
                 <el-dropdown-item command="/checkCompany">企业信息</el-dropdown-item>
-                <el-dropdown-item command="/talkWithSystem">系统通知</el-dropdown-item>
+                <el-dropdown-item command="/talkWithSystem">系统通知<i>o</i></el-dropdown-item>
                 <el-dropdown-item command="/feedback">反馈</el-dropdown-item>
                 <el-dropdown-item @click.native='quit'>退出</el-dropdown-item>
               </el-dropdown-menu>
@@ -91,6 +92,9 @@
             </div>
           </div>
           <div class="content">
+						<div v-if="$route.name == 'main'" class="mainPngDiv">
+							<img src="../../imgs/main.png">
+						</div>
             <keep-alive>
               <router-view/>
             </keep-alive>
@@ -116,6 +120,7 @@
 					localTalkData: [],
 					uid: '',
 					showIcon: false, // 职位沟通小红点
+					showSystemIcon: true, // 设置小红点
           g_state:true,
 					mainOrChildren: '',
 					permissionConfig: []
@@ -125,6 +130,7 @@
         // WLabel
       },
 			created () {
+				console.log('router', this.$route)
 				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 				this.mainOrChildren = window.sessionStorage.getItem('mainOrChildren')
 				let _form = Default
@@ -335,6 +341,18 @@
 						}
 					}
 				})
+				
+//				this.$axios({
+//					url: '/dabai-chaorenjob/notice/getHrNoticeNumber',
+//					type: 'post',
+//					fuc: (res) => {
+//						if(parseInt(res.data) > 0) {
+//							this.showSystemIcon = false
+//						} else {
+//							this.showSystemIcon = true
+//						}
+//					}
+//				})
 			},
       computed:{
         includePageNames (){
@@ -513,6 +531,16 @@
 		right: 35px;
 		background-color: #ff2121;
 	}
+	.index_cont .el-dropdown-link>i:nth-of-type(2){
+		width: 10px;
+		height: 10px;
+		display: inline-block;
+		border-radius: 10px;
+		position: absolute;
+		top: 0;
+		right: 48px;
+		background-color: #ff2121;
+	}
 </style>
 <style scoped>
 
@@ -632,7 +660,7 @@
     /*top:60px;*/
     /*right: 0;*/
     /*z-index: 100;*/
-    border-bottom: 10px solid #eff9ff;
+/*    border-bottom: 10px solid #eff9ff;*/
   }
   .label_main{
     flex: 1;
@@ -645,12 +673,25 @@
   }
   .content{
     position: absolute;
-    top: 50px;
+    top: 40px;
     left: 0;
     right: 0;
     bottom: 0;
     min-height: calc(100% - 70px);
     overflow: auto;
-    margin: 0 10px 10px;
+/*    margin: 0 10px 10px;*/
   }
+	.content>div{
+		margin: 10px;
+	}
+	.content>.mainPngDiv{
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		text-align: center;
+		background-color: white;
+	}
+	.mainPngDiv>img{
+		margin-top: 100px;
+	}
 </style>

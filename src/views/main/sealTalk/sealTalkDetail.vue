@@ -153,7 +153,7 @@
 			if (window.sessionStorage.getItem('targetIdBool') == 'true') { // 从简历详情页进入聊天
 				console.log('targetIdTrue', Boolean(window.sessionStorage.getItem('targetIdBool')), false)
 				this.targetId = window.sessionStorage.getItem('targetId')
-				this.rrid = window.sessionStorage.getItem('rrid')
+				this.rrid = window.sessionStorage.getItem('targetRrid')
 				this.getJobInfo()
 	//        // 若存在公司历史纪录
 				if (window.localStorage.getItem(this.uid)) {
@@ -386,7 +386,7 @@
               for (let val of nowThis.localTalkData) {
                 if (nowThis.targetId === val.targetId) {
                   val.rrid = nowThis.rrid
-                  val.content = [{content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: true}]
+                  val.content.push({content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: true})
                   nowThis.localTalkData.unshift(nowThis.localTalkData.splice(nowThis.localTalkData.indexOf(val), 1)[0])
                     nowThis.$store.state.zyy.localTalkData = nowThis.localTalkData
                     window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))

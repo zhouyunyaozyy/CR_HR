@@ -8,6 +8,11 @@
 		{"code":"3", "name": "禁用"},
 		{"code":"4", "name": "删除"}
 	],
+	"meetSure": [
+		{"code":"0", "name": "(未确认)"},
+		{"code":"1", "name": "(已接受)"},
+		{"code":"2", "name": "(已拒绝)"}
+	],
 	"vision":[
 		{"code":"1","name":"0.1"},
 		{"code":"2","name":"0.12"},
@@ -124,7 +129,7 @@
 		{"code":"5","name":"行业水平"}
 	],
 	"overVoteStatusEnum":[
-		{"code":"1","name":"未查看"},
+		{"code":"1","name":"已投递"},
 		{"code":"2","name":"已查看"},
 		{"code":"3","name":"邀请面试"},
 		{"code":"4","name":"不合适"},

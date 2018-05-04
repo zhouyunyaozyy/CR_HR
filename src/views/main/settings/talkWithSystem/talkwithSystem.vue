@@ -2,32 +2,32 @@
   <div class="systemTalked">
     <div class="systemTalkedBody">
       <div class="talked" v-for='(item, index) in tableMsg'>
-        <h4>{{item.title}}</h4>
-        <p>{{item.args}}</p>
-        <p>{{item.args}}</p>
+        <h3><i class="iconfont icon-tongzhi"></i>{{item.title}}<time style="color:#808080;float:right;font-size: 12px;font-weight: 200;">{{new Date(parseInt(item.create_time)).toLocaleString('chinese',{hour12: false})}}</time></h3>
+        <p>{{item.content}}</p>
+        <p>{{item.content}}</p>
         <span @click='checkDetail(index)'>查看详情</span>
       </div>
     </div>
-    <div class="btns" v-if="1 > 0">
+    <div class="btns" v-if="tableMsg.length > 0">
         <el-pagination
-        layout="prev, pager, next" @current-change="pageChange"
-        :total="count" :page-size="limit" :currentPage="start">
-      </el-pagination>
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange"
+						:current-page.sync="$start"
+						:page-size="pageData.pageSize"
+						layout="prev, pager, next"
+						:total="pageData.count">
+					</el-pagination>
     </div>
   </div>
 </template>
 
 <script>
   /* eslint-disable */
-  import store from '@/store'
+//  import store from '@/store'
   export default {
     data () {
       return {
-        tableMsg: [],
-        count: 0, // 总体条数
-        start: 1,   // 第几页 从 0 开始
-        pager: 0, // 页数
-        limit: 4 // 每页条数
+        tableMsg: []
       }
     },
     created () {
@@ -35,27 +35,28 @@
     },
     methods: {
       showTable () {
-        store.state.ajax({
-          url: '/push/queryHrPush',
-          type: 'post',
-          data: {_start: this.start, _limit: this.limit},
-          success: (res) => {
-            if (res.code === 1) {
+        this.$axios({
+          url: '/dabai-chaorenjob/notice/queryAllHrNoticeOfMine',
+          type: 'get',
+          data: {_start: this.$start, _limit: this.$limit},
+          fuc: (res) => {
+            if (res.code == 1) {
               console.log(res)
               this.tableMsg = res.data.data
-              this.count = res.data.count
-              this.start = res.data.start
-              this.pager = res.data.pager
+              this.pageData = res.data
             }
 //            this.loading = false
           }
         })
       },
-      pageChange (val) { // 输入页数跳转
-        this.start = val
-        console.log('val', val)
-        this.showTable()
-      },
+			handleSizeChange (val) {
+				this.$limit = val
+				this.showTable()
+			},
+			handleCurrentChange (val) {
+				this.$start = val
+				this.showTable()
+			},
       checkDetail (index) {
         var event = window.event || arguments.callee.caller.arguments[0]
         let target = event.srcElement || event.target
@@ -69,13 +70,14 @@
 
 <style lang="css" scoped="true">
   .systemTalked{
-    background-color: #eff1f6;
+/*    background-color: #eff1f6;*/
     width: 100%;
-    padding: 20px;
+   	box-sizing: border-box;
+		padding: 10px;
   }
   .systemTalkedBody{
     width: 100%;
-    padding: 20px;
+    padding: 10px;
     background-color: white;
     box-sizing: border-box;
     overflow: hidden;
@@ -84,12 +86,12 @@
     width: 100%;
     padding: 16px 12px;
     box-sizing: border-box;
-    border: 1px solid #D8DDEB;
+    border-bottom: 1px solid #eff9ff;
     margin-top: 20px;
     line-height: 25px;
     position: relative;
     overflow: hidden;
-    min-height: 120px;
+/*    min-height: 120px;*/
   }
   .talked>span{
     position: absolute;
@@ -104,15 +106,12 @@
     line-height: 20px;
   }
   .talked>p:first-of-type{
-    overflow:hidden; 
-
-    text-overflow:ellipsis;
-
-    display:-webkit-box; 
-
-    -webkit-box-orient:vertical;
-
-    -webkit-line-clamp:2; 
+		overflow: hidden;
+    width: calc(100% - 83px);
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
   .talked>p:last-of-type{
     display: none;
@@ -121,7 +120,7 @@
     color: #aebee1;
   }
   .talked:hover{
-    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.20);
+/*    box-shadow: 0 4px 5px 0 rgba(0,0,0,0.20);*/
   }
   .btns{
       width: 100%;
@@ -130,5 +129,6 @@
       padding: 40px 0 20px 20px;
       margin-bottom: 30px;
       background-color: white;
+		box-sizing: border-box;
   }
 </style>

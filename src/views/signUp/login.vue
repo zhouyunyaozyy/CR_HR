@@ -33,6 +33,7 @@
 		</el-form>
 		<div class="planeDiv" v-if='showPlane'>
 			<img src="../../imgs/plane.gif"/>
+			<p style="text-align:center;color:white">正在登录...</p>
 		</div>
   </div>
 </template>
@@ -43,7 +44,7 @@
 			return {
 				form: {
 					phone: '',
-					pwd: '123456'
+					pwd: ''
 				},
 				showPlane: false,
 				rules: {
@@ -177,6 +178,7 @@
 		width: 100%;
 		overflow: hidden;
 		margin-top: 30px;
+/*		position: relative;*/
 	}
 	.login form button{
 		width: 100%;
@@ -206,9 +208,13 @@
 		position: absolute;
 		z-index: 100;
 		top: 0;
+/*		top: calc(50% - 50px);*/
 		left: 0;
 		background-color: black;
 		opacity:0.6;
+		box-sizing: border-box;
+		padding-top: 436px;
+/*		padding-top: calc(50% - 40px);*/
 	}
 	.planeDiv>img{
 		margin: auto;
@@ -216,6 +222,5 @@
 		display: inline-block;
 		position: relative;
 		left: calc(50% - 100px);
-		top: calc(50% - 40px);
 	}
 </style>
