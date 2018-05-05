@@ -5,16 +5,17 @@
 				<el-input
 					type='text'
 					placeholder="请输入手机号或用户名"
-					prefix-icon="el-icon-search"
-					v-model='form.phone'>
+					prefix-icon="iconfont icon-icon-test2"
+					v-model='form.phone'
+					class='loginInput'>
 				</el-input>
 			</el-form-item>
 			<el-form-item prop='pwd'>
 				<el-input
 					type='password'
 					placeholder="请输入密码"
-					prefix-icon="el-icon-search"
-					v-model='form.pwd'
+					prefix-icon="iconfont icon-mima1"
+					v-model='form.pwd' class='loginPwdInput'
 					@keydown.enter.native="login">
 				</el-input>
 			</el-form-item>
@@ -85,7 +86,7 @@
 									type: 'post',
 									url: '/dabai-chaorenjob/hr/getUserInfoByTickets',
 									fuc: (res) => {
-										console.log('loginAfter', res.data.uid != window.sessionStorage.getItem('uid'))
+//										console.log('loginAfter', res.data.uid != window.sessionStorage.getItem('uid'))
 										if (res.code == 1) {
 											if (res.data.uid != window.sessionStorage.getItem('uid')) {
 												window.sessionStorage.removeItem('label_list')
@@ -171,6 +172,14 @@
 	}
 	.login input:hover{
 		border-color: #b3b3b3;
+	}
+	.loginInput i{
+		font-size: 20px;
+		color: black;
+	}
+	.loginPwdInput i{
+		font-size: 18px;
+		color: black;
 	}
 </style>
 <style scoped="true" lang='css'>

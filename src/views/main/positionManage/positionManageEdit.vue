@@ -131,44 +131,44 @@
             </el-col>
             <el-col :span='5' :offset="1">
               <el-input
-                type="number"
+                type="text"
                 placeholder="年龄(岁)"
-                v-model="screen.age"></el-input>
+                v-model="screen.age" @keyup.native="screen.age = $inputKeyUp($event)" @afterpaste.native="screen.age = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="年龄(岁)"
-                v-model="screen.age2"></el-input>
+                v-model="screen.age2" @keyup.native="screen.age2 = $inputKeyUp($event)" @afterpaste.native="screen.age2 = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="身高(cm)"
-                v-model="screen.height"></el-input>
+                v-model="screen.height" @keyup.native="screen.height = $inputKeyUp($event)" @afterpaste.native="screen.height = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="身高(cm)"
-                v-model="screen.height2"></el-input>
+                v-model="screen.height2" @keyup.native="screen.height2 = $inputKeyUp($event)" @afterpaste.native="screen.height2 = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span='5' :offset="1">
               <el-input
-                type="number"
+                type="text"
                 placeholder="体重(kg)"
-                v-model="screen.weight"></el-input>
+                v-model="screen.weight" @keyup.native="screen.weight = $inputKeyUp($event)" @afterpaste.native="screen.weight = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="体重(kg)"
-                v-model="screen.weight2"></el-input>
+                v-model="screen.weight2" @keyup.native="screen.weight2 = $inputKeyUp($event)" @afterpaste.native="screen.weight2 = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
           </el-row>
           <el-row>

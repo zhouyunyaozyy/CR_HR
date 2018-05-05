@@ -478,7 +478,7 @@
 </style>
 <style scoped="true">
 	.sealTalk{
-		width: 100%;
+/*		width: 100%;*/
 		box-sizing: border-box;
 		overflow: hidden;
 		height: 100%;

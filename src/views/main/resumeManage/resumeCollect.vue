@@ -149,6 +149,12 @@
                     v-if="item1.code == scope.row.status">{{item1.name}}{{sure(scope.row.status,scope.row.sure)}}</span>
               </template>
             </el-table-column>
+						<el-table-column
+							min-width="80">
+							<template slot-scope="scope">
+								<el-button @click="_detail(scope.row.rrid)" type="primary" plain>查看</el-button>
+							</template>
+						</el-table-column>
           </el-table>
         </el-checkbox-group>
       </div>
@@ -190,6 +196,10 @@
       this.init();
     },
     methods: {
+			_detail (rrid) {
+				window.sessionStorage.setItem("rrid",rrid)
+        this.$router.push("/resumeDetail")
+			},
 			showOrHideenForm () {
 				this.showFormBool = !this.showFormBool
 			},
@@ -410,4 +420,9 @@
     border-radius: 2px;
     border: 1px solid #ccc;
   }
+	.resume_collect button{
+		width: 70px;
+    height: 30px;
+    padding: 0;
+	}
 </style>

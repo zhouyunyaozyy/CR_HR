@@ -18,9 +18,12 @@ Vue.config.productionTip = false
 
 //封装方法
 
-Vue.prototype.$inputKeyUp = () => { // 输入框限制
-  var event = window.event || arguments.callee.caller.arguments[0]
-  let target = event.srcElement || event.target
+Vue.prototype.$inputKeyUp = (e) => { // 输入框限制
+//	console.log(window.arguments)
+//  var event = window.event || arguments.callee.caller.arguments[0]
+  let target = window.event ? (event.srcElement || event.target) : e.target
+	console.log(target)
+//  let target = event.srcElement || event.target
   if (target.value.length === 1) {
     target.value = target.value.replace(/[^1-9]/g, '')
   } else {

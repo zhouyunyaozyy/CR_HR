@@ -26,7 +26,7 @@
             <i class="iconfont icon-shoucang"></i>
             {{detailData.isFavorite?"取消收藏":"收藏"}}
           </el-button>
-          <el-button plain>导出简历</el-button>
+          <el-button plain @click='outPdf'>导出简历</el-button>
         </div>
         <div class="head_review">
           <div class="review_result" v-if="detailData.status == 5">
@@ -294,8 +294,18 @@
           <img class="dot" src="./../../../assets/dot.png" alt="">
           <div class="info_txt"
                v-for="item1 in localData.overVoteStatusEnum"
-               v-if="item1.code == item.type"
-          >{{item1.name}}</div>
+               v-if="item1.code == item.type && item.type != 3 && item.type != 4"
+           style="font-weight:bold;">{{item1.name}}</div>
+					<div v-for="item1 in localData.overVoteStatusEnum" v-if='item.type == 3 && item1.code == item.type' class="info_txt">
+						<p style="font-weight:bold;">{{item1.name}}</p>
+						<p>面试时间：{{new Date(parseInt(item.agreedtime)).toLocaleString('chinese', {hour12: false})}}</p>
+						<p>面试地点：{{item.agreedpath}}</p>
+						<p v-if='item.agreenote'>留言：{{item.agreednote}}</p>
+					</div>
+					<div v-for="item1 in localData.overVoteStatusEnum" v-if='item.type == 4 && item1.code == item.type' class="info_txt">
+						<p style="font-weight:bold;">{{item1.name}}</p>
+						<p>拒绝理由：{{item.agreednote}}</p>
+					</div>
         </div>
       </div>
     </div>
@@ -331,6 +341,9 @@
       this.getRecord();
     },
     methods:{
+			outPdf () {
+				window.open('http://localhost:7000/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
+			},
       changeState(type){
         this.state = type;
         if(type == 1){

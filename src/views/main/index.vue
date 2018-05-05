@@ -23,7 +23,7 @@
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="/personSettingUser">个人信息</el-dropdown-item>
                 <el-dropdown-item command="/checkCompany">企业信息</el-dropdown-item>
-                <el-dropdown-item command="/talkWithSystem">系统通知<i>o</i></el-dropdown-item>
+                <el-dropdown-item command="/talkWithSystem">系统通知</el-dropdown-item>
                 <el-dropdown-item command="/feedback">反馈</el-dropdown-item>
                 <el-dropdown-item @click.native='quit'>退出</el-dropdown-item>
               </el-dropdown-menu>
@@ -43,26 +43,26 @@
           <div ref="elmenu">
             <el-menu
               router
-              :default-active="$route.path"
+              :default-active="$route.name"
               class="aside_label"
               background-color="#1f282d"
               text-color="#fff"
               active-text-color="#fff" >
-              <el-menu-item index="/hrList" v-if="mainOrChildren == 'main'">
+              <el-menu-item index="hrList" v-if="mainOrChildren == 'main'">
                 <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
-              <el-submenu index="1" v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
+              <el-submenu index='2' v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
                 <template slot="title">
                   <i class="iconfont icon-wendang"></i>
                   <span>简历管理</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="/resumeList">职位简历</el-menu-item>
-                  <el-menu-item index="/resumeCollect">简历收藏</el-menu-item>
+                  <el-menu-item index="resumeList">职位简历</el-menu-item>
+                  <el-menu-item index="resumeCollect">简历收藏</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-menu-item index="/jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
+              <el-menu-item index="jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
                 <i class="iconfont icon-pipeizhiwei"></i>
                 <span slot="title">职位管理</span>
               </el-menu-item>
@@ -87,7 +87,7 @@
                 </el-tab-pane>
               </el-tabs>
             </div>
-            <div @click="refresh()" class="refresh_btn">
+            <div @click="refresh()" class="refresh_btn" v-if='label_list.length > 0'>
               <img src="@/assets/refresh.png" alt="">
             </div>
           </div>
@@ -105,7 +105,6 @@
   </div>
 </template>
 <script>
-	import '@/css/iconfont/iconfont.css'
 	import area from '@/area.json';
 	import Default from '@/default.json';
   const global = require('@/global.js')
@@ -120,7 +119,7 @@
 					localTalkData: [],
 					uid: '',
 					showIcon: false, // 职位沟通小红点
-					showSystemIcon: true, // 设置小红点
+					showSystemIcon: false, // 设置小红点
           g_state:true,
 					mainOrChildren: '',
 					permissionConfig: []
@@ -342,17 +341,17 @@
 					}
 				})
 				
-//				this.$axios({
-//					url: '/dabai-chaorenjob/notice/getHrNoticeNumber',
-//					type: 'post',
-//					fuc: (res) => {
-//						if(parseInt(res.data) > 0) {
-//							this.showSystemIcon = false
-//						} else {
-//							this.showSystemIcon = true
-//						}
-//					}
-//				})
+				this.$axios({
+					url: '/dabai-chaorenjob/notice/getHrNoticeNumber',
+					type: 'post',
+					fuc: (res) => {
+						if(parseInt(res.data) > 0) {
+							this.showSystemIcon = true
+						} else {
+							this.showSystemIcon = false
+						}
+					}
+				})
 			},
       computed:{
         includePageNames (){
@@ -384,6 +383,7 @@
 					}
 				},
 				tabIndex (val) {
+					console.log('route', this.$route)
 					// console.log('val', val)
 //					if (val && val != 0) {
 //						this.tabIndex = val
@@ -475,7 +475,13 @@
     padding-left: 10px;
     text-align: left;
   }
+/*
   .aside_label>.is-active,.aside_label>.is-opened>.el-submenu__title{
+    border-left-color: #048adf;
+    background-color: #4e5d66 !important;
+  }
+*/
+  .aside_label .is-active{
     border-left-color: #048adf;
     background-color: #4e5d66 !important;
   }

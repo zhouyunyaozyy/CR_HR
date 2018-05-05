@@ -39,40 +39,40 @@
           </div>
           <div class="xl">
             <el-input
-              type="text" @keyup.native="screenData.age = $inputKeyUp()" @afterpaste.native="screenData.age = $inputKeyUp()" :maxlength='2'
+              type="text" @keyup.native="screenData.age = $inputKeyUp($event)" @afterpaste.native="screenData.age = $inputKeyUp($event)" :maxlength='2'
               placeholder="年龄(岁)"
               v-model="screenData.age"></el-input>
           </div>
           <span>至</span>
           <div class="xl">
             <el-input
-              type="text" @keyup.native="screenData.age2 = $inputKeyUp()" @afterpaste.native="screenData.age2 = $inputKeyUp()" :maxlength='2'
+              type="text" @keyup.native="screenData.age2 = $inputKeyUp($event)" @afterpaste.native="screenData.age2 = $inputKeyUp($event)" :maxlength='2'
               placeholder="年龄(岁)"
               v-model="screenData.age2"></el-input>
           </div>
           <div class="xl">
             <el-input
-              type="text" @keyup.native="screenData.height = $inputKeyUp()" @afterpaste.native="screenData.height = $inputKeyUp()" :maxlength='3'
+              type="text" @keyup.native="screenData.height = $inputKeyUp($event)" @afterpaste.native="screenData.height = $inputKeyUp($event)" :maxlength='3'
               placeholder="身高(cm)"
               v-model="screenData.height"></el-input>
           </div>
           <span>至</span>
           <div class="xl">
             <el-input
-              type="text" @keyup.native="screenData.height2 = $inputKeyUp()" @afterpaste.native="screenData.height2 = $inputKeyUp()" :maxlength='3'
+              type="text" @keyup.native="screenData.height2 = $inputKeyUp($event)" @afterpaste.native="screenData.height2 = $inputKeyUp($event)" :maxlength='3'
               placeholder="身高(cm)"
               v-model="screenData.height2"></el-input>
           </div>
           <div class="xl">
             <el-input
-              type="text" @keyup.native="screenData.weight = $inputKeyUp()" @afterpaste.native="screenData.weight = $inputKeyUp()" :maxlength='3'
+              type="text" @keyup.native="screenData.weight = $inputKeyUp($event)" @afterpaste.native="screenData.weight = $inputKeyUp($event)" :maxlength='3'
               placeholder="体重(kg)"
               v-model="screenData.weight"></el-input>
           </div>
           <span>至</span>
           <div class="xl">
             <el-input
-              type="text" @keyup.native="screenData.weight2 = $inputKeyUp()" @afterpaste.native="screenData.weight2 = $inputKeyUp()" :maxlength='3'
+              type="text" @keyup.native="screenData.weight2 = $inputKeyUp($event)" @afterpaste.native="screenData.weight2 = $inputKeyUp($event)" :maxlength='3'
               placeholder="体重(kg)"
               v-model="screenData.weight2"></el-input>
           </div>
@@ -152,7 +152,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="init(1)">查找</el-button>
+          <el-button type="primary" @click="handleCurrentChange(1)">查找</el-button>
           <el-button @click="clearScreen()" type="warning" plain>清空条件</el-button>
         </el-form-item>
       </el-form>
@@ -169,7 +169,7 @@
         </div>
         <div class="recruit_right_btn">
           <div class="export_btn">
-            <el-button  @click="" plain>导出选中简历</el-button>
+            <el-button  @click="outPdf" plain>导出选中简历</el-button>
             <el-button  @click="outExcell" plain>导出全部名单</el-button>
             <el-button  @click="outExcell" plain>导出选中名单</el-button>
           </div>
@@ -372,7 +372,7 @@
 					<el-pagination
 						@size-change="handleSizeChange"
 						@current-change="handleCurrentChange"
-						:current-page.sync="$start"
+						:current-page.sync="start"
 						:page-sizes="[15, 30]"
 						:page-size="pageData.pageSize"
 						layout="total, prev, pager, next, sizes"
@@ -391,6 +391,7 @@
       return {
         jobName: "",
         jid:"",
+				start: 0,
         // screen:{
         //   name:11,
         //   gender: '',           //  性别
@@ -426,12 +427,20 @@
     computed:{
     },
     activated () {
+			this.start = this.$start
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.jobName = window.sessionStorage.getItem("jobName");
       this.jid = window.sessionStorage.getItem("jid")
       this.getDetail();
     },
     methods:{
+			outPdf () {
+				if (this.checkedCities.length > 0) {
+					window.open('http://localhost:7000/toNodeGetPdf?id='+ this.checkedCities.join('-'))
+				}
+//				console.log(this.checkedCities)
+//				window.open('http://localhost:7000/toNodeGetPdf?id='+ arr.join('-'))
+			},
 			showOrHideenForm () {
 				this.showFormBool = !this.showFormBool
 			},
@@ -443,8 +452,8 @@
 				this.init()
 			},
 			handleCurrentChange (val) {
-				console.log(val)
-				this.$start = val
+				console.log("startChange", val)
+				this.start = val
 				this.checkedCities = [];
 				this.checkSum = 0;
 				this.checkState = false;
@@ -464,10 +473,10 @@
         }
       },
       outExcell(){
-				this.$start = 1
+				this.start = 1
         let screenArr = {
 					_limit: 9999,
-					_start: this.$start,
+					_start: this.start,
           jid: this.jid
         }
         if(this.screenData.name){
@@ -557,13 +566,16 @@
         })
       },
       init(data){
-				if (data) {
-					this.$start = 1
-				}
-				console.log('start', this.$start)
+//				if (data) {
+//					this.start = 1
+//					this.checkState = false;
+//					this.checkedCities = [];
+//          this.checkSum = 0;
+//				}
+				console.log('start1', this.start)
         let screenArr = {
 					_limit: this.$limit,
-					_start: this.$start,
+					_start: this.start,
           jid: this.jid
         }
         if(this.screenData.name){
@@ -624,6 +636,7 @@
           fuc: (res) => {
             if(res.code == 1){
 							this.pageData = res.data
+							this.start = res.data.start
               this.tableData = res.data.data;
               for(let i = 0;i<this.tableData.length;i++){
                 this.checkedAllName[i] = this.tableData[i].rrid

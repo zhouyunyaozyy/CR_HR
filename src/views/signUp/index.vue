@@ -9,7 +9,7 @@
       <router-view></router-view>
     </div>
     <footer>
-      Copyright © 2017 Dhb168.com
+      Copyright ©2018 chaorenjob.com 蜀ICP备18009198号-1
     </footer>
   </div>
 </template>
