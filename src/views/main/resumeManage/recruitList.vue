@@ -171,7 +171,7 @@
           <div class="export_btn">
             <el-button  @click="outPdf" plain>导出选中简历</el-button>
             <el-button  @click="outExcell" plain>导出全部名单</el-button>
-            <el-button  @click="outExcell" plain>导出选中名单</el-button>
+            <el-button  @click="outExcell(1)" plain>导出选中名单</el-button>
           </div>
           <div class="state_btn">
             <el-button type="primary" @click="_review()" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
@@ -385,6 +385,7 @@
 </template>
 
 <script>
+	const global = require('@/global.js')
   export default {
     name: "recruitList",
     data () {
@@ -427,7 +428,8 @@
     computed:{
     },
     activated () {
-			this.start = this.$start
+//			this.start = this.$start
+			this.start = 1
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.jobName = window.sessionStorage.getItem("jobName");
       this.jid = window.sessionStorage.getItem("jid")
@@ -472,13 +474,21 @@
             return "(已拒绝)"
         }
       },
-      outExcell(){
+      outExcell(bool){
 				this.start = 1
         let screenArr = {
 					_limit: 9999,
 					_start: this.start,
           jid: this.jid
         }
+				if (bool) {
+					if (this.checkedCities.length > 0) {
+						screenArr.rrids = this.checkedCities.join(',')
+					} else {
+						this.$message.warning('请先选择数据，再进行操作')
+						return
+					}
+				}
         if(this.screenData.name){
           screenArr.name = this.screenData.name
         }
@@ -535,11 +545,12 @@
 					{code: 'gender', name: '性别', json: 'gender'},
 					{code: 'age', name: '年龄'},
 					{code: 'height', name: '身高'},
+					{code: 'weight', name: '体重'},
 					{code: 'vision_left', name: '裸眼视力(左眼)', json: 'vision'},
 					{code: 'vision_right', name: '裸眼视力(右眼)', json: 'vision'},
 					{code: 'experience', name: '工作经验', json: 'offerExperience'},
 					{code: 'education', name: '学历', json: 'education'},
-					{code: 'language', name: '熟悉小语种'},
+					{code: 'language', name: '熟悉小语种', value: '/'},
 					{code: 'auditor_success', name: '评审通过人数'},
 					{code: 'auditor_fail', name: '评审否决人数'},
 					{code: 'status', name: '简历状态', json: 'overVoteStatusEnum'},
@@ -658,7 +669,13 @@
             // 获取详情
             if(res.code == 1){
               this.screenData = JSON.parse(res.data.search_config_json)
-              console.log(this.screenData)
+              console.log(1, this.screenData)
+							for (let val in this.screenData) {
+								console.log(val)
+								if (this.screenData[val]) {
+									this.$message.success('已根据职位要求，完成简历筛选。')
+								}
+							}
               let status = window.sessionStorage.getItem("status");
               if(status){
 //                this.screenData.status = status;

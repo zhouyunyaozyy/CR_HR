@@ -223,6 +223,11 @@
         }
       })
     },
+		computed: {
+      tabIndex (){
+        return this.$store.state.tj.tabIndex;
+      }
+		},
     methods: {
       beforeAvatarUpload (file) {
         const isJPG = file.type === 'image/jpeg'
@@ -326,11 +331,22 @@
 									message: res.msg,
 									duration: 1000
 								})
+								this.removeTab()
               }
             })
           } else {
           }
         })
+      },
+      removeTab() {
+        this.$store.commit('removeTab',this.tabIndex)
+        this.clickTab();
+      },
+      clickTab() {
+        this.$store.commit('changeTab',"/checkCompany")
+        this.$router.push({
+          path:"/checkCompany"
+        });
       }
     }
   }

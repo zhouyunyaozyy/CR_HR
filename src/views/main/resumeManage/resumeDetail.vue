@@ -309,6 +309,16 @@
         </div>
       </div>
     </div>
+		<el-dialog
+			title="提示"
+			:visible.sync="dialogVisible"
+			width="30%">
+			<span>您已与该应聘者沟通过，是否就新职位【{{jobName}}】继续沟通</span>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="dialogTrue">确 定</el-button>
+			</span>
+		</el-dialog>
   </div>
 </template>
 
@@ -317,7 +327,8 @@
     name: "recruitDetail",
     data (){
       return {
-        jobName: window.sessionStorage.getItem("jobName"),
+				dialogVisible: false,
+        jobName: '',
         state:1,
         big_src: "",
         detailData: {},
@@ -336,11 +347,19 @@
       }
     },
     activated () {
+			this.jobName = window.sessionStorage.getItem("jobName")
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.init();
       this.getRecord();
     },
     methods:{
+			dialogTrue () {
+				this.dialogVisible = false
+				window.sessionStorage.setItem('targetId', this.detailData.uid)
+				window.sessionStorage.setItem('targetRrid', window.sessionStorage.getItem('rrid'))
+				window.sessionStorage.setItem('targetIdBool', true)
+				this.$router.push('sealtalkDetail')
+			},
 			outPdf () {
 				window.open('http://localhost:7000/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
 			},
@@ -370,10 +389,18 @@
         })
       },
 			goSealTalk () {
-				window.sessionStorage.setItem('targetId', this.detailData.uid)
-				window.sessionStorage.setItem('targetRrid', window.sessionStorage.getItem('rrid'))
-				window.sessionStorage.setItem('targetIdBool', true)
-				this.$router.push('sealtalkDetail')
+				let localTalkData = window.localStorage.getItem(window.sessionStorage.getItem('uid')) ? JSON.parse(window.localStorage.getItem(window.sessionStorage.getItem('uid'))) : []
+				console.log(localTalkData)
+				for (let val of localTalkData) {
+					if (val.targetId == this.detailData.uid) {
+						if (val.rrid != window.sessionStorage.getItem('rrid')) {
+							this.dialogVisible = true
+							return
+						}
+					}
+				}
+				console.log('dialogTrue')
+				this.dialogTrue()
 			},
       init () {
         //获取简历详情

@@ -43,12 +43,12 @@
           <div ref="elmenu">
             <el-menu
               router
-              :default-active="$route.name"
+              :default-active="$route.path"
               class="aside_label"
               background-color="#1f282d"
               text-color="#fff"
               active-text-color="#fff" >
-              <el-menu-item index="hrList" v-if="mainOrChildren == 'main'">
+              <el-menu-item index="/hrList" v-if="mainOrChildren == 'main'">
                 <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
@@ -58,11 +58,11 @@
                   <span>简历管理</span>
                 </template>
                 <el-menu-item-group>
-                  <el-menu-item index="resumeList">职位简历</el-menu-item>
-                  <el-menu-item index="resumeCollect">简历收藏</el-menu-item>
+                  <el-menu-item index="/resumeList">职位简历</el-menu-item>
+                  <el-menu-item index="/resumeCollect">简历收藏</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-menu-item index="jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
+              <el-menu-item index="/jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
                 <i class="iconfont icon-pipeizhiwei"></i>
                 <span slot="title">职位管理</span>
               </el-menu-item>
