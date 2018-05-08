@@ -1,7 +1,7 @@
 <template>
   <div class="index_cont">
-    <el-container height="100%">
-      <el-header>
+    <div class="g_container" height="100%">
+      <div class="g_header">
         <div class="logo_cont">
           <img src="@/assets/logo.png" alt="">
           <span class="logo_txt">超人招聘企业管理平台</span>
@@ -30,9 +30,9 @@
             </el-dropdown>
           </div>
         </div>
-      </el-header>
-      <el-container>
-        <el-aside width="200px">
+      </div>
+      <div class="g_main">
+        <div class="g_aside" width="200px">
           <div class="time_cont">
             <div>
               <div class="week_time">星期四</div>
@@ -68,8 +68,8 @@
               </el-menu-item>
             </el-menu>
           </div>
-        </el-aside>
-        <el-main>
+        </div>
+        <div class="main_content">
           <div class="label_cont">
             <div class="label_main">
               <el-tabs
@@ -92,16 +92,16 @@
             </div>
           </div>
           <div class="content">
-						<div v-if="$route.name == 'main'" class="mainPngDiv">
-							<img src="../../imgs/main.png">
-						</div>
+            <div v-if="$route.name == 'main'" class="mainPngDiv">
+              <img src="../../imgs/main.png">
+            </div>
             <keep-alive>
               <router-view/>
             </keep-alive>
           </div>
-        </el-main>
-      </el-container>
-    </el-container>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -340,7 +340,7 @@
 						}
 					}
 				})
-				
+
 				this.$axios({
 					url: '/dabai-chaorenjob/notice/getHrNoticeNumber',
 					type: 'post',
@@ -404,7 +404,7 @@
 					catch (err) {
 						this.$router.push('/')
 					}
-					
+
 				},
         // 保存聊天记录
 				setLocalTalk (userId, rrid, obj) {
@@ -549,21 +549,22 @@
 	}
 </style>
 <style scoped>
-
   .index_cont{
     height: 100%;
   }
-  .el-container{
+  .g_container{
     height: 100%;
   }
-  .el-aside{
+  .g_aside{
     position:fixed;
     top:60px;
     bottom:0px;
     left: 0px;
+    width: 200px;
     background-color: #1f282d;
+    z-index: 99;
   }
-  .el-header{
+  .g_header{
     color:#fff;
     font-size: 20px;
     background: url(./../../assets/header_bj.png) no-repeat center;
@@ -648,11 +649,16 @@
   .el-menu{
     border:0;
   }
-  .el-main{
+  .g_main{
     height: 100%;
-    margin-left: 200px;
+    padding-left: 200px;
+  }
+  .main_content{
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
     background-color: #eff9ff;
-    padding: 0;
+    /*margin-left: 200px;*/
     position: relative;
   }
   .label_cont{
