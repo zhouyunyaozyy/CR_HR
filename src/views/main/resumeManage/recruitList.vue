@@ -368,7 +368,7 @@
             </el-table>
           </el-checkbox-group>
         </div>
-				<div class="pagenationDiv">
+				<div class="pagenationDiv" @click="showPage()">
 					<el-pagination
 						@size-change="handleSizeChange"
 						@current-change="handleCurrentChange"
@@ -436,6 +436,9 @@
       this.getDetail();
     },
     methods:{
+      showPage(){
+        console.log(this.pageData,this.start)
+      },
 			outPdf () {
 				if (this.checkedCities.length > 0) {
 					window.open('http://localhost:7000/toNodeGetPdf?id='+ this.checkedCities.join('-'))
@@ -711,7 +714,7 @@
 //          this.checkSum--
 //        }
 				this.checkSum = val.length
-				
+
         if(this.tableData.length == this.checkSum){
           this.checkState = true;
         }else{
