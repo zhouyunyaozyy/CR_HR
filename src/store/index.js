@@ -51,6 +51,7 @@ const store = new Vuex.Store({
       if (state.pageStatus === 'reg' || state.pageStatus === 'forget' || state.pageStatus === 'login') {
           // 获取浏览器信息
           var explorer = window.navigator.userAgent.toLowerCase()
+					console.log('explorer', explorer)
         // ie
           if (explorer.indexOf('msie') >= 0) {
             let ver = explorer.match(/msie ([\d.]+)/)[1]

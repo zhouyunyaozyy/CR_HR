@@ -1,36 +1,38 @@
 <template>
-  <el-row :gutter="10" class="resume_list">
-    <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='index' class="resume_item">
-      <div class="resume_item_cont">
-        <div class="resume_posi">
-          <div class="posi_name wrap" style="width: 100%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;" :title="item.name">{{item.name}}</div>
-          <div class="pisi_sub"></div>
+  <div class="resume_list_cont">
+    <el-row :gutter="10" class="resume_list">
+      <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='index' class="resume_item">
+        <div class="resume_item_cont">
+          <div class="resume_posi">
+            <div class="posi_name wrap" style="width: 100%;overflow:hidden;text-overflow: ellipsis;white-space: nowrap;" :title="item.name">{{item.name}}</div>
+            <div class="pisi_sub"></div>
+          </div>
+          <div class="resume_cont">
+            <div class="resume_state_item">
+              <div class="state_title">全部简历</div>
+              <div class="resume_num">共({{item.ALL}}份)</div>
+              <el-button @click="_jump(item,6)" type="warning" size="small" plain>详情</el-button>
+            </div>
+            <div class="resume_state_item">
+              <div class="state_title">待评审</div>
+              <div class="resume_num">共({{item.DAIPINGSHEN}}份)</div>
+              <el-button @click="_jump(item,5)" type="warning" size="small" plain>详情</el-button>
+            </div>
+            <div class="resume_state_item bor">
+              <div class="state_title">邀请面试</div>
+              <div class="resume_num">共({{item.MIANSHI}}份)</div>
+              <el-button @click="_jump(item,3)" type="warning" size="small" plain>详情</el-button>
+            </div>
+            <div class="resume_state_item">
+              <div class="state_title">不合适</div>
+              <div class="resume_num">共({{item.BUHESHI}}份)</div>
+              <el-button @click="_jump(item,4)" type="warning" size="small" plain>详情</el-button>
+            </div>
+          </div>
         </div>
-        <div class="resume_cont">
-          <div class="resume_state_item">
-            <div class="state_title">全部简历</div>
-            <div class="resume_num">共({{item.ALL}}份)</div>
-            <el-button @click="_jump(item,6)" type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">待评审</div>
-            <div class="resume_num">共({{item.DAIPINGSHEN}}份)</div>
-            <el-button @click="_jump(item,5)" type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item bor">
-            <div class="state_title">邀请面试</div>
-            <div class="resume_num">共({{item.MIANSHI}}份)</div>
-            <el-button @click="_jump(item,3)" type="warning" size="small" plain>详情</el-button>
-          </div>
-          <div class="resume_state_item">
-            <div class="state_title">不合适</div>
-            <div class="resume_num">共({{item.BUHESHI}}份)</div>
-            <el-button @click="_jump(item,4)" type="warning" size="small" plain>详情</el-button>
-          </div>
-        </div>
-      </div>
-    </el-col>
-  </el-row>
+      </el-col>
+    </el-row>
+  </div>
 </template>
 <script>
   export default {
