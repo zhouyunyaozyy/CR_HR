@@ -84,8 +84,9 @@
           <el-col :span="5">
             <el-input
               placeholder="输入招聘人数"
-              type="number"
-              v-model="form.hire_number"></el-input>
+							:maxlength='3'
+              type="text"
+              v-model="form.hire_number" @keyup.native="form.hire_number = $inputKeyUp($event)" @afterpaste.native="form.hire_number = $inputKeyUp($event)"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="职位描述">
@@ -131,44 +132,44 @@
             </el-col>
             <el-col :span='5' :offset="1">
               <el-input
-                type="number"
+                type="text"
                 placeholder="年龄(岁)"
-                v-model="screen.age"></el-input>
+                v-model="screen.age" @keyup.native="screen.age = $inputKeyUp($event)" @afterpaste.native="screen.age = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="年龄(岁)"
-                v-model="screen.age2"></el-input>
+                v-model="screen.age2" @keyup.native="screen.age2 = $inputKeyUp($event)" @afterpaste.native="screen.age2 = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
           </el-row>
           <el-row>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="身高(cm)"
-                v-model="screen.height"></el-input>
+                v-model="screen.height" @keyup.native="screen.height = $inputKeyUp($event)" @afterpaste.native="screen.height = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="身高(cm)"
-                v-model="screen.height2"></el-input>
+                v-model="screen.height2" @keyup.native="screen.height2 = $inputKeyUp($event)" @afterpaste.native="screen.height2 = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span='5' :offset="1">
               <el-input
-                type="number"
+                type="text"
                 placeholder="体重(kg)"
-                v-model="screen.weight"></el-input>
+                v-model="screen.weight" @keyup.native="screen.weight = $inputKeyUp($event)" @afterpaste.native="screen.weight = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
             <el-col :span="1">至</el-col>
             <el-col :span='5'>
               <el-input
-                type="number"
+                type="text"
                 placeholder="体重(kg)"
-                v-model="screen.weight2"></el-input>
+                v-model="screen.weight2" @keyup.native="screen.weight2 = $inputKeyUp($event)" @afterpaste.native="screen.weight2 = $inputKeyUp($event)" :maxlength='10'></el-input>
             </el-col>
           </el-row>
           <el-row>
@@ -388,70 +389,71 @@
             duration: 1000
           })
           return;
-        }else if(!this.form.rtid){
-          this.$message({
-            type: 'error',
-            message: '请选择职能',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.education){
-          this.$message({
-            type: 'error',
-            message: '请选择学历',
-            duration: 1000
-          })
-          return;
-        }else if(!this.address){
-          this.$message({
-            type: 'error',
-            message: '请选择省份',
-            duration: 1000
-          })
-          return;
-        }else if(!this.address2){
-          this.$message({
-            type: 'error',
-            message: '请选择城市',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.work_experience){
-          this.$message({
-            type: 'error',
-            message: '请选择工作经验',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.wages){
-          this.$message({
-            type: 'error',
-            message: '请选择薪资范围',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.hire_number){
-          this.$message({
-            type: 'error',
-            message: '请输入招聘人数',
-            duration: 1000
-          })
-          return;
-        }else if(/^\d{1,4}$/.test(this.form.hire_number) == false){
-          this.$message({
-            type: 'error',
-            message: '招聘人数为1-4位正整数',
-            duration: 1000
-          })
-          return;
-        }else if(!this.form.profile){
-          this.$message({
-            type: 'error',
-            message: '请输入职位描述',
-            duration: 1000
-          })
-          return;
         }
+//				else if(!this.form.rtid){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择职能',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.education){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择学历',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.address){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择省份',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.address2){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择城市',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.work_experience){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择工作经验',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.wages){
+//          this.$message({
+//            type: 'error',
+//            message: '请选择薪资范围',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.hire_number){
+//          this.$message({
+//            type: 'error',
+//            message: '请输入招聘人数',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(/^\d{1,4}$/.test(this.form.hire_number) == false){
+//          this.$message({
+//            type: 'error',
+//            message: '招聘人数为1-4位正整数',
+//            duration: 1000
+//          })
+//          return;
+//        }else if(!this.form.profile){
+//          this.$message({
+//            type: 'error',
+//            message: '请输入职位描述',
+//            duration: 1000
+//          })
+//          return;
+//        }
         this.addJob();
       },
       selectCity () {

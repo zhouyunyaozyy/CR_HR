@@ -7,6 +7,7 @@
     name: "appBack",
     activated (){
       // this.$store.commit("refresh")
+			
       this.$router.push(window.sessionStorage.getItem("tabIndex"))
     }
   }

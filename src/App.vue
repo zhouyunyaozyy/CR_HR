@@ -5,6 +5,8 @@
 </template>
 
 <script>
+
+	import '@/css/iconfont/iconfont.css'
 export default {
   name: 'App',
 	watch: {

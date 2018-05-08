@@ -14,6 +14,7 @@
             v-for="item in rcnidArr"
             v-if="item.rtid == jobInfo.rtid"
           >{{item.name}}</span>
+					<span v-if='!parseInt(jobInfo.rtid)' class="job_info_text">（暂未填写）</span>
         </div>
         <div class="job_info_item">
           <span class="job_info_name">最低学历要求：</span>
@@ -22,6 +23,7 @@
             v-for="item in localData.education"
             v-if="item.code == jobInfo.education"
           >{{item.name}}</span>
+					<span v-if='!parseInt(jobInfo.education)' class="job_info_text">（暂未填写）</span>
         </div>
         <div class="job_info_item">
           <span class="job_info_name">工作地点：</span>
@@ -35,6 +37,7 @@
               v-if="item1.code == (jobInfo.address+'').slice(0,4)+'00'"
             >{{item1.name}}</div>
           </div>
+					<span v-if='!parseInt(jobInfo.address)' class="job_info_text">（暂未填写）</span>
         </div>
         <div class="job_info_item">
           <span class="job_info_name">工作经验要求：</span>
@@ -43,6 +46,7 @@
             v-for="item in localData.offerExperience"
             v-if="item.code == jobInfo.work_experience"
           >{{item.name}}</span>
+					<span v-if='!parseInt(jobInfo.work_experience)' class="job_info_text">（暂未填写）</span>
         </div>
         <div class="job_info_item">
           <span class="job_info_name">薪资范围：</span>
@@ -51,6 +55,7 @@
             v-for="item in localData.wages"
             v-if="item.code == jobInfo.wages"
           >{{item.name}}</span>
+					<span v-if='!parseInt(jobInfo.wages)' class="job_info_text">（暂未填写）</span>
         </div>
         <div class="job_info_item">
           <span class="job_info_name">招聘人数：</span>
@@ -58,7 +63,8 @@
         </div>
         <div class="job_info_item">
           <span class="job_info_name">职位描述：</span>
-          <span class="job_info_text job_info_textarea">{{jobInfo.profile}}</span>
+					<span v-if='!parseInt(jobInfo.profile)' class="job_info_text job_info_textarea">（暂未填写）</span>
+          <span v-else class="job_info_text job_info_textarea">{{jobInfo.profile}}</span>
         </div>
       </div>
     </div>

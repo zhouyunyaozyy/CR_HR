@@ -6,7 +6,7 @@
           <img src="@/assets/logo.png" alt="">
           <span class="logo_txt">超人招聘企业管理平台</span>
         </div>
-        <div class="user_name">欢迎回来！ 旺旺</div>
+        <div class="user_name">欢迎回来！ {{name}}</div>
         <div class="right_icon">
           <div class="icon_item" @click='goSealTalkDetail'>
             <i class="iconfont icon-ai-message"></i>
@@ -14,10 +14,11 @@
 						<i v-if='showIcon'></i>
           </div>
           <div class="icon_item">
-            <el-dropdown @command="handleCommand">
+            <el-dropdown @command="handleCommand" trigger="click">
               <div class="el-dropdown-link">
                 <i class="iconfont icon-shezhi-tianchong"></i>
                 <span class="icon_txt">设置</span>
+								<i v-if='showSystemIcon'></i>
               </div>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="/personSettingUser">个人信息</el-dropdown-item>
@@ -51,7 +52,7 @@
                 <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
-              <el-submenu index="1" v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
+              <el-submenu index='2' v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
                 <template slot="title">
                   <i class="iconfont icon-wendang"></i>
                   <span>简历管理</span>
@@ -86,11 +87,14 @@
                 </el-tab-pane>
               </el-tabs>
             </div>
-            <div @click="refresh()" class="refresh_btn">
+            <div @click="refresh()" class="refresh_btn" v-if='label_list.length > 0'>
               <img src="@/assets/refresh.png" alt="">
             </div>
           </div>
           <div class="content">
+						<div v-if="$route.name == 'main'" class="mainPngDiv">
+							<img src="../../imgs/main.png">
+						</div>
             <keep-alive>
               <router-view/>
             </keep-alive>
@@ -101,7 +105,6 @@
   </div>
 </template>
 <script>
-	import '@/css/iconfont/iconfont.css'
 	import area from '@/area.json';
 	import Default from '@/default.json';
   const global = require('@/global.js')
@@ -110,11 +113,13 @@
       name: "index",
       data() {
         return {
+					name: window.sessionStorage.getItem('name'),
           group_id:1,
           sub_show:false,
 					localTalkData: [],
 					uid: '',
 					showIcon: false, // 职位沟通小红点
+					showSystemIcon: false, // 设置小红点
           g_state:true,
 					mainOrChildren: '',
 					permissionConfig: []
@@ -124,6 +129,7 @@
         // WLabel
       },
 			created () {
+				console.log('router', this.$route)
 				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 				this.mainOrChildren = window.sessionStorage.getItem('mainOrChildren')
 				let _form = Default
@@ -334,6 +340,18 @@
 						}
 					}
 				})
+				
+				this.$axios({
+					url: '/dabai-chaorenjob/notice/getHrNoticeNumber',
+					type: 'post',
+					fuc: (res) => {
+						if(parseInt(res.data) > 0) {
+							this.showSystemIcon = true
+						} else {
+							this.showSystemIcon = false
+						}
+					}
+				})
 			},
       computed:{
         includePageNames (){
@@ -365,6 +383,7 @@
 					}
 				},
 				tabIndex (val) {
+					console.log('route', this.$route)
 					// console.log('val', val)
 //					if (val && val != 0) {
 //						this.tabIndex = val
@@ -378,8 +397,14 @@
       methods: {
 				quit () { // 退出
 					console.log('quit')
-					RongIMClient.getInstance().disconnect()
-					this.$router.push('/')
+					try {
+						RongIMClient.getInstance().disconnect()
+						this.$router.push('/')
+					}
+					catch (err) {
+						this.$router.push('/')
+					}
+					
 				},
         // 保存聊天记录
 				setLocalTalk (userId, rrid, obj) {
@@ -450,7 +475,13 @@
     padding-left: 10px;
     text-align: left;
   }
+/*
   .aside_label>.is-active,.aside_label>.is-opened>.el-submenu__title{
+    border-left-color: #048adf;
+    background-color: #4e5d66 !important;
+  }
+*/
+  .aside_label .is-active{
     border-left-color: #048adf;
     background-color: #4e5d66 !important;
   }
@@ -504,6 +535,16 @@
 		position: absolute;
 		top: 0;
 		right: 35px;
+		background-color: #ff2121;
+	}
+	.index_cont .el-dropdown-link>i:nth-of-type(2){
+		width: 10px;
+		height: 10px;
+		display: inline-block;
+		border-radius: 10px;
+		position: absolute;
+		top: 0;
+		right: 48px;
 		background-color: #ff2121;
 	}
 </style>
@@ -625,7 +666,7 @@
     /*top:60px;*/
     /*right: 0;*/
     /*z-index: 100;*/
-    border-bottom: 10px solid #eff9ff;
+/*    border-bottom: 10px solid #eff9ff;*/
   }
   .label_main{
     flex: 1;
@@ -638,12 +679,25 @@
   }
   .content{
     position: absolute;
-    top: 50px;
+    top: 40px;
     left: 0;
     right: 0;
     bottom: 0;
     min-height: calc(100% - 70px);
     overflow: auto;
-    margin: 0 10px 10px;
+/*    margin: 0 10px 10px;*/
   }
+	.content>div{
+		margin: 10px;
+	}
+	.content>.mainPngDiv{
+		width: 100%;
+		height: 100%;
+		margin: 0;
+		text-align: center;
+		background-color: white;
+	}
+	.mainPngDiv>img{
+		margin-top: 100px;
+	}
 </style>

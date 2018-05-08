@@ -1,10 +1,10 @@
 <template>
   <div class="resume_collect">
     <div class="collect_screen">
-      <div class="screen_title">简历筛选</div>
+      <div class="screen_title" @click='showOrHideenForm'>简历筛选<i class="iconfont icon-sanjiaoxing-down" v-if='showFormBool'></i><i class="iconfont icon-sanjiaoxing-up" v-else></i></div>
       <el-form
         :model="screen"
-        label-width="112px"
+        label-width="112px" v-if='showFormBool'
         class="screen_cont">
         <el-form-item label='状态筛选'>
             <el-select v-model='screen.status' placeholder='所有'>
@@ -33,10 +33,6 @@
         <el-checkbox
           v-model="checkState"
           @change="checkAll">全选</el-checkbox>
-        <div class="btn_cont">
-          <el-button  @click="" plain>导出简历</el-button>
-          <el-button  @click="" plain>导出excel名单</el-button>
-        </div>
       </div>
       <div class="collect_cont">
         <el-checkbox-group v-model="checkedCities" @change="checkItem">
@@ -82,13 +78,19 @@
             </el-table-column>
             <el-table-column
               prop="height"
-              label="身高(cm)"
+              label="身高"
               min-width="95">
+                <template slot-scope="scope">
+                  <span>{{scope.row.height}}cm</span>
+                </template>
             </el-table-column>
             <el-table-column
               prop="weight"
-              label="体重(kg)"
+              label="体重"
               min-width="90">
+                <template slot-scope="scope">
+                  <span>{{scope.row.weight}}kg</span>
+                </template>
             </el-table-column>
             <el-table-column
               label="裸眼视力(左眼)"
@@ -142,11 +144,17 @@
               label="简历状态"
               min-width="90">
               <template slot-scope="scope">
-                <span v-for="item in localData.overVoteStatusEnum"
-                  v-if="item.code == scope.row.status"
-                >{{item.name}}</span>
+                  <span
+                    v-for="item1 in localData.overVoteStatusEnum"
+                    v-if="item1.code == scope.row.status">{{item1.name}}{{sure(scope.row.status,scope.row.sure)}}</span>
               </template>
             </el-table-column>
+						<el-table-column
+							min-width="80">
+							<template slot-scope="scope">
+								<el-button @click="_detail(scope.row.rrid)" type="primary" plain>查看</el-button>
+							</template>
+						</el-table-column>
           </el-table>
         </el-checkbox-group>
       </div>
@@ -181,23 +189,47 @@
         checkSum: 0,
         checkedAllName: [],
         checkedCities:[],
+				showFormBool: false // 展示过滤条件
       }
     },
     activated () {
       this.init();
-      for(let i = 0;i<this.tableData.length;i++){
-        this.checkedAllName[i] = this.tableData[i].name
-      }
     },
     methods: {
+			_detail (rrid) {
+				window.sessionStorage.setItem("rrid",rrid)
+        this.$router.push("/resumeDetail")
+			},
+			showOrHideenForm () {
+				this.showFormBool = !this.showFormBool
+			},
 			handleSizeChange (val) {
 				this.$limit = val
+				this.checkedCities = [];
+				this.checkSum = 0;
+				this.checkState = false;
 				this.init()
 			},
 			handleCurrentChange (val) {
 				this.$start = val
+				this.checkedCities = [];
+				this.checkSum = 0;
+				this.checkState = false;
 				this.init()
 			},
+      sure (state,type){
+        if(state != 3){
+          return;
+        }
+        switch (type){
+          case 0:
+            return "(未确认)"
+          case 1:
+            return "(已接受)"
+          case 2:
+            return "(已拒绝)"
+        }
+      },
       init (){
         let dataPost = {
 					_limit: this.$limit,
@@ -218,6 +250,9 @@
             if(res.code == 1){
 							this.pageData = res.data
               this.tableData = res.data.data;
+							for(let i = 0;i<this.tableData.length;i++){
+								this.checkedAllName[i] = this.tableData[i].name
+							}
               // this.init();
             }else{
               this.$message({
@@ -231,11 +266,7 @@
         })
       },
       checkItem(val){
-        if(val){
-          this.checkSum++
-        }else{
-          this.checkSum--
-        }
+				this.checkSum = val.length
         if(this.tableData.length == this.checkSum){
           this.checkState = true;
         }else{
@@ -244,6 +275,7 @@
         console.log(this.checkedCities)
       },
       checkAll(val) {
+				console.log(val)
         if(val){
           this.checkedCities = this.checkedAllName
           this.checkSum = this.tableData.length;
@@ -388,4 +420,9 @@
     border-radius: 2px;
     border: 1px solid #ccc;
   }
+	.resume_collect button{
+		width: 70px;
+    height: 30px;
+    padding: 0;
+	}
 </style>

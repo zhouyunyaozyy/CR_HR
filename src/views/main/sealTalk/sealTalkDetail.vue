@@ -29,11 +29,11 @@
 			<div class="sealTalkContainBody">
 				<div class="sealTalkContainBodyContent">
 					<div v-for='item in talkData' :key='item.time'>
-						<time v-if='item.showTime'>{{new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0] == new Date().toLocaleString('chinese', {hour12: false}).split(' ')[0] ? new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1] : new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[0] + '/' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[1] + ' ' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1]}}</time>
+						<time v-if="item.showTime && item.type != 'PersonMessage'">{{new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0] == new Date().toLocaleString('chinese', {hour12: false}).split(' ')[0] ? new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1] : new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[0] + '/' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[0].split('/')[1] + ' ' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[0] + ':' + new Date(parseInt(item.time)).toLocaleString('chinese', {hour12: false}).split(' ')[1].split(':')[1]}}</time>
 						<div :class="item.class">
 							<div>
-								<img v-if="item.class == 'left'" :src="appUserUrl">
-								<img v-else :src="myImgUrl">
+								<img v-if="item.class == 'left'" :src="appUserUrl" @click='goRecruitDetail'>
+								<img v-if="item.class == 'right' && item.type != 'PersonMessage'" :src="myImgUrl">
 							</div>
 							<div :class='item.type' v-if="item.type == 'text'"><pre v-html='item.content'></pre></div>
 							<div :class='item.type' v-else-if="item.type == 'image'">
@@ -43,12 +43,10 @@
 								<video controls :src="item.url"></video>
 							</div>
 							<div :class='item.type' v-else-if="item.type == 'PersonMessage'">
-								<div>
-									<p>{{item.content.job.name}}</p>
-									<p>{{item.content.job.name_full}}</p>
-									<p v-for="val in localData.wages" v-if="item.content.job.wages == val.code">{{val.name}}</p>
-								</div>
-								<p>就此职位与您沟通</p>
+								<span>应聘职位：{{item.content.job.name}}</span>
+								<span>应聘者：{{item.content.job.name_full}}</span>
+								<span v-for="val in localData.wages" v-if="item.content.job.wages == val.code">薪资范围：{{val.name}}</span>
+								<span>求职意向：{{item.content.job.target_name}}</span>
 							</div>
 						</div>
 					</div>
@@ -111,10 +109,10 @@
           }
         }
 				console.log('list', this.tabsList)
-//				this.tabsList = []
+				this.tabsList = []
 				for (let val in this.localTalkData) {
 					let nowData = this.localTalkData[val]
-					this.$set(this.tabsList, val, {url: '', name: '', type: '', targetId: nowData.targetId, time: '', content: ''})
+					this.$set(this.tabsList, val, {url: '', name: '', type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无'})
 					this.$axios({
 						url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
 						type: 'get',
@@ -155,7 +153,7 @@
 			if (window.sessionStorage.getItem('targetIdBool') == 'true') { // 从简历详情页进入聊天
 				console.log('targetIdTrue', Boolean(window.sessionStorage.getItem('targetIdBool')), false)
 				this.targetId = window.sessionStorage.getItem('targetId')
-				this.rrid = window.sessionStorage.getItem('rrid')
+				this.rrid = window.sessionStorage.getItem('targetRrid')
 				this.getJobInfo()
 	//        // 若存在公司历史纪录
 				if (window.localStorage.getItem(this.uid)) {
@@ -279,7 +277,7 @@
 						this.rrid = val.rrid
 						val.showIcon = false
 						this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
-//						window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+						window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
 						this.getAppUserHeader(this.rrid)
 					}
 				}
@@ -296,7 +294,20 @@
         this.textareaData += name
       },
 			deleteSelect () {
+				console.log('checkList', this.checkList)
+				for (let val of this.checkList) {
+					for (let index = 0; index < this.localTalkData.length; index++) {
+						if (val == this.localTalkData[index].targetId) {
+							console.log('val', val)
+							this.localTalkData.splice(index, 1)
+							index--
+						}
+					}
+				}
+				this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
+				window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
 				this.tabClassName = ''
+				this.talkData = []
 			},
         // 获取当前简历的职位信息
       getJobInfo () {
@@ -307,7 +318,7 @@
 					fuc: (res) => {
 //						let localData = JSON.parse(window.localStorage.getItem('localData'))
 						this.jid = res.data.jid
-						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': '找杨山','name': res.data.name,wages: res.data.wages}
+						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.user_name,'name': res.data.job_name,wages: res.data.wages,target_name: res.data.target_name}
 					}
 				})
       },
@@ -375,7 +386,7 @@
               for (let val of nowThis.localTalkData) {
                 if (nowThis.targetId === val.targetId) {
                   val.rrid = nowThis.rrid
-                  val.content = [{content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: true}]
+                  val.content.push({content: message.content, class: 'right', type: 'PersonMessage', time: message.sentTime, showTime: true})
                   nowThis.localTalkData.unshift(nowThis.localTalkData.splice(nowThis.localTalkData.indexOf(val), 1)[0])
                     nowThis.$store.state.zyy.localTalkData = nowThis.localTalkData
                     window.localStorage.setItem(nowThis.uid, JSON.stringify(nowThis.localTalkData))
@@ -423,7 +434,11 @@
             })
           }
         })
-      }
+      },
+			goRecruitDetail () {
+				window.sessionStorage.setItem("rrid", this.rrid)
+        this.$router.push("/resumeDetail")
+			}
 		}
 	}
 </script>
@@ -463,7 +478,7 @@
 </style>
 <style scoped="true">
 	.sealTalk{
-		width: 100%;
+/*		width: 100%;*/
 		box-sizing: border-box;
 		overflow: hidden;
 		height: 100%;
@@ -710,28 +725,30 @@
 		text-align: left;
 	}
 	.sealTalkContainBodyContent>div>.right>.PersonMessage{
-		width: 220px;
+		width: calc(100% - 40px);
 /*		max-width: 220px;*/
 		float: right;
 		overflow: hidden;
 		background-color: #f1f5f8;
-		padding: 20px 20px;
-		border-radius: 4px;
-		font-size: 12px;
-		text-align: right;
-	}
-	.sealTalkContainBodyContent>div>.right>.PersonMessage>div{
-		width: 100%;
+		padding: 20px 0px;
+		margin: 0 20px;
+		border-radius: 20px;
+		position: relative;
 		box-sizing: border-box;
-		padding: 10px;
-		background-color: white;
-		text-align: right;
-		border-radius: 4px;
+		font-size: 12px;
+		top: -30px;
+/*		text-align: right;*/
+	}
+	.sealTalkContainBodyContent>div>.right>.PersonMessage>span{
+		width: 20%;
+		display: inline-block;
+		box-sizing: border-box;
+/*		padding: 10px;*/
+/*		background-color: white;*/
+		text-align: center;
+/*		border-radius: 4px;*/
 		line-height: 20px;
 		margin-bottom: 10px;
-	}
-	.sealTalkContainBodyContent>div>.right>.PersonMessage>p{
-		font-weight: bold;
 	}
 /*	表情*/
 	.el-popover>div{

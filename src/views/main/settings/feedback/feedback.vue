@@ -10,7 +10,7 @@
           :on-remove="handleRemove" :data="postData">
           <i class="el-icon-plus"></i>
         </el-upload>
-        <el-dialog v-model="dialogVisible" size="tiny">
+        <el-dialog :visible.sync="dialogVisible" size="tiny">
           <img width="100%" :src="dialogImages" alt="形象图片">
         </el-dialog>
     </div>
@@ -52,6 +52,7 @@
         console.log('file', file)
         this.dialogImages = file.url;
         this.dialogVisible = true;
+        console.log('file', this.dialogVisible)
       },
       beforeAvatarUpload (file) {
         console.log(file.size, 'size')

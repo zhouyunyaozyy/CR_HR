@@ -26,16 +26,16 @@
             <i class="iconfont icon-shoucang"></i>
             {{detailData.isFavorite?"取消收藏":"收藏"}}
           </el-button>
-          <el-button plain>导出简历</el-button>
+          <el-button plain @click='outPdf'>导出简历</el-button>
         </div>
         <div class="head_review">
           <div class="review_result" v-if="detailData.status == 5">
             <span class="">评审结果：</span>
-            <span class="review_num">{{detailData.audited_success || 0}} 通过</span>
+            <span class="review_num">{{detailData.auditor_success || 0}} 通过</span>
             <span>&nbsp;/&nbsp;</span>
             <!--<span class=""-->
                   <!--v-if="success_list.length > 0">&nbsp;{{"("+success_list.join(",")+")"}}</span>-->
-            <span class="review_txt">{{detailData.audited_fail || 0}} 否决</span>
+            <span class="review_txt">{{detailData.auditor_fail || 0}} 否决</span>
             <span class="review_query">
               <i class="iconfont icon-wenhao"></i>
             </span>
@@ -47,14 +47,14 @@
           <div v-if="detailData.status != 5 && detailData.status != 4 && detailData.status != 3" class="review_btn">
             <el-button @click="_review()" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[0].startReview == true'>发起评审</el-button>
           </div>
-          <div class="review_btn" v-else-if="detailData.status == 5 && permissionConfig.length > 0 && permissionConfig[0].joinReview == true">
+          <div class="review_btn" v-if="detailData.status == 5 && permissionConfig.length > 0 && permissionConfig[0].joinReview == true">
             <el-button
               @click="_change_review()"
               type="primary" plain
               v-if='!review_btn && passState == 2'>参与评审</el-button>
             <el-button
               plain
-              v-else-if='passState == 0'>已投否决</el-button>
+              v-if='passState == 0'>已投否决</el-button>
             <el-button
               plain
               v-else-if='passState == 1'>已投通过</el-button>
@@ -79,7 +79,7 @@
         <el-col :xs="13" :sm="13" :md="13" :lg="13" :xl="13" class="detail_info_left">
           <div class="job_wanted">
             <div class="detail_info_title">求职意向</div>
-            <div class="detail_info_job">飞行员</div>
+            <div class="detail_info_job">{{detailData.target_name}}</div>
             <div class="detail_info_title">基本信息</div>
             <div class="job_want_cont">
               <div class="job_want_left">
@@ -102,7 +102,7 @@
                        v-if="item1.code == (detailData.birthplace+'').slice(0,4)+'00'">
                     <div v-for='item2 in item1.children'
                          v-if='item2.code == detailData.birthplace'>
-                      籍贯：<span>{{item.name}}</span>
+                      籍贯：<span>{{item.name + item1.name + item2.name}}</span>
                     </div>
                   </div>
                 </div>
@@ -113,7 +113,7 @@
                 </div>
                 <div class="job_want_item"
                      v-for='item in localData.political'
-                     v-if='item.code==detailData.political_status'>
+                     v-if='item.code==detailData.politics'>
                   政治面貌：<span>{{item.name}}</span>
                 </div>
                 <div class="job_want_item">身高：<span>{{detailData.height}}CM</span></div>
@@ -155,7 +155,7 @@
                 </div>
                 <div class="job_want_item"
                      v-for='item in localData.offerState'
-                     v-if='item.code==detailData.status_resume'>
+                     v-if='item.code==detailData.employ'>
                   任职状态：<span>{{item.name}}</span>
                 </div>
                 <div class="job_want_item">联系电话：<span>{{detailData.tel}}</span></div>
@@ -167,7 +167,7 @@
             <div class="detail_info_title">工作经历</div>
             <div class="job_exp_cont">
               <div class="job_exp_cont_item"
-                   v-for='item in experience_item'>
+                   v-for='item in experience_item' style="padding-bottom:20px;">
                 <div class="job_exp_item" v-if='item.endtime==88888888888888'>
                   任职时间：<span>{{
                   new Date(parseInt(item.starttime)).getFullYear()
@@ -199,7 +199,7 @@
             <div class="detail_info_title">教育经历</div>
             <div class="job_exp_cont">
               <div class="job_exp_cont_item"
-                   v-for='item in education_item'>
+                   v-for='item in education_item' style="padding-bottom:20px;">
                 <div class="job_exp_item"
                      v-if='item.graduation_time==88888888888888'>
                   就读时间：<span>{{
@@ -294,11 +294,31 @@
           <img class="dot" src="./../../../assets/dot.png" alt="">
           <div class="info_txt"
                v-for="item1 in localData.overVoteStatusEnum"
-               v-if="item1.code == item.type"
-          >{{item1.name}}</div>
+               v-if="item1.code == item.type && item.type != 3 && item.type != 4"
+           style="font-weight:bold;">{{item1.name}}</div>
+					<div v-for="item1 in localData.overVoteStatusEnum" v-if='item.type == 3 && item1.code == item.type' class="info_txt">
+						<p style="font-weight:bold;">{{item1.name}}</p>
+						<p>面试时间：{{new Date(parseInt(item.agreedtime)).toLocaleString('chinese', {hour12: false})}}</p>
+						<p>面试地点：{{item.agreedpath}}</p>
+						<p v-if='item.agreenote'>留言：{{item.agreednote}}</p>
+					</div>
+					<div v-for="item1 in localData.overVoteStatusEnum" v-if='item.type == 4 && item1.code == item.type' class="info_txt">
+						<p style="font-weight:bold;">{{item1.name}}</p>
+						<p>拒绝理由：{{item.agreednote}}</p>
+					</div>
         </div>
       </div>
     </div>
+		<el-dialog
+			title="提示"
+			:visible.sync="dialogVisible"
+			width="30%">
+			<span>您已与该应聘者沟通过，是否就新职位【{{jobName}}】继续沟通</span>
+			<span slot="footer" class="dialog-footer">
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="dialogTrue">确 定</el-button>
+			</span>
+		</el-dialog>
   </div>
 </template>
 
@@ -307,7 +327,8 @@
     name: "recruitDetail",
     data (){
       return {
-        jobName: window.sessionStorage.getItem("jobName"),
+				dialogVisible: false,
+        jobName: '',
         state:1,
         big_src: "",
         detailData: {},
@@ -326,11 +347,22 @@
       }
     },
     activated () {
+			this.jobName = window.sessionStorage.getItem("jobName")
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.init();
       this.getRecord();
     },
     methods:{
+			dialogTrue () {
+				this.dialogVisible = false
+				window.sessionStorage.setItem('targetId', this.detailData.uid)
+				window.sessionStorage.setItem('targetRrid', window.sessionStorage.getItem('rrid'))
+				window.sessionStorage.setItem('targetIdBool', true)
+				this.$router.push('sealtalkDetail')
+			},
+			outPdf () {
+				window.open('http://localhost:7000/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
+			},
       changeState(type){
         this.state = type;
         if(type == 1){
@@ -357,15 +389,25 @@
         })
       },
 			goSealTalk () {
-				window.sessionStorage.setItem('targetId', this.detailData.uid)
-				window.sessionStorage.setItem('targetIdBool', true)
-				this.$router.push('sealtalkDetail')
+				let localTalkData = window.localStorage.getItem(window.sessionStorage.getItem('uid')) ? JSON.parse(window.localStorage.getItem(window.sessionStorage.getItem('uid'))) : []
+				console.log(localTalkData)
+				for (let val of localTalkData) {
+					if (val.targetId == this.detailData.uid) {
+						if (val.rrid != window.sessionStorage.getItem('rrid')) {
+							this.dialogVisible = true
+							return
+						}
+					}
+				}
+				console.log('dialogTrue')
+				this.dialogTrue()
 			},
       init () {
         //获取简历详情
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
         }
+				this.detailData = {}
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/resumeReceived/getResumeVoteSnapshotVo',
@@ -383,7 +425,7 @@
                 }else if(res.data.reviewList[i].sure == 0){
                   this.fail_list.push(res.data.reviewList[i].name)
                 }
-                if(res.data.rrid == res.data.reviewList[i].rrid){
+                if(window.sessionStorage.getItem('uid') == res.data.reviewList[i].uid){
                   this.passState = res.data.reviewList[i].sure
                 }
               }
