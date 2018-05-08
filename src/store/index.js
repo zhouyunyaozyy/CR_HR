@@ -51,11 +51,16 @@ const store = new Vuex.Store({
       if (state.pageStatus === 'reg' || state.pageStatus === 'forget' || state.pageStatus === 'login') {
           // 获取浏览器信息
           var explorer = window.navigator.userAgent.toLowerCase()
-					console.log('explorer', explorer)
+//					console.log('explorer', explorer)
         // ie
           if (explorer.indexOf('msie') >= 0) {
             let ver = explorer.match(/msie ([\d.]+)/)[1]
             data.client = 'IE'
+            data.clientVersion = ver
+          } else if (explorer.indexOf('trident') >= 0) {
+            let ver = explorer.match(/trident\/([\d.]+)/)[1]
+//						console.log('ver', ver)
+            data.client = 'trident'
             data.clientVersion = ver
           } else if (explorer.indexOf('firefox') >= 0) { // firefox
             let ver = explorer.match(/firefox\/([\d.]+)/)[1]
