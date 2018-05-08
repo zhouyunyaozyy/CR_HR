@@ -164,7 +164,7 @@
         }
         let postData = {
           rrids: JSON.parse(window.sessionStorage.getItem("rrids")),
-          mark: this.form.leav
+          agreednote: this.form.leav
         }
         this.$axios({
           type: 'post',

@@ -65,6 +65,11 @@
   }
 </script>
 <style scoped>
+  .wrap{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
   .resume_list{
     /*display: flex;*/
     /*justify-content: space-between;*/
