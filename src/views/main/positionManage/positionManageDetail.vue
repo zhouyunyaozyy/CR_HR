@@ -11,7 +11,7 @@
           <el-col :span='10'>
             <el-input
               placeholder="如乘务员、飞行员、机务等"
-              maxlength="20"
+              maxlength="12"
               v-model="form.name"></el-input>
           </el-col>
         </el-form-item>
