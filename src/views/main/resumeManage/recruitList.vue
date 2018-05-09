@@ -170,7 +170,7 @@
         <div class="recruit_right_btn">
           <div class="export_btn">
             <el-button  @click="outPdf" plain>导出选中简历</el-button>
-            <el-button  @click="outExcell" plain>导出全部名单</el-button>
+            <el-button  @click="outExcell(0)" plain>导出全部名单</el-button>
             <el-button  @click="outExcell(1)" plain>导出选中名单</el-button>
           </div>
           <div class="state_btn">
@@ -485,6 +485,7 @@
           jid: this.jid
         }
 				if (bool) {
+					console.log(bool)
 					if (this.checkedCities.length > 0) {
 						screenArr.rrids = this.checkedCities.join(',')
 					} else {

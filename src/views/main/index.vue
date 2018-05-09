@@ -376,10 +376,15 @@
 				getlocalTalkData (obj) {
 					console.log('obj', obj)
 					this.localTalkData = obj
+					let bool = true
 					for (let val of this.localTalkData) {
 						if (val.showIcon) {
 							this.showIcon = true
+							bool = false
 						}
+					}
+					if (bool) {
+						this.showIcon = false
 					}
 				},
 				tabIndex (val) {
@@ -534,8 +539,8 @@
 		border-radius: 10px;
 		position: absolute;
 		top: 0;
-		right: 35px;
-		background-color: #ff2121;
+		right: 128px;
+		background-color: #e76049;
 	}
 	.index_cont .el-dropdown-link>i:nth-of-type(2){
 		width: 10px;

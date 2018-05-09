@@ -88,8 +88,8 @@
 				appUserUrl: '',
 				emojisData: [],
 				jid: '',
-				targetId: '983683018335977472',
-				rrid: '985724022845079552',
+				targetId: '',
+				rrid: '',
 				talkData: [], // 当前聊天内容
 				localTalkData: [], // 本地聊天记录
 				tabsList: [] // 所有用户聊天信息
@@ -106,13 +106,20 @@
         for (let val of this.localTalkData) {
           if (this.targetId === val.targetId) {
             this.talkData = val.content // 加载本地与应聘者会话记录
+						if (val.showIcon) {
+							console.log('修改icon')
+							val.showIcon = false
+							this.$store.state.zyy.localTalkData = JSON.parse(JSON.stringify(this.localTalkData))
+							window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
+							return
+						}
           }
         }
-				console.log('list', this.tabsList)
+//				console.log('list', this.tabsList)
 				this.tabsList = []
 				for (let val in this.localTalkData) {
 					let nowData = this.localTalkData[val]
-					this.$set(this.tabsList, val, {url: '', name: '', type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无'})
+					this.$set(this.tabsList, val, {url: '', name: '', type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无', showIcon: false})
 					this.$axios({
 						url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
 						type: 'get',
@@ -120,7 +127,7 @@
 						fuc: (res) => {
 							let data = res.data
 							console.log(data.name, nowData)
-							this.$set(this.tabsList, val, {url: data.headerUrl, name: data.name, type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无'})
+							this.$set(this.tabsList, val, {url: data.headerUrl, name: data.name, type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无', showIcon: nowData.showIcon})
 							this.$nextTick(() => {
 								console.log('targetId', this.targetId)
 								if (document.getElementsByClassName('actived')[0]) {
@@ -139,7 +146,7 @@
 					})
 				}
 				
-				console.log('list', this.tabsList)
+//				console.log('list', this.tabsList)
 //        this.$nextTick(() => {
 //          let divArr = document.getElementsByClassName('detailBody')[0].children
 //          divArr[divArr.length-1].scrollIntoView()
@@ -308,6 +315,7 @@
 				window.localStorage.setItem(this.uid, JSON.stringify(this.localTalkData))
 				this.tabClassName = ''
 				this.talkData = []
+				this.rrid = ''
 			},
         // 获取当前简历的职位信息
       getJobInfo () {
@@ -318,7 +326,7 @@
 					fuc: (res) => {
 //						let localData = JSON.parse(window.localStorage.getItem('localData'))
 						this.jid = res.data.jid
-						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.user_name,'name': res.data.job_name,wages: res.data.wages,target_name: res.data.target_name}
+						this.jobInfo = {"jid": res.data.jid,"rrid": this.rrid,'name_full': res.data.user_name,'name': res.data.job_name,wages: res.data.wages,target_name: res.data.target_name, name_short: res.data.name_short}
 					}
 				})
       },
@@ -328,6 +336,10 @@
             // 在页面追加你要生成的内容
 
             // 定义消息类型,文字消息使用 RongIMLib.TextMessage
+				if (!this.rrid) {
+					this.$message.warning('请先选择聊天对象')
+					return
+				}
         var messageName = "PersonMessage" // 消息名称。
         var objectName = "s:person" // 消息内置名称，请按照此格式命名。
         var mesasgeTag = new RongIMLib.MessageTag(true,true) // 消息是否保存是否计数，true true 保存且计数，false false 不保存不计数。
@@ -481,7 +493,7 @@
 /*		width: 100%;*/
 		box-sizing: border-box;
 		overflow: hidden;
-		height: 100%;
+		height: calc(100% - 20px);
 		position: absolute;
 		top: 0;
 		left: 0;
