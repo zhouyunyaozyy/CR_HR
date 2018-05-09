@@ -63,7 +63,7 @@
         </div>
         <div class="job_info_item">
           <span class="job_info_name">职位描述：</span>
-					<span v-if='!parseInt(jobInfo.profile)' class="job_info_text job_info_textarea">（暂未填写）</span>
+					<span v-if='!jobInfo.profile' class="job_info_text job_info_textarea">（暂未填写）</span>
           <span v-else class="job_info_text job_info_textarea">{{jobInfo.profile}}</span>
         </div>
       </div>

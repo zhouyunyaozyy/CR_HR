@@ -417,6 +417,8 @@
               this.detailData = res.data;
               this.experience_item = res.data.experience_item ?JSON.parse(res.data.experience_item) : []
               this.education_item = JSON.parse(res.data.education_item)
+              this.passState = 2;
+              this.review_btn = false;
               for(let i = 0 ;i<res.data.reviewList.length;i++){
                 this.success_list = [];
                 this.fail_list = [];

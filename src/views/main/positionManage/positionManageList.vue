@@ -91,15 +91,24 @@
           </el-table-column>
         </el-table>
 				<div class="pagenationDiv">
-					<el-pagination
-						@size-change="handleSizeChange"
-						@current-change="handleCurrentChange"
-						:current-page="pageData.start"
-						:page-sizes="[15]"
-						:page-size="pageData.pageSize"
-						layout="total, prev, pager, next, sizes"
-						:total="pageData.count">
-					</el-pagination>
+					<!--<el-pagination-->
+						<!--@size-change="handleSizeChange"-->
+						<!--@current-change="handleCurrentChange"-->
+						<!--:current-page="pageData.start"-->
+						<!--:page-sizes="[15]"-->
+						<!--:page-size="pageData.pageSize"-->
+						<!--layout="total, prev, pager, next, sizes"-->
+						<!--:total="pageData.count">-->
+					<!--</el-pagination>-->
+          <page v-if="pageSize > 0 && count >0 && start > 0"
+                @change-page="init"
+                @change-size="_page"
+                ref="Pages"
+                :page_size="pageSize"
+                :count="count"
+                :start1="start"
+                :page_type="[15]"
+          ></page>
 				</div>
       </el-main>
     </el-container>
@@ -107,6 +116,7 @@
 </template>
 
 <script>
+  import Page from '@/components/page';
   export default {
     name: "positionManagement",
     data() {
@@ -115,15 +125,28 @@
 				pageData: {},
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
 				permissionConfig: [], //权限管理
-        status: 2
+        status: 2,
+        pageSize:0,
+        count:0,
+        start:1,
+        limit:3,
       }
+    },
+    components:{
+      Page
     },
     activated () {
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 			console.log(this.permissionConfig[2].onOrOffJob)
-      this.init(2);
+      this.init();
     },
     methods:{
+      _page(val){
+        if(val){
+          this.limit = val;
+          this.init()
+        }
+      },
 			handleSizeChange (val) {
 				this.$limit = val
 				this.init(this.status)
@@ -133,26 +156,39 @@
 				this.init(this.status)
 			},
 			initBefore (num) {
-				this.$start = 1
-				this.init(num)
+        this.status = num;
+				this.init()
 			},
-      init(type){
+      init(page){
+        if(page){
+          var _start = page;
+        }else{
+          var _start = 1;
+        }
         let resultData = {
-					_limit: this.$limit,
-					_start: this.$start,
+					_limit: this.limit,
+					_start: _start,
           cid:window.sessionStorage.getItem("cid")
         };
-        if(type != 2){
-          resultData.status = type
+        if(this.status != 2){
+          resultData.status = this.status
         }
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/job/queryAllJobListByCid',
           data: resultData,
           fuc: (res) => {
-						this.pageData = res.data
-            this.tableData= res.data.data;
-            this.status = type
+            if(res.code == 1){
+              if(this.pageSize > 0){
+                this.$refs.Pages.initStart(res.data.start)
+              }
+              this.pageData = res.data
+              this.pageSize = res.data.pageSize
+              this.count = res.data.count
+              this.start = res.data.start
+              this.tableData= res.data.data;
+            }
+            // this.status = type
             console.log( res)
           }
         })
