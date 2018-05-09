@@ -152,7 +152,7 @@
 						<el-table-column
 							min-width="80">
 							<template slot-scope="scope">
-								<el-button @click="_detail(scope.row.rrid)" type="primary" plain>查看</el-button>
+								<el-button @click="_detail(scope.row.oid)" type="primary" plain>查看</el-button>
 							</template>
 						</el-table-column>
           </el-table>

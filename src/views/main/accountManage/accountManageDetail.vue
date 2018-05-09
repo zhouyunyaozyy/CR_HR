@@ -69,6 +69,7 @@
           enterprise:[],
           job:[]
         },
+        submitState:false,
 				checkBool: false,
 				checkBoolJob: false,
         rules: {
@@ -163,6 +164,15 @@
 				this.checkBoolJob = false
 			},
       submitForm(formName) {
+        if(!this.submitState){
+          this.submitState = true;
+        }else{
+          this.$message({
+            type: 'error',
+            message: "数据处理中请勿重复提交",
+            duration: 1000
+          })
+        }
         this.$refs[formName].validate((valid) => {
           console.log(valid)
           if (valid){

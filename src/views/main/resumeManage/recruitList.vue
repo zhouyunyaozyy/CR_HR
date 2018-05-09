@@ -152,7 +152,7 @@
           </div>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleCurrentChange(1)">查找</el-button>
+          <el-button type="primary" @click="init()">查找</el-button>
           <el-button @click="clearScreen()" type="warning" plain>清空条件</el-button>
         </el-form-item>
       </el-form>
@@ -181,7 +181,7 @@
         </div>
       </div>
       <div class="recruit_list_cont">
-        <el-row v-if="!pattern" class="chart_list">
+        <el-row v-show="!pattern" class="chart_list">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-col
               v-for="item in tableData"
@@ -235,7 +235,7 @@
             </el-col>
           </el-checkbox-group>
         </el-row>
-        <div v-if="pattern" class="list_list">
+        <div v-show="pattern" class="list_list">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-table
               :data="tableData"
@@ -368,16 +368,25 @@
             </el-table>
           </el-checkbox-group>
         </div>
-				<div class="pagenationDiv" @click="showPage()">
-					<el-pagination
-						@size-change="handleSizeChange"
-						@current-change="handleCurrentChange"
-						:current-page.sync="start"
-						:page-sizes="[15, 30]"
-						:page-size="pageData.pageSize"
-						layout="total, prev, pager, next, sizes"
-						:total="pageData.count">
-					</el-pagination>
+				<div class="pagenationDiv">
+					<!--<el-pagination-->
+            <!--layout="total, prev, pager, next, sizes"-->
+						<!--:current-page.sync="start"-->
+						<!--:page-sizes="[15, 30]"-->
+						<!--:page-size="pageData.pageSize"-->
+            <!--@size-change="handleSizeChange"-->
+            <!--@current-change="init"-->
+						<!--:total="pageData.count">-->
+					<!--</el-pagination>-->
+          <page v-if="pageSize > 0 && count >0 && start > 0"
+                @change-page="init"
+                @change-size="_page"
+                ref="Pages"
+                :page_size="pageSize"
+                :count="count"
+                :start1="start"
+                :page_type="[15,30]"
+          ></page>
 				</div>
       </div>
     </div>
@@ -385,7 +394,8 @@
 </template>
 
 <script>
-	const global = require('@/global.js')
+  import Page from '@/components/page';
+	const global = require('@/global.js');
   export default {
     name: "recruitList",
     data () {
@@ -393,6 +403,9 @@
         jobName: "",
         jid:"",
 				start: 0,
+        count:0,
+        pageSize:0,
+        limit:3,
         // screen:{
         //   name:11,
         //   gender: '',           //  性别
@@ -422,10 +435,16 @@
         checkedCities:[],
 				permissionConfig: [],
 				pageData: {},
-				showFormBool: false // 展示过滤条件
+				showFormBool: false, // 展示过滤条件
       }
     },
     computed:{
+      // pageNum () {
+      //   return Math.ceil(this.pageData.count/this.pageData.pageSize)
+      // }
+    },
+    components:{
+      Page
     },
     activated () {
 //			this.start = this.$start
@@ -436,8 +455,11 @@
       this.getDetail();
     },
     methods:{
-      showPage(){
-        console.log(this.pageData,this.start)
+      _page(val){
+        if(val){
+          this.limit = val;
+          this.init()
+        }
       },
 			outPdf () {
 				if (this.checkedCities.length > 0) {
@@ -462,7 +484,7 @@
 				this.checkedCities = [];
 				this.checkSum = 0;
 				this.checkState = false;
-				this.init()
+				// this.init()
 			},
       sure (state,type){
         if(state != 3){
@@ -579,17 +601,21 @@
           }
         })
       },
-      init(data){
+      init(page){
 //				if (data) {
 //					this.start = 1
 //					this.checkState = false;
 //					this.checkedCities = [];
 //          this.checkSum = 0;
 //				}
-				console.log('start1', this.start)
+        if(page){
+          var _start = page;
+        }else{
+          var _start = 1;
+        }
         let screenArr = {
-					_limit: this.$limit,
-					_start: this.start,
+					_limit: this.limit,
+					_start: _start,
           jid: this.jid
         }
         if(this.screenData.name){
@@ -649,8 +675,16 @@
           data:screenArr,
           fuc: (res) => {
             if(res.code == 1){
+              if(this.pageSize > 0){
+                this.$refs.Pages.initStart(res.data.start)
+              }
 							this.pageData = res.data
+              this.pageSize = res.data.pageSize
+              this.count = res.data.count
 							this.start = res.data.start
+              this.checkedCities = [];
+              this.checkSum = 0;
+              this.checkState = false;
               this.tableData = res.data.data;
               for(let i = 0;i<this.tableData.length;i++){
                 this.checkedAllName[i] = this.tableData[i].rrid
@@ -756,6 +790,7 @@
           fuc: (res) => {
             if(res.code == 1){
               this.checkSum = 0;
+					    this.checkState = false;
               this.checkedCities = [];
               this.getDetail();
               this.$message({

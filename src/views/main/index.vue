@@ -1,5 +1,5 @@
 <template>
-  <div class="index_cont">
+  <div class="index_cont" @click="hidePage">
     <div class="g_container" height="100%">
       <div class="g_header">
         <div class="logo_cont">
@@ -395,6 +395,9 @@
 				}
 			},
       methods: {
+        hidePage (){
+          this.$store.state.tj.isPage = false;
+        },
 				quit () { // 退出
 					console.log('quit')
 					try {
@@ -524,6 +527,9 @@
     font-size: 14px;
     height: 30px;
   }
+  .index_cont .el-input__inner{
+    line-height: 30px;
+  }
 	.index_cont .icon_item{
 		position: relative;
 	}
@@ -557,7 +563,7 @@
   }
   .g_aside{
     position:fixed;
-    top:60px;
+    top: 60px;
     bottom:0px;
     left: 0px;
     width: 200px;
@@ -650,7 +656,7 @@
     border:0;
   }
   .g_main{
-    height: 100%;
+    height: calc(100% - 60px);
     padding-left: 200px;
   }
   .main_content{
@@ -692,9 +698,10 @@
     min-height: calc(100% - 70px);
     overflow: auto;
 /*    margin: 0 10px 10px;*/
+    margin-top: 10px;
   }
 	.content>div{
-		margin: 10px;
+		margin:0 10px 10px;
 	}
 	.content>.mainPngDiv{
 		width: 100%;
