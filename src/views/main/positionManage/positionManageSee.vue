@@ -161,9 +161,11 @@
   }
   .job_info_name{
     flex: 0 0 150px;
+    display: block;
   }
   .job_info_text{
     flex: 0 0 400px;
+    display: block;
     max-height: 100px;
     overflow: auto;
   }

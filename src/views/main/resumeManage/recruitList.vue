@@ -378,7 +378,7 @@
             <!--@current-change="init"-->
 						<!--:total="pageData.count">-->
 					<!--</el-pagination>-->
-          <page v-if="pageSize > 0 && count >0 && start > 0"
+          <page v-if="pageSize > 0"
                 @change-page="init"
                 @change-size="_page"
                 ref="Pages"

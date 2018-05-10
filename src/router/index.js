@@ -204,12 +204,21 @@ Vue.mixin({
 console.log(router1, Vue.prototype)
 let routerLoading
 router1.beforeEach((to, from, next) => {
+  if(from.name == "signUp" || from.name == "login" || from.name == "register" || from.name == "forgetPwd"){
     routerLoading = Vue.prototype.$loading({
       target: '#app',
       text: '正在努力加载',
       spinner: 'el-icon-loading'
     })
     next()
+  }else{
+    routerLoading = Vue.prototype.$loading({
+      target: '#main',
+      text: '正在努力加载',
+      spinner: 'el-icon-loading'
+    })
+    next()
+  }
 })
 
 router1.afterEach(route => {
