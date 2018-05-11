@@ -35,9 +35,9 @@
         <div class="g_aside" width="200px">
           <div class="time_cont">
             <div>
-              <div class="week_time">星期四</div>
-              <div class="time_time">16:10</div>
-              <div class="day_time">2018.4.15</div>
+              <div class="week_time">{{showDay}}</div>
+              <div class="time_time">{{showHours + ":" + showM}}</div>
+              <div class="day_time">{{showYear + "." + showMonth + "." + showDate}}</div>
             </div>
           </div>
           <div ref="elmenu">
@@ -52,6 +52,10 @@
                 <i class="iconfont icon-zhanghao00"></i>
                 <span slot="title">账号管理</span>
               </el-menu-item>
+              <el-menu-item index="/jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
+                <i class="iconfont icon-pipeizhiwei"></i>
+                <span slot="title">职位管理</span>
+              </el-menu-item>
               <el-submenu index='2' v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
                 <template slot="title">
                   <i class="iconfont icon-wendang"></i>
@@ -62,10 +66,6 @@
                   <el-menu-item index="/resumeCollect">简历收藏</el-menu-item>
                 </el-menu-item-group>
               </el-submenu>
-              <el-menu-item index="/jobList" v-if='permissionConfig.length > 0 && permissionConfig[2].seeJob == true'>
-                <i class="iconfont icon-pipeizhiwei"></i>
-                <span slot="title">职位管理</span>
-              </el-menu-item>
             </el-menu>
           </div>
         </div>
@@ -122,13 +122,80 @@
 					showSystemIcon: false, // 设置小红点
           g_state:true,
 					mainOrChildren: '',
-					permissionConfig: []
+					permissionConfig: [],
+          showDay:"",
+          showHours:0,
+          showM:0,
+          showYear:0,
+          showMonth:0,
+          showDate:0
         }
       },
       components:{
         // WLabel
       },
 			created () {
+        let date = new Date();
+        let day = date.getDay();
+        if(date.getMinutes() < 10){
+          this.showM = "0" + date.getMinutes();
+        }else{
+          this.showM = date.getMinutes();
+        }
+        let s = date.getSeconds();
+        setInterval(() => {
+          s = s + 1;
+          if(s == 60){
+            s = 0;
+            let mTime = parseInt(this.showM);
+            mTime = mTime + 1;
+            if( mTime < 10){
+              this.showM = "0" + mTime;
+            }else{
+              this.showM = mTime;
+            }
+          }
+        },1000)
+        if(date.getHours() < 10){
+          this.showHours = "0" + date.getHours();
+        }else{
+          this.showHours = date.getHours();
+        }
+        this.showYear = date.getFullYear();
+        if(date.getMonth() < 9){
+          this.showMonth = "0" + (date.getMonth()+1);
+        }else{
+          this.showMonth = date.getMonth()+1;
+        }
+        if(date.getDate() < 10){
+          this.showDate = "0" + date.getDate();
+        }else{
+          this.showDate = date.getDate();
+        }
+        switch (day){
+          case 1:
+            this.showDay = "星期一"
+            break;
+          case 2:
+            this.showDay = "星期二"
+            break;
+          case 3:
+            this.showDay = "星期三"
+            break;
+          case 4:
+            this.showDay = "星期四"
+            break;
+          case 5:
+            this.showDay = "星期五"
+            break;
+          case 6:
+            this.showDay = "星期六"
+            break;
+          case 7:
+            this.showDay = "星期天"
+            break;
+        }
+        console.log()
 				console.log('router', this.$route)
 				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 				this.mainOrChildren = window.sessionStorage.getItem('mainOrChildren')

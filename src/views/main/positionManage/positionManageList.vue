@@ -120,14 +120,12 @@
     data() {
       return {
         tableData: [],
-				pageData: {},
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
 				permissionConfig: [], //权限管理
         status: 2,
-        pageSize:0,
+        pageSize:3,
         count:0,
         start:1,
-        limit:3,
       }
     },
     components:{
@@ -141,18 +139,10 @@
     methods:{
       _page(val){
         if(val){
-          this.limit = val;
+          this.pageSize = val;
           this.init()
         }
       },
-			handleSizeChange (val) {
-				this.$limit = val
-				this.init(this.status)
-			},
-			handleCurrentChange (val) {
-				this.$start = val
-				this.init(this.status)
-			},
 			initBefore (num) {
         this.status = num;
 				this.init()
@@ -164,10 +154,12 @@
           var _start = 1;
         }
         let resultData = {
-					_limit: this.limit,
 					_start: _start,
           cid:window.sessionStorage.getItem("cid")
         };
+        if(this.pageSize){
+          resultData._limit = this.pageSize
+        }
         if(this.status != 2){
           resultData.status = this.status
         }
@@ -180,7 +172,6 @@
               if(this.pageSize > 0){
                 this.$refs.Pages.initStart(res.data.start)
               }
-              this.pageData = res.data
               this.pageSize = res.data.pageSize
               this.count = res.data.count
               this.start = res.data.start
