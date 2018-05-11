@@ -323,6 +323,7 @@
 </template>
 
 <script>
+	const global = require('@/global.js');
   export default {
     name: "recruitDetail",
     data (){

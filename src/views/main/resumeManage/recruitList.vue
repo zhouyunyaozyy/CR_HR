@@ -465,8 +465,6 @@
 				if (this.checkedCities.length > 0) {
 					window.open(global.configSelf.nodeUrl + '/toNodeGetPdf?id='+ this.checkedCities.join('-'))
 				}
-//				console.log(this.checkedCities)
-//				window.open('http://localhost:7000/toNodeGetPdf?id='+ arr.join('-'))
 			},
 			showOrHideenForm () {
 				this.showFormBool = !this.showFormBool
