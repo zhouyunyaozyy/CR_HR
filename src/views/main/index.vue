@@ -33,17 +33,17 @@
       </div>
       <div class="g_main">
         <div class="g_aside" width="200px">
-          <div class="time_cont">
-            <!--<div>-->
-              <!--<div class="week_time">{{showDay}}</div>-->
-              <!--<div class="time_time">{{showHours + ":" + showM + ":" + showS}}</div>-->
-              <!--<div class="day_time">{{showYear + "." + showMonth + "." + showDate}}</div>-->
+          <!--<div class="time_cont">-->
+            <!--&lt;!&ndash;<div>&ndash;&gt;-->
+              <!--&lt;!&ndash;<div class="week_time">{{showDay}}</div>&ndash;&gt;-->
+              <!--&lt;!&ndash;<div class="time_time">{{showHours + ":" + showM + ":" + showS}}</div>&ndash;&gt;-->
+              <!--&lt;!&ndash;<div class="day_time">{{showYear + "." + showMonth + "." + showDate}}</div>&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--<div id="clock">-->
+              <!--<p class="date">{{showYear + "." + showMonth + "." + showDate}}</p>-->
+              <!--<p class="time">{{showHours + ":" + showM + ":" + showS}}</p>-->
             <!--</div>-->
-            <div id="clock">
-              <p class="date">{{showYear + "." + showMonth + "." + showDate}}</p>
-              <p class="time">{{showHours + ":" + showM + ":" + showS}}</p>
-            </div>
-          </div>
+          <!--</div>-->
           <div ref="elmenu">
             <el-menu
               router
@@ -128,6 +128,7 @@
           g_state:true,
 					mainOrChildren: '',
 					permissionConfig: [],
+          is_open:false,
           showDay:"",
           showHours:0,
           showM:0,
@@ -135,15 +136,14 @@
           showYear:0,
           showMonth:0,
           showDate:0,
-          is_open:false,
         }
       },
       components:{
         // WLabel
       },
 			created () {
-        this.initDate();
-        setInterval(this.initDate,1000)
+        // this.initDate();
+        // setInterval(this.initDate,1000)
 				console.log('router', this.$route)
 				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 				this.mainOrChildren = window.sessionStorage.getItem('mainOrChildren')
@@ -559,7 +559,7 @@
 </script>
 <style>
   .aside_label>.el-menu-item,.aside_label>.el-submenu>.el-submenu__title{
-    border-left: 4px solid transparent;
+    /*border-left: 4px solid transparent;*/
     color:#fff;
     font-size: 18px;
     padding-left: 10px;
@@ -578,7 +578,7 @@
   }
 */
   .aside_label .is-active{
-    border-left-color: #048adf;
+    /*border-left-color: #048adf;*/
     background-color: #4e5d66 !important;
   }
   .aside_label .el-menu-item-group{
