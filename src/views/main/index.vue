@@ -91,7 +91,7 @@
               <img src="@/assets/refresh.png" alt="">
             </div>
           </div>
-          <div class="content">
+          <div class="content" id="main">
             <div v-if="$route.name == 'main'" class="mainPngDiv">
               <img src="../../imgs/main.png">
             </div>

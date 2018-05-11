@@ -1,117 +1,115 @@
 <template>
   <div class="posi_list">
-    <el-container>
-      <el-header height="60px">
-        <div class="job_tab">
+    <div class="job_header" height="60px">
+      <div class="job_tab">
           <span @click="initBefore(2)"
                 class="job_tab_item"
                 :class="{is_active:status == 2}">所有职位</span>
-          <span @click="initBefore(0)"
-                class="job_tab_item"
-                :class="{is_active:status == 0}">待发布职位</span>
-          <span @click="initBefore(1)"
-                class="job_tab_item"
-                :class="{is_active:status == 1}">已发布职位</span>
-        </div>
-        <!--<div class="hr_num">当前账号数量（4）</div>-->
-        <div @click="addHr()" class="add_hr" v-if="permissionConfig.length > 0 && permissionConfig[2].addJob">
-          <img src="@/assets/add.png" alt="">
-          <span>添加职位</span>
-        </div>
-      </el-header>
-      <el-main>
-        <el-table
-          :data="tableData"
-          style="width: 100%">
-          <el-table-column
-            prop="name"
-            label="职位名称"
-            min-width="140">
-          </el-table-column>
-          <el-table-column
-            prop="education"
-            label="学历要求"
-            min-width="90">
-            <template slot-scope="scope">
-              <span>{{scope.row.education ? localData.education[parseInt(scope.row.education)-1].name : '/'}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="address"
-            label="工作地"
-            min-width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.address ? selectCity(scope.row.address) : '/'}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="work_experience"
-            label="经验要求"
-            min-width="80">
-            <template slot-scope="scope">
-              <span>{{scope.row.work_experience ? localData.offerExperience[parseInt(scope.row.work_experience)-1].name : '/'}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="wages"
-            label="薪资范围"
-            min-width="80">
-            <template slot-scope="scope">
-              <span>{{scope.row.wages ? localData.wages[parseInt(scope.row.wages)-1].name : '/'}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="status"
-            label="发布状态"
-            min-width="80">
-            <template slot-scope="scope">
-              <span v-if="scope.row.status == 1">已发布</span>
-              <span v-else="scope.row.status == 0">待发布</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="create_time"
-            label="发布时间"
-            min-width="140">
-            <template slot-scope="scope">
-              <span v-if='scope.row.modify_time == 0 || scope.row.status == 0'>未发布</span>
-              <span v-else>{{new Date(parseInt(scope.row.modify_time)).toLocaleString().replace(/:\d{1,2}$/, '')}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column width="240px">
-            <template slot-scope="scope">
-              <div class="btn_cont">
-                <el-button @click="_see(scope.row.jid)" type="primary" plain>查看</el-button>
-                <el-button @click="_edit(scope.row.jid)" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[2].editJob == true'>编辑</el-button>
-                <!--<el-button type="primary" plain>权限管理</el-button>-->
-                <el-button @click="_release(scope.row,2)" type="primary" v-if="scope.row.status == 1 && permissionConfig[2].onOrOffJob" plain>停止发布</el-button>
-                <el-button @click="_release(scope.row,1)" type="primary" v-if="scope.row.status == 0 && permissionConfig[2].onOrOffJob" plain>发布</el-button>
-              </div>
-            </template>
-          </el-table-column>
-        </el-table>
-				<div class="pagenationDiv">
-					<!--<el-pagination-->
-						<!--@size-change="handleSizeChange"-->
-						<!--@current-change="handleCurrentChange"-->
-						<!--:current-page="pageData.start"-->
-						<!--:page-sizes="[15]"-->
-						<!--:page-size="pageData.pageSize"-->
-						<!--layout="total, prev, pager, next, sizes"-->
-						<!--:total="pageData.count">-->
-					<!--</el-pagination>-->
-          <page v-if="pageSize > 0 && count >0 && start > 0"
-                @change-page="init"
-                @change-size="_page"
-                ref="Pages"
-                :page_size="pageSize"
-                :count="count"
-                :start1="start"
-                :page_type="[15]"
-          ></page>
-				</div>
-      </el-main>
-    </el-container>
+        <span @click="initBefore(0)"
+              class="job_tab_item"
+              :class="{is_active:status == 0}">待发布职位</span>
+        <span @click="initBefore(1)"
+              class="job_tab_item"
+              :class="{is_active:status == 1}">已发布职位</span>
+      </div>
+      <!--<div class="hr_num">当前账号数量（4）</div>-->
+      <div @click="addHr()" class="add_hr" v-if="permissionConfig.length > 0 && permissionConfig[2].addJob">
+        <img src="@/assets/add.png" alt="">
+        <span>添加职位</span>
+      </div>
+    </div>
+    <div class="job_main">
+      <el-table
+        :data="tableData"
+        style="width: 100%">
+        <el-table-column
+          prop="name"
+          label="职位名称"
+          min-width="140">
+        </el-table-column>
+        <el-table-column
+          prop="education"
+          label="学历要求"
+          min-width="90">
+          <template slot-scope="scope">
+            <span>{{scope.row.education ? localData.education[parseInt(scope.row.education)-1].name : '/'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="address"
+          label="工作地"
+          min-width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.address ? selectCity(scope.row.address) : '/'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="work_experience"
+          label="经验要求"
+          min-width="80">
+          <template slot-scope="scope">
+            <span>{{scope.row.work_experience ? localData.offerExperience[parseInt(scope.row.work_experience)-1].name : '/'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="wages"
+          label="薪资范围"
+          min-width="80">
+          <template slot-scope="scope">
+            <span>{{scope.row.wages ? localData.wages[parseInt(scope.row.wages)-1].name : '/'}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          label="发布状态"
+          min-width="80">
+          <template slot-scope="scope">
+            <span v-if="scope.row.status == 1">已发布</span>
+            <span v-else="scope.row.status == 0">待发布</span>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="create_time"
+          label="发布时间"
+          min-width="140">
+          <template slot-scope="scope">
+            <span v-if='scope.row.modify_time == 0 || scope.row.status == 0'>未发布</span>
+            <span v-else>{{new Date(parseInt(scope.row.modify_time)).toLocaleString().replace(/:\d{1,2}$/, '')}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column width="240px">
+          <template slot-scope="scope">
+            <div class="btn_cont">
+              <el-button @click="_see(scope.row.jid)" type="primary" plain>查看</el-button>
+              <el-button @click="_edit(scope.row.jid)" type="primary" plain v-if='permissionConfig.length > 0 && permissionConfig[2].editJob == true'>编辑</el-button>
+              <!--<el-button type="primary" plain>权限管理</el-button>-->
+              <el-button @click="_release(scope.row,2)" type="primary" v-if="scope.row.status == 1 && permissionConfig[2].onOrOffJob" plain>停止发布</el-button>
+              <el-button @click="_release(scope.row,1)" type="primary" v-if="scope.row.status == 0 && permissionConfig[2].onOrOffJob" plain>发布</el-button>
+            </div>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="pagenationDiv">
+        <!--<el-pagination-->
+        <!--@size-change="handleSizeChange"-->
+        <!--@current-change="handleCurrentChange"-->
+        <!--:current-page="pageData.start"-->
+        <!--:page-sizes="[15]"-->
+        <!--:page-size="pageData.pageSize"-->
+        <!--layout="total, prev, pager, next, sizes"-->
+        <!--:total="pageData.count">-->
+        <!--</el-pagination>-->
+        <page v-if="pageSize > 0"
+              @change-page="init"
+              @change-size="_page"
+              ref="Pages"
+              :page_size="pageSize"
+              :count="count"
+              :start1="start"
+              :page_type="[15]"
+        ></page>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -253,7 +251,8 @@
 </script>
 
 <style scoped>
-  .posi_list .el-header{
+  .posi_list .job_header{
+    height: 60px;
     margin-bottom: 1px;
     display: flex;
     align-items: center;
@@ -297,7 +296,7 @@
     width: 26px;
     margin-right: 5px;
   }
-  .posi_list .el-main{
+  .posi_list .job_main{
     background-color: #fff;
     padding: 0 20px 20px;
   }

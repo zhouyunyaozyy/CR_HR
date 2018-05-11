@@ -2,7 +2,9 @@
   <div class="page_cont">
     <div class="page_total">共{{count}}条</div>
     <div class="page_list">
-      <span class="page_prve" :class="{no_active:start == 1}" @click="prevPage(start-1)">上一页</span>
+      <span class="page_prve"
+            :class="{no_active:start == 1 || count == 0}"
+            @click="prevPage(start-1)">上一页</span>
       <div v-if="pageNum < 5" class="page_data">
         <span class="page_item"
               @click="changePage(index+1)"
@@ -49,7 +51,9 @@
               class="page_item"
         >{{pageNum}}</span>
       </div>
-      <span class="page_next" :class="{no_active:start == pageNum}" @click="nextPage(start+1)">下一页</span>
+      <span class="page_next"
+            :class="{no_active:start == pageNum || count == 0}"
+            @click="nextPage(start+1)">下一页</span>
     </div>
     <div class="page_size">
       <div @click.stop="showSelect" class="page_size_cont">
@@ -276,14 +280,19 @@
     flex: 0 0 80px;
   }
   .page_num input{
-    width: 100%;
+    width: 80px;
+    height: 28px;
+    *height: 30px;
     line-height: 28px;
+    *line-height: 30px;
     text-align: center;
     background-color: #fff;
     border: 1px solid #ccc;
     box-sizing: border-box;
   }
   .page_jump{
+    font-size: 14px;
+    color:#666;
     flex: 0 0 50px;
     text-align: center;
     margin-left: 10px;
