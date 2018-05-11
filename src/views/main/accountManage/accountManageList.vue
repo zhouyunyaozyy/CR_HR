@@ -59,53 +59,64 @@
         </el-table-column>
       </el-table>
       <div class="pagenationDiv">
-        <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pageData.start"
-          :page-sizes="[15]"
-          :page-size="pageData.pageSize"
-          layout="total, prev, pager, next, sizes"
-          :total="pageData.count">
-        </el-pagination>
+        <page v-if="pageSize > 0"
+              @change-page="init"
+              @change-size="_page"
+              ref="Pages"
+              :page_size="pageSize"
+              :count="count"
+              :start1="start"
+              :page_type="[15]"
+        ></page>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import Page from '@/components/page'
   export default {
     name: "accountManagement",
     data() {
       return {
         tableData: [],
-				pageData: {}
+        start: 0,
+        count:0,
+        pageSize:3,
       }
+    },
+    components:{
+      Page
     },
     activated () {
       this.init();
     },
     methods:{
-			handleSizeChange (val) {
-				this.$limit = val
-				this.init()
-			},
-			handleCurrentChange (val) {
-				this.$start = val
-				this.init()
-			},
+      _page(val){
+        if(val){
+          this.pageSize = val;
+          this.init()
+        }
+      },
       init (){
         let resultData = {
-					_limit: this.$limit,
-					_start: this.$start,
+					_start: this.start,
           cid:window.sessionStorage.getItem("cid")
         };
+        if(this.pageSize){
+          resultData._limit = this.pageSize
+        }
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/company/queryAllChildrenByCid',
           data: resultData,
           fuc: (res) => {
-						this.pageData = res.data
+            if(this.pageSize > 0){
+              this.$refs.Pages.initStart(res.data.start)
+            }
+            this.pageSize = res.data.pageSize
+            this.count = res.data.count
+            this.start = res.data.start
             this.tableData = res.data.data;
             console.log( res)
           }

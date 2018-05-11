@@ -404,8 +404,7 @@
         jid:"",
 				start: 0,
         count:0,
-        pageSize:0,
-        limit:3,
+        pageSize:3,
         // screen:{
         //   name:11,
         //   gender: '',           //  性别
@@ -434,7 +433,6 @@
         checkedAllName: [],
         checkedCities:[],
 				permissionConfig: [],
-				pageData: {},
 				showFormBool: false, // 展示过滤条件
       }
     },
@@ -457,7 +455,7 @@
     methods:{
       _page(val){
         if(val){
-          this.limit = val;
+          this.pageSize = val;
           this.init()
         }
       },
@@ -468,21 +466,6 @@
 			},
 			showOrHideenForm () {
 				this.showFormBool = !this.showFormBool
-			},
-			handleSizeChange (val) {
-				this.$limit = val
-				this.checkedCities = [];
-				this.checkSum = 0;
-				this.checkState = false;
-				this.init()
-			},
-			handleCurrentChange (val) {
-				console.log("startChange", val)
-				this.start = val
-				this.checkedCities = [];
-				this.checkSum = 0;
-				this.checkState = false;
-				// this.init()
 			},
       sure (state,type){
         if(state != 3){
@@ -613,9 +596,11 @@
           var _start = 1;
         }
         let screenArr = {
-					_limit: this.limit,
 					_start: _start,
           jid: this.jid
+        }
+        if(this.pageSize){
+          screenArr._limit = this.pageSize;
         }
         if(this.screenData.name){
           screenArr.name = this.screenData.name
@@ -677,7 +662,6 @@
               if(this.pageSize > 0){
                 this.$refs.Pages.initStart(res.data.start)
               }
-							this.pageData = res.data
               this.pageSize = res.data.pageSize
               this.count = res.data.count
 							this.start = res.data.start

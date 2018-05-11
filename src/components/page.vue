@@ -5,7 +5,7 @@
       <span class="page_prve"
             :class="{no_active:start == 1 || count == 0}"
             @click="prevPage(start-1)">上一页</span>
-      <div v-if="pageNum < 5" class="page_data">
+      <div v-if="pageNum <= 5" class="page_data">
         <span class="page_item"
               @click="changePage(index+1)"
               :class="{is_active:start == index+1}"
@@ -97,10 +97,18 @@
     },
     data (){
       return{
-        pageNum:0,
+        pageNum:Math.ceil(this.count/this.page_size),
         jumpNum:"",
         select_state:0,
         start:1,
+      }
+    },
+    watch:{
+      count (oldVue,newVue){
+        this.pageNum = Math.ceil(this.count/this.page_size)
+      },
+      page_size (oldVue,newVue){
+        this.pageNum = Math.ceil(this.count/this.page_size)
       }
     },
     computed:{
@@ -108,8 +116,6 @@
         return this.$store.state.tj.isPage;
       },
       pageCount () {
-        this.pageNum = Math.ceil(this.count/this.page_size)
-        console.log(this.count,this.page_size,Math.ceil(this.count/this.page_size))
         return new Array(this.pageNum)
       }
     },
