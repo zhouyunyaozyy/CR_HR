@@ -34,10 +34,14 @@
       <div class="g_main">
         <div class="g_aside" width="200px">
           <div class="time_cont">
-            <div>
-              <div class="week_time">{{showDay}}</div>
-              <div class="time_time">{{showHours + ":" + showM}}</div>
-              <div class="day_time">{{showYear + "." + showMonth + "." + showDate}}</div>
+            <!--<div>-->
+              <!--<div class="week_time">{{showDay}}</div>-->
+              <!--<div class="time_time">{{showHours + ":" + showM + ":" + showS}}</div>-->
+              <!--<div class="day_time">{{showYear + "." + showMonth + "." + showDate}}</div>-->
+            <!--</div>-->
+            <div id="clock">
+              <p class="date">{{showYear + "." + showMonth + "." + showDate}}</p>
+              <p class="time">{{showHours + ":" + showM + ":" + showS}}</p>
             </div>
           </div>
           <div ref="elmenu">
@@ -45,6 +49,7 @@
               router
               :default-active="$route.path"
               class="aside_label"
+              @select="menuSelect"
               background-color="#1f282d"
               text-color="#fff"
               active-text-color="#fff" >
@@ -56,9 +61,9 @@
                 <i class="iconfont icon-pipeizhiwei"></i>
                 <span slot="title">职位管理</span>
               </el-menu-item>
-              <el-submenu index='2' v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
+              <el-submenu index='/resume' v-if='permissionConfig.length > 0 && permissionConfig[0].seeRecruitDetail == true'>
                 <template slot="title">
-                  <i class="iconfont icon-wendang"></i>
+                  <i class="iconfont icon-wendang" :class="{is_open:is_open}"></i>
                   <span>简历管理</span>
                 </template>
                 <el-menu-item-group>
@@ -126,76 +131,19 @@
           showDay:"",
           showHours:0,
           showM:0,
+          showS:0,
           showYear:0,
           showMonth:0,
-          showDate:0
+          showDate:0,
+          is_open:false,
         }
       },
       components:{
         // WLabel
       },
 			created () {
-        let date = new Date();
-        let day = date.getDay();
-        if(date.getMinutes() < 10){
-          this.showM = "0" + date.getMinutes();
-        }else{
-          this.showM = date.getMinutes();
-        }
-        let s = date.getSeconds();
-        setInterval(() => {
-          s = s + 1;
-          if(s == 60){
-            s = 0;
-            let mTime = parseInt(this.showM);
-            mTime = mTime + 1;
-            if( mTime < 10){
-              this.showM = "0" + mTime;
-            }else{
-              this.showM = mTime;
-            }
-          }
-        },1000)
-        if(date.getHours() < 10){
-          this.showHours = "0" + date.getHours();
-        }else{
-          this.showHours = date.getHours();
-        }
-        this.showYear = date.getFullYear();
-        if(date.getMonth() < 9){
-          this.showMonth = "0" + (date.getMonth()+1);
-        }else{
-          this.showMonth = date.getMonth()+1;
-        }
-        if(date.getDate() < 10){
-          this.showDate = "0" + date.getDate();
-        }else{
-          this.showDate = date.getDate();
-        }
-        switch (day){
-          case 1:
-            this.showDay = "星期一"
-            break;
-          case 2:
-            this.showDay = "星期二"
-            break;
-          case 3:
-            this.showDay = "星期三"
-            break;
-          case 4:
-            this.showDay = "星期四"
-            break;
-          case 5:
-            this.showDay = "星期五"
-            break;
-          case 6:
-            this.showDay = "星期六"
-            break;
-          case 7:
-            this.showDay = "星期天"
-            break;
-        }
-        console.log()
+        this.initDate();
+        setInterval(this.initDate,1000)
 				console.log('router', this.$route)
 				this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 				this.mainOrChildren = window.sessionStorage.getItem('mainOrChildren')
@@ -467,6 +415,59 @@
 				}
 			},
       methods: {
+        initDate(){
+          let date = new Date();
+          let day = date.getDay();
+          if(date.getSeconds() < 10){
+            this.showS = "0" + date.getSeconds();
+          }else{
+            this.showS = date.getSeconds();
+          }
+          if(date.getMinutes() < 10){
+            this.showM = "0" + date.getMinutes();
+          }else{
+            this.showM = date.getMinutes();
+          }
+          if(date.getHours() < 10){
+            this.showHours = "0" + date.getHours();
+          }else{
+            this.showHours = date.getHours();
+          }
+          this.showYear = date.getFullYear();
+          if(date.getMonth() < 9){
+            this.showMonth = "0" + (date.getMonth()+1);
+          }else{
+            this.showMonth = date.getMonth()+1;
+          }
+          if(date.getDate() < 10){
+            this.showDate = "0" + date.getDate();
+          }else{
+            this.showDate = date.getDate();
+          }
+          switch (day){
+            case 1:
+              this.showDay = "星期一"
+              break;
+            case 2:
+              this.showDay = "星期二"
+              break;
+            case 3:
+              this.showDay = "星期三"
+              break;
+            case 4:
+              this.showDay = "星期四"
+              break;
+            case 5:
+              this.showDay = "星期五"
+              break;
+            case 6:
+              this.showDay = "星期六"
+              break;
+            case 7:
+              this.showDay = "星期天"
+              break;
+          }
+        },
         hidePage (){
           this.$store.state.tj.isPage = false;
         },
@@ -539,6 +540,20 @@
 					window.sessionStorage.setItem('targetIdBool', false)
 					this.$router.push('sealtalkDetail')
 				},
+        menuSelect( index, indexPath){
+          switch (index){
+            case "/resumeList":
+              this.is_open = true;
+              break;
+            case "/resumeCollect":
+              this.is_open = true;
+              break;
+            default:
+              this.is_open = false;
+              break;
+          }
+          console.log( index, indexPath)
+        }
       }
     }
 </script>
@@ -549,6 +564,12 @@
     font-size: 18px;
     padding-left: 10px;
     text-align: left;
+  }
+  .aside_label .iconfont{
+    font-size: 24px;
+  }
+  .aside_label .el-submenu__title .iconfont{
+    font-size: 20px;
   }
 /*
   .aside_label>.is-active,.aside_label>.is-opened>.el-submenu__title{
@@ -575,7 +596,7 @@
   .aside_label .el-menu-item-group .el-menu-item.is-active{
     background-color: #151b1e;
   }
-  .aside_label .el-submenu__title i{
+  .aside_label .el-submenu__title i.is_open{
     color:#fff;
   }
   .label_cont .el-tabs--card>.el-tabs__header .el-tabs__nav{
@@ -719,6 +740,7 @@
     justify-content: center;
     margin-bottom: 10px;
     text-align: center;
+    position: relative;
   }
   .time_time{
     font-size: 22px;
@@ -785,4 +807,32 @@
 	.mainPngDiv>img{
 		margin-top: 100px;
 	}
+
+  #clock {
+    font-family: 'Share Tech Mono', monospace;
+    color: #ffffff;
+    text-align: center;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    color: #daf6ff;
+    text-shadow: 0 0 20px #0aafe6, 0 0 20px rgba(10, 175, 230, 0);
+  }
+  #clock .time {
+    letter-spacing: 0.05em;
+    font-size: 20px;
+    padding: 5px 0;
+  }
+  #clock .date {
+    letter-spacing: 0.1em;
+    font-size: 16px;
+  }
+  #clock .text {
+    letter-spacing: 0.1em;
+    font-size: 12px;
+    padding: 20px 0 0;
+  }
+
 </style>
