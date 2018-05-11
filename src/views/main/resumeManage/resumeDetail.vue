@@ -361,7 +361,7 @@
 				this.$router.push('sealtalkDetail')
 			},
 			outPdf () {
-				window.open('http://localhost:7000/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
+				window.open(global.configSelf.nodeUrl + '/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
 			},
       changeState(type){
         this.state = type;

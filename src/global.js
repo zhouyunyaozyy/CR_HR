@@ -28,7 +28,7 @@ let urlSelf = {
       getAllListOfParentUndo: '/parent/getAllListOfParentUndo' // 获取首页未处理简历信息
     }
 }
-// 调试
+// 开发
 let configSelf = {
   appKey: 'k51hidwqknn3b',
   //paramUrl: 'http://192.168.1.115:8080',
@@ -44,7 +44,7 @@ let configSelf = {
 //    }
   }
 }
-// 开发
+// 调试
 let configSelf2 = {
   appKey: 'k51hidwqknn3b',
   paramUrl: 'http://192.168.1.222:8080',
@@ -83,8 +83,8 @@ let configSelf5 = {
 }
 
 module.exports.urlSelf = urlSelf
-module.exports.configSelf = configSelf // 杨山服务器（开发）
+//module.exports.configSelf = configSelf // 杨山服务器（开发）
 //module.exports.configSelf = configSelf2 // 测试服务器（调试）
 //module.exports.configSelf = configSelf3 // 线上服务器（正式）
 //module.exports.configSelf = configSelf4 // 线上服务器（预发布）
-//module.exports.configSelf = configSelf5 // 线下服务器（测试）
+module.exports.configSelf = configSelf5 // 线下服务器（测试）
