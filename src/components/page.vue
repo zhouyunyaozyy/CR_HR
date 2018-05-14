@@ -3,57 +3,57 @@
     <div class="page_total">共{{count}}条</div>
     <div class="page_list">
       <span class="page_prve"
-            :class="{no_active:start == 1 || count == 0}"
-            @click="prevPage(start-1)">上一页</span>
+            :class="{no_active:startPage == 1 || count == 0}"
+            @click="prevPage(startPage - 1)">上一页</span>
       <div v-if="pageNum <= 5" class="page_data">
         <span class="page_item"
               @click="changePage(index+1)"
-              :class="{is_active:start == index+1}"
+              :class="{is_active:startPage == index+1}"
               v-for="(item,index) in pageCount">{{index+1}}</span>
       </div>
       <div v-else class="page_data">
-        <span :class="{is_active:start == 1}" @click="changePage(1)" class="page_item">1</span>
-        <span :class="{is_active:start == 2}"
+        <span :class="{is_active:startPage == 1}" @click="changePage(1)" class="page_item">1</span>
+        <span :class="{is_active:startPage == 2}"
               @click="changePage(2)"
-              v-if="start < 4" class="page_item">2</span>
+              v-if="startPage < 4" class="page_item">2</span>
         <span v-else class="page_item"><i class="iconfont icon-ellipsis"></i></span>
-        <span :class="{is_active:start == 3}"
+        <span :class="{is_active:startPage == 3}"
               @click="changePage(3)"
-              v-if="start < 4" class="page_item">3</span>
-        <span v-else-if="start < pageNum - 2"
-              @click="changePage(start-1)"
-              class="page_item">{{start - 1}}</span>
+              v-if="startPage < 4" class="page_item">3</span>
+        <span v-else-if="startPage < pageNum - 2"
+              @click="changePage(startPage - 1)"
+              class="page_item">{{startPage - 1}}</span>
         <span @click="changePage(4)"
-              v-if="start < 4" class="page_item">4</span>
-        <span :class="{is_active:start == pageNum - 3}"
+              v-if="startPage < 4" class="page_item">4</span>
+        <span :class="{is_active:startPage == pageNum - 3}"
               @click="changePage(pageNum - 3)"
-              v-else-if="start >= pageNum - 2"
+              v-else-if="startPage >= pageNum - 2"
               class="page_item"
         >{{pageNum - 3}}</span>
-        <span v-else class="page_item is_active">{{start}}</span>
-        <span v-if="start < 4" class="page_item"><i class="iconfont icon-ellipsis"></i></span>
-        <span @click="changePage(start+1)"
-              v-else-if="start < pageNum - 2"
-              class="page_item">{{start + 1}}</span>
-        <span :class="{is_active:start == pageNum - 2}"
+        <span v-else class="page_item is_active">{{startPage}}</span>
+        <span v-if="startPage < 4" class="page_item"><i class="iconfont icon-ellipsis"></i></span>
+        <span @click="changePage(startPage+1)"
+              v-else-if="startPage < pageNum - 2"
+              class="page_item">{{startPage + 1}}</span>
+        <span :class="{is_active:startPage == pageNum - 2}"
               @click="changePage(pageNum - 2)"
               v-else class="page_item"
         >{{pageNum - 2}}</span>
-        <span :class="{is_active:start == pageNum - 1}"
+        <span :class="{is_active:startPage == pageNum - 1}"
               @click="changePage(pageNum - 1)"
-              v-if="start >= pageNum-2"
+              v-if="startPage >= pageNum-2"
               class="page_item"
         >{{pageNum - 1}}</span>
-        <span v-else-if="start >= 4"
+        <span v-else-if="startPage >= 4"
               class="page_item"><i class="iconfont icon-ellipsis"></i></span>
-        <span :class="{is_active:start == pageNum}"
+        <span :class="{is_active:startPage == pageNum}"
               @click="changePage(pageNum)"
               class="page_item"
         >{{pageNum}}</span>
       </div>
       <span class="page_next"
-            :class="{no_active:start == pageNum || count == 0}"
-            @click="nextPage(start+1)">下一页</span>
+            :class="{no_active:startPage == pageNum || count == 0}"
+            @click="nextPage(startPage+1)">下一页</span>
     </div>
     <div class="page_size">
       <div @click.stop="showSelect" class="page_size_cont">
@@ -100,7 +100,11 @@
         pageNum:Math.ceil(this.count/this.page_size),
         jumpNum:"",
         select_state:0,
-        start:1,
+      }
+    },
+    computed:{
+      startPage () {
+        return this.$store.state.tj.startPage;
       }
     },
     watch:{
@@ -130,7 +134,6 @@
         this.$store.state.tj.isPage = !this.$store.state.tj.isPage;
       },
       changePage(val){
-        // this.start = val;
         if(val > 0 && val <= this.pageNum){
           this.$emit("change-page",val)
           console.log(val)

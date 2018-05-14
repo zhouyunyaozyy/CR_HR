@@ -37,6 +37,7 @@
       <div class="collect_cont">
         <el-checkbox-group v-model="checkedCities" @change="checkItem">
           <el-table
+            v-loading="loading"
             :data="tableData"
             style="width: 100%">
             <el-table-column
@@ -189,6 +190,7 @@
         checkSum: 0,
         checkedAllName: [],
         checkedCities:[],
+        loading:true,
 				showFormBool: false // 展示过滤条件
       }
     },
@@ -231,6 +233,7 @@
         }
       },
       init (){
+        this.loading = true;
         let dataPost = {
 					_limit: this.$limit,
 					_start: this.$start
@@ -247,20 +250,12 @@
           url: '/dabai-chaorenjob/favorites/getResumeFavoritesList',
           data: dataPost,
           fuc: (res) => {
-            if(res.code == 1){
-							this.pageData = res.data
-              this.tableData = res.data.data;
-							for(let i = 0;i<this.tableData.length;i++){
-								this.checkedAllName[i] = this.tableData[i].name
-							}
-              // this.init();
-            }else{
-              this.$message({
-                type: 'error',
-                message: res.msg,
-                duration: 1000
-              })
+            this.pageData = res.data
+            this.tableData = res.data.data;
+            for(let i = 0;i<this.tableData.length;i++){
+              this.checkedAllName[i] = this.tableData[i].name
             }
+            this.loading = false;
             // this.tableData[index].status ==
           }
         })

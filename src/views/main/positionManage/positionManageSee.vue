@@ -1,7 +1,7 @@
 <template>
   <div class="pisition_see">
     <div class="job_detail_title">职位信息</div>
-    <div class="job_info_list">
+    <div class="job_info_list" v-loading="loading">
       <div class="job_info_cont">
         <div class="job_info_item">
           <span class="job_info_name">职位名称：</span>
@@ -79,6 +79,7 @@
         jobInfo:{},
         rcnidArr:[],
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
+        loading:true,
       }
     },
     activated () {
@@ -110,6 +111,7 @@
         })
       },
       getDetail (){
+        this.loading = true;
         let resultData = {
           jid:window.sessionStorage.getItem("jid")
         };
@@ -121,6 +123,7 @@
             // 获取详情
             if(res.code == 1){
               this.jobInfo = res.data
+              this.loading = false;
             }else{
               this.$message({
                 type: 'error',

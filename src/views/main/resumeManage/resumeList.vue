@@ -1,7 +1,6 @@
 <template>
-  <div class="resume_list_cont">
-    <el-row :gutter="10" class="resume_list"
-            v-loading="loading">
+  <div class="resume_list_cont" v-loading="loading">
+    <el-row :gutter="10" class="resume_list" v-if="resumeData.length > 0">
       <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='index' class="resume_item">
         <div class="resume_item_cont">
           <div class="resume_posi">
@@ -33,6 +32,9 @@
         </div>
       </el-col>
     </el-row>
+    <div v-else class="no_data">
+      <img src="./../../../imgs/no_data_04.png" alt="">
+    </div>
   </div>
 </template>
 <script>
@@ -155,5 +157,15 @@
     height: 30px;
     padding: 0;
     font-size: 14px;
+  }
+  .resume_list_cont{
+    height: 100%;
+  }
+  .no_data{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

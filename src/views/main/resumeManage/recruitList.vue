@@ -450,6 +450,7 @@
     activated () {
 //			this.start = this.$start
 			this.start = 1
+      this.$store.state.tj.startPage = 1;
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.jobName = window.sessionStorage.getItem("jobName");
       this.jid = window.sessionStorage.getItem("jid")
@@ -657,7 +658,7 @@
           data:screenArr,
           fuc: (res) => {
             if(this.pageSize > 0){
-              this.$refs.Pages.initStart(res.data.start)
+              this.$store.state.tj.startPage = res.data.start
             }
             this.pageSize = res.data.pageSize
             this.count = res.data.count
