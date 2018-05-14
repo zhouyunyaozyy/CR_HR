@@ -1,6 +1,7 @@
 <template>
   <div class="resume_list_cont">
-    <el-row :gutter="10" class="resume_list">
+    <el-row :gutter="10" class="resume_list"
+            v-loading="loading">
       <el-col v-for="(item,index) in resumeData" :class="{blue:index%2!=0}" :xs="24" :sm="12" :md="8" :lg="8" :xl="6" :key='index' class="resume_item">
         <div class="resume_item_cont">
           <div class="resume_posi">
@@ -40,6 +41,7 @@
     data () {
       return{
         resumeData:[],
+        loading:true,
       }
     },
     activated () {
@@ -47,11 +49,13 @@
     },
     methods:{
       init(){
+        this.loading = true;
         this.$axios({
           type: 'get',
           url: '/dabai-chaorenjob/resumeReceived/getHRResumeListGroupByJid',
           fuc: (res) => {
             this.resumeData= res.data;
+            this.loading = false;
             console.log( res)
           }
         })

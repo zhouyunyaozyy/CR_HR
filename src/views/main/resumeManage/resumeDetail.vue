@@ -75,7 +75,7 @@
       <span @click="changeState(2)" class="detail_tab_item" :class="{is_active:state == 2}">处理记录</span>
     </div>
     <div class="detail_info" v-show="state == 1">
-      <el-row>
+      <el-row v-loading="loading">
         <el-col :xs="13" :sm="13" :md="13" :lg="13" :xl="13" class="detail_info_left">
           <div class="job_wanted">
             <div class="detail_info_title">求职意向</div>
@@ -344,7 +344,8 @@
 				permissionConfig: [], // 权限管理
         fail_list:[],
         success_list:[],
-        passState:2
+        passState:2,
+        loading:true
       }
     },
     activated () {
@@ -404,6 +405,7 @@
 				this.dialogTrue()
 			},
       init () {
+			  this.loading = true;
         //获取简历详情
         let getData = {
           rrid:window.sessionStorage.getItem("rrid")
@@ -413,27 +415,24 @@
           type: 'get',
           url: '/dabai-chaorenjob/resumeReceived/getResumeVoteSnapshotVo',
           data:getData,
-          fuc: (res) => {
-            if(res.code == 1){
-              this.detailData = res.data;
-              this.experience_item = res.data.experience_item ?JSON.parse(res.data.experience_item) : []
-              this.education_item = JSON.parse(res.data.education_item)
-              this.passState = 2;
-              this.review_btn = false;
-              for(let i = 0 ;i<res.data.reviewList.length;i++){
-                this.success_list = [];
-                this.fail_list = [];
-                if(res.data.reviewList[i].sure == 1){
-                  this.success_list.push(res.data.reviewList[i].name)
-                }else if(res.data.reviewList[i].sure == 0){
-                  this.fail_list.push(res.data.reviewList[i].name)
-                }
-                if(window.sessionStorage.getItem('uid') == res.data.reviewList[i].uid){
-                  this.passState = res.data.reviewList[i].sure
-                }
+          fuc: (res) => { this.detailData = res.data;
+            this.experience_item = res.data.experience_item ?JSON.parse(res.data.experience_item) : []
+            this.education_item = JSON.parse(res.data.education_item)
+            this.passState = 2;
+            this.review_btn = false;
+            for(let i = 0 ;i<res.data.reviewList.length;i++){
+              this.success_list = [];
+              this.fail_list = [];
+              if(res.data.reviewList[i].sure == 1){
+                this.success_list.push(res.data.reviewList[i].name)
+              }else if(res.data.reviewList[i].sure == 0){
+                this.fail_list.push(res.data.reviewList[i].name)
               }
-              console.log(JSON.parse(res.data.education_item))
+              if(window.sessionStorage.getItem('uid') == res.data.reviewList[i].uid){
+                this.passState = res.data.reviewList[i].sure
+              }
             }
+            this.loading = false;
             console.log( res)
           }
         })

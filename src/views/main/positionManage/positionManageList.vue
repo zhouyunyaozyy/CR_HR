@@ -20,6 +20,7 @@
     </div>
     <div class="job_main">
       <el-table
+        v-loading="loading"
         :data="tableData"
         style="width: 100%">
         <el-table-column
@@ -126,6 +127,7 @@
         pageSize:3,
         count:0,
         start:1,
+        loading:true,
       }
     },
     components:{
@@ -148,6 +150,7 @@
 				this.init()
 			},
       init(page){
+        this.loading = true;
         if(page){
           var _start = page;
         }else{
@@ -168,15 +171,14 @@
           url: '/dabai-chaorenjob/job/queryAllJobListByCid',
           data: resultData,
           fuc: (res) => {
-            if(res.code == 1){
-              if(this.pageSize > 0){
-                this.$refs.Pages.initStart(res.data.start)
-              }
-              this.pageSize = res.data.pageSize
-              this.count = res.data.count
-              this.start = res.data.start
-              this.tableData= res.data.data;
+            if(this.pageSize > 0){
+              this.$refs.Pages.initStart(res.data.start)
             }
+            this.pageSize = res.data.pageSize
+            this.count = res.data.count
+            this.start = res.data.start
+            this.tableData= res.data.data;
+            this.loading = false;
             // this.status = type
             console.log( res)
           }

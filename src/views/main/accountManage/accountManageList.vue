@@ -10,8 +10,9 @@
     </div>
     <div class="hr_main">
       <el-table
+        v-loading="loading"
         :data="tableData"
-        style="width: 100%">
+        style="width: 100%;">
         <el-table-column
           prop="name"
           label="账号姓名"
@@ -83,6 +84,7 @@
         start: 0,
         count:0,
         pageSize:3,
+        loading:true,
       }
     },
     components:{
@@ -99,6 +101,7 @@
         }
       },
       init (){
+        this.loading = true;
         let resultData = {
 					_start: this.start,
           cid:window.sessionStorage.getItem("cid")
@@ -118,6 +121,7 @@
             this.count = res.data.count
             this.start = res.data.start
             this.tableData = res.data.data;
+            this.loading = false;
             console.log( res)
           }
         })
@@ -248,6 +252,7 @@
     margin-right: 5px;
   }
   .hr_list .hr_main{
+    padding: 0 20px;
     background-color: #fff;
   }
   .hr_list th{

@@ -181,7 +181,8 @@
         </div>
       </div>
       <div class="recruit_list_cont">
-        <el-row v-show="!pattern" class="chart_list">
+        <el-row v-show="!pattern" class="chart_list"
+                v-loading="loading">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-col
               v-for="item in tableData"
@@ -238,6 +239,7 @@
         <div v-show="pattern" class="list_list">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-table
+              v-loading="loading"
               :data="tableData"
               style="width: 100%">
               <el-table-column
@@ -405,6 +407,7 @@
 				start: 0,
         count:0,
         pageSize:3,
+        loading:true,
         // screen:{
         //   name:11,
         //   gender: '',           //  性别
@@ -584,12 +587,7 @@
         })
       },
       init(page){
-//				if (data) {
-//					this.start = 1
-//					this.checkState = false;
-//					this.checkedCities = [];
-//          this.checkSum = 0;
-//				}
+        this.loading = true;
         if(page){
           var _start = page;
         }else{
@@ -658,21 +656,20 @@
           url: '/dabai-chaorenjob/resumeReceived/getResumeReceivedListByJid',
           data:screenArr,
           fuc: (res) => {
-            if(res.code == 1){
-              if(this.pageSize > 0){
-                this.$refs.Pages.initStart(res.data.start)
-              }
-              this.pageSize = res.data.pageSize
-              this.count = res.data.count
-							this.start = res.data.start
-              this.checkedCities = [];
-              this.checkSum = 0;
-              this.checkState = false;
-              this.tableData = res.data.data;
-              for(let i = 0;i<this.tableData.length;i++){
-                this.checkedAllName[i] = this.tableData[i].rrid
-              }
+            if(this.pageSize > 0){
+              this.$refs.Pages.initStart(res.data.start)
             }
+            this.pageSize = res.data.pageSize
+            this.count = res.data.count
+            this.start = res.data.start
+            this.checkedCities = [];
+            this.checkSum = 0;
+            this.checkState = false;
+            this.tableData = res.data.data;
+            for(let i = 0;i<this.tableData.length;i++){
+              this.checkedAllName[i] = this.tableData[i].rrid
+            }
+            this.loading = false;
             console.log( res)
           }
         })

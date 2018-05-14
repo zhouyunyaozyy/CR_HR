@@ -85,6 +85,7 @@
             <el-input
               placeholder="输入招聘人数"
               type="number"
+              min="1"
               v-model="form.hire_number"></el-input>
           </el-col>
         </el-form-item>
@@ -379,7 +380,7 @@
 					this.removeTab();
 					return
 				}
-				
+
         console.log(this.form)
         if(!this.form.name){
           this.$message({
