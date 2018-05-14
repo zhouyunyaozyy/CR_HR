@@ -81,9 +81,9 @@
     data() {
       return {
         tableData: [],
-        start: 0,
-        count:0,
         pageSize:3,
+        count:0,
+        start: 1,
         loading:true,
       }
     },
@@ -100,10 +100,15 @@
           this.init()
         }
       },
-      init (){
+      init (page){
         this.loading = true;
+        if(page){
+          var _start = page;
+        }else{
+          var _start = 1;
+        }
         let resultData = {
-					_start: this.start,
+          _start: _start,
           cid:window.sessionStorage.getItem("cid")
         };
         if(this.pageSize){
