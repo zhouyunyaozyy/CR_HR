@@ -140,6 +140,7 @@
 											}
 											this.showPlane = false
 											this.$router.push('/main')
+                      this.$store.state.tj.is_login = false;
 										} else {
 											this.showPlane = false
 										}
@@ -147,7 +148,7 @@
 								})
 							}).catch( (err) => {
 								this.showPlane = false
-							}) 
+							})
 						}
 						catch (err) {
 							console.log(1, err)

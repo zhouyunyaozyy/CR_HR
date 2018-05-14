@@ -7,7 +7,7 @@ import store from '@/store'
 import axios from 'axios';
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css';
-import { Message } from 'element-ui';
+import { Message,MessageBox } from 'element-ui';
 const Base64 = require('js-base64').Base64
 const CryptoJS = require('crypto-js')
 const global = require('./global.js')
@@ -82,14 +82,28 @@ Vue.prototype.$axios = (params) => {
   if (params.type === 'get') {
     axios.get(baseUrl + params.url, {params: params.data, withCredentials:false, headers: {"Content-Type": "application/json ", "Accept" : "*/*", 'CR-token': resultData}})
       .then(function(response){
-        if (response.data.code != 1) {
+        if (response.data.code == 1) {
+          params.fuc(response.data)
+        } else if(response.data.code == 10001 || response.data.code == 10002) {
+          if(!store.state.tj.is_login){
+            store.state.tj.is_login = true;
+            MessageBox({
+              title:"温馨提示",
+              showClose: false,
+              message: response.data.msg,
+              callback:function(){
+                // window.location.href = "/"
+                router.push({name:"login"})
+                // this.$router.push({name:"login"})
+              }
+            });
+          }
+        } else{
           Message({
-						showClose: true,
+            showClose: true,
             message: response.data.msg + params.url,
             type: 'error',
           });
-        } else {
-          params.fuc(response.data)
         }
       })
       .catch(function(error){
@@ -115,7 +129,21 @@ Vue.prototype.$axios = (params) => {
 //						response.data.blob().then((blobData) => {
 							params.fuc(response.data)
 //						})
-					} else if (response.data.code != 1) {
+					} else if(response.data.code == 10001 || response.data.code == 10002) {
+           if(!store.state.tj.is_login){
+             store.state.tj.is_login = true;
+             MessageBox({
+               title:"温馨提示",
+               showClose: false,
+               message: response.data.msg,
+               callback:function(){
+                 // window.location.href = "/"
+                 router.push({name:"login"})
+                 // this.$router.push({name:"login"})
+               }
+             });
+           }
+          } else if (response.data.code != 1) {
 						Message({
 							showClose: true,
 							message: response.data.msg,

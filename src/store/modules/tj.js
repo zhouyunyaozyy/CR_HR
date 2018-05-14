@@ -7,7 +7,8 @@ const tj = {
       //是否刷新
       isRefresh: false,
       includePageNames:[],
-      isPage:false
+      isPage:false,
+      is_login:false,
     },
     mutations: {
       addTab (state,key) {

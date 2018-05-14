@@ -349,6 +349,7 @@
       }
     },
     activated () {
+      this.state = 1;
 			this.jobName = window.sessionStorage.getItem("jobName")
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.init();
@@ -366,6 +367,7 @@
 				window.open(global.configSelf.nodeUrl + '/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
 			},
       changeState(type){
+			  alert(type)
         this.state = type;
         if(type == 1){
           this.init()
