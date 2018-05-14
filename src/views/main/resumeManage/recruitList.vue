@@ -181,7 +181,7 @@
         </div>
       </div>
       <div class="recruit_list_cont">
-        <el-row v-show="!pattern" class="chart_list"
+        <el-row v-if="!pattern" class="chart_list"
                 v-loading="loading">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-col
@@ -236,7 +236,7 @@
             </el-col>
           </el-checkbox-group>
         </el-row>
-        <div v-show="pattern" class="list_list">
+        <div v-else class="list_list">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-table
               v-loading="loading"
@@ -1018,5 +1018,8 @@
   .check_cont{
     display: flex;
     align-items: center;
+  }
+  .chart_list,.list_list {
+    width: 100%;
   }
 </style>
