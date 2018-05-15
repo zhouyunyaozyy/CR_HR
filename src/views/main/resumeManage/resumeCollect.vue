@@ -161,20 +161,20 @@
       </div>
     </div>
 		<div class="pagenationDiv">
-			<el-pagination
-				@size-change="handleSizeChange"
-				@current-change="handleCurrentChange"
-				:current-page="pageData.start"
-				:page-sizes="[15]"
-				:page-size="pageData.pageSize"
-				layout="total, prev, pager, next, sizes"
-				:total="pageData.count">
-			</el-pagination>
+      <page v-if="pageSize > 0"
+            @change-page="init"
+            @change-size="_page"
+            :page_size="pageSize"
+            :count="count"
+            :start1="start"
+            :page_type="[15]"
+      ></page>
 		</div>
   </div>
 </template>
 
 <script>
+  import Page from '@/components/page';
   export default {
     name: "resumeCollect",
     data (){
@@ -191,33 +191,31 @@
         checkedAllName: [],
         checkedCities:[],
         loading:true,
+        pageSize:3,
+        count:0,
+        start: 1,
 				showFormBool: false // 展示过滤条件
       }
+    },
+    components:{
+      Page
     },
     activated () {
       this.init();
     },
     methods: {
+      _page(val){
+        if(val){
+          this.pageSize = val;
+          this.init()
+        }
+      },
 			_detail (rrid) {
 				window.sessionStorage.setItem("rrid",rrid)
         this.$router.push("/resumeDetail")
 			},
 			showOrHideenForm () {
 				this.showFormBool = !this.showFormBool
-			},
-			handleSizeChange (val) {
-				this.$limit = val
-				this.checkedCities = [];
-				this.checkSum = 0;
-				this.checkState = false;
-				this.init()
-			},
-			handleCurrentChange (val) {
-				this.$start = val
-				this.checkedCities = [];
-				this.checkSum = 0;
-				this.checkState = false;
-				this.init()
 			},
       sure (state,type){
         if(state != 3){
@@ -232,12 +230,19 @@
             return "(已拒绝)"
         }
       },
-      init (){
+      init (page){
         this.loading = true;
+        if(page){
+          var _start = page;
+        }else{
+          var _start = 1;
+        }
         let dataPost = {
-					_limit: this.$limit,
-					_start: this.$start
+          _start: _start,
 				};
+        if(this.pageSize){
+          dataPost._limit = this.pageSize;
+        }
         if(this.screen.status == 6){
         }else if(this.screen.status == 3 && this.screen.reservationState != 3){
           dataPost.status = this.screen.status
@@ -255,6 +260,9 @@
             for(let i = 0;i<this.tableData.length;i++){
               this.checkedAllName[i] = this.tableData[i].name
             }
+            this.pageSize = res.data.pageSize
+            this.count = res.data.count
+            this.start = res.data.start
             this.loading = false;
             // this.tableData[index].status ==
           }
@@ -420,4 +428,7 @@
     height: 30px;
     padding: 0;
 	}
+  .pagenationDiv{
+    margin: 15px 0;
+  }
 </style>

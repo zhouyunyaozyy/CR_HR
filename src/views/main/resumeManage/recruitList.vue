@@ -404,9 +404,9 @@
       return {
         jobName: "",
         jid:"",
-				start: 0,
-        count:0,
         pageSize:3,
+        count:0,
+        start: 1,
         loading:true,
         // screen:{
         //   name:11,
