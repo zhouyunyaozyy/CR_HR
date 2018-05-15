@@ -51,7 +51,7 @@ const store = new Vuex.Store({
       if (state.pageStatus === 'reg' || state.pageStatus === 'forget' || state.pageStatus === 'login') {
           // 获取浏览器信息
           var explorer = window.navigator.userAgent.toLowerCase()
-//					console.log('explorer', explorer)
+					console.log('explorer', explorer)
         // ie
           if (explorer.indexOf('msie') >= 0) {
             let ver = explorer.match(/msie ([\d.]+)/)[1]
@@ -74,7 +74,7 @@ const store = new Vuex.Store({
             let ver = explorer.match(/opera.([\d.]+)/)[1]
             data.client = 'Opera'
             data.clientVersion = ver
-          } else if (explorer.indexOf('Safari') >= 0) { // Safari
+          } else if (explorer.indexOf('safari') >= 0) { // Safari
             let ver = explorer.match(/version\/([\d.]+)/)[1]
             data.client = 'Safari'
             data.clientVersion = ver
