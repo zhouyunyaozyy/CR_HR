@@ -166,7 +166,6 @@
             @change-size="_page"
             :page_size="pageSize"
             :count="count"
-            :start1="start"
             :page_type="[15]"
       ></page>
 		</div>
@@ -184,7 +183,6 @@
           reservationState:"3"
         },
         tableData:[],
-				pageData: {},
         localData: JSON.parse(window.sessionStorage.getItem("localData")),
         checkState: false,
         checkSum: 0,
@@ -193,7 +191,6 @@
         loading:true,
         pageSize:3,
         count:0,
-        start: 1,
 				showFormBool: false // 展示过滤条件
       }
     },
@@ -255,15 +252,17 @@
           url: '/dabai-chaorenjob/favorites/getResumeFavoritesList',
           data: dataPost,
           fuc: (res) => {
-            this.pageData = res.data
+            if(this.pageSize > 0){
+              this.$store.state.tj.startPage = res.data.start
+            }
             this.tableData = res.data.data;
             for(let i = 0;i<this.tableData.length;i++){
               this.checkedAllName[i] = this.tableData[i].name
             }
             this.pageSize = res.data.pageSize
             this.count = res.data.count
-            this.start = res.data.start
             this.loading = false;
+            console.log(res)
             // this.tableData[index].status ==
           }
         })

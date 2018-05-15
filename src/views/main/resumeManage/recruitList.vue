@@ -386,7 +386,6 @@
                 ref="Pages"
                 :page_size="pageSize"
                 :count="count"
-                :start1="start"
                 :page_type="[15,30]"
           ></page>
 				</div>
@@ -406,7 +405,6 @@
         jid:"",
         pageSize:3,
         count:0,
-        start: 1,
         loading:true,
         // screen:{
         //   name:11,
@@ -485,10 +483,9 @@
         }
       },
       outExcell(bool){
-				this.start = 1
         let screenArr = {
 					_limit: 9999,
-					_start: this.start,
+					_start: this.$store.state.tj.startPage,
           jid: this.jid
         }
 				if (bool) {
@@ -662,7 +659,6 @@
             }
             this.pageSize = res.data.pageSize
             this.count = res.data.count
-            this.start = res.data.start
             this.checkedCities = [];
             this.checkSum = 0;
             this.checkState = false;
