@@ -102,11 +102,6 @@
         select_state:0,
       }
     },
-    computed:{
-      startPage () {
-        return this.$store.state.tj.startPage;
-      }
-    },
     watch:{
       count (oldVue,newVue){
         this.pageNum = Math.ceil(this.count/this.page_size)
@@ -116,6 +111,9 @@
       }
     },
     computed:{
+      startPage () {
+        return this.$store.state.tj.startPage;
+      },
       isPage (){
         return this.$store.state.tj.isPage;
       },
@@ -150,9 +148,6 @@
           this.$emit("change-page",val)
           console.log(val)
         }
-      },
-      initStart(val){
-        this.start = val;
       },
       _jump(){
         let num = Number(this.jumpNum);
