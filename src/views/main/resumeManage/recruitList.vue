@@ -464,6 +464,8 @@
 			outPdf () {
 				if (this.checkedCities.length > 0) {
 					window.open(global.configSelf.nodeUrl + '/toNodeGetPdf?id='+ this.checkedCities.join('-'))
+				} else {
+					this.$message.warning('请先选择数据，再进行操作')
 				}
 			},
 			showOrHideenForm () {
