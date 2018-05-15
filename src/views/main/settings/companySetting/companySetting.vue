@@ -13,7 +13,7 @@
       </el-upload>
     </div>
     <div class="basicBody">
-      <h3>上传企业形象图片 <span>支持jpg/png/gif格式，图片1035*480像素,不超过1M。</span></h3>
+      <h3>上传企业形象图片 <span>支持jpg/png/gif格式，图片690*340像素,不超过1M。</span></h3>
       <el-upload
           action="http://upload-z2.qiniu.com"
           list-type="picture-card" :file-list="imagesUrl" :before-upload="beforeAvatarUpload"
@@ -43,7 +43,7 @@
           <el-form-item label="官网" prop='website'>
             <el-input placeholder="HTTP://" v-model="form.website"></el-input>
           </el-form-item>
-          <el-form-item label="企业性质" prop='character'> 
+          <el-form-item label="企业性质" prop='character'>
               <el-col :span='5'>
                 <el-select v-model="form.character" placeholder="选择企业性质">
                   <el-option label="央企" value="1"></el-option>
@@ -53,7 +53,7 @@
                 </el-select>
               </el-col>
           </el-form-item>
-          <el-form-item label="机队规模" prop='fleet_size'> 
+          <el-form-item label="机队规模" prop='fleet_size'>
               <el-col :span='5'>
                 <el-select v-model="form.fleet_size" placeholder="选择机队规模">
                 <el-option label="1-30架" value="1"></el-option>
@@ -385,7 +385,7 @@
       }
 </style>
 <style lang='css' scoped>
-    
+
     .basicBody{
         width: 100%;
         overflow: hidden;

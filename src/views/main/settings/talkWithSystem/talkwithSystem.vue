@@ -1,12 +1,15 @@
 <template>
   <div class="systemTalked">
-    <div class="systemTalkedBody">
+    <div v-if="tableMsg.length > 0" class="systemTalkedBody">
       <div class="talked" v-for='(item, index) in tableMsg'>
         <h3><i class="iconfont icon-tongzhi"></i>{{item.title}}<time style="color:#808080;float:right;font-size: 12px;font-weight: 200;">{{new Date(parseInt(item.create_time)).toLocaleString('chinese',{hour12: false})}}</time></h3>
         <p>{{item.content}}</p>
         <p>{{item.content}}</p>
         <span @click='checkDetail(index)'>查看详情</span>
       </div>
+    </div>
+    <div v-else class="no_data">
+      <img src="./../../../../imgs/no_data_04.png" alt="">
     </div>
     <div class="btns" v-if="tableMsg.length > 0">
         <el-pagination
@@ -130,5 +133,15 @@
       margin-bottom: 30px;
       background-color: white;
 		box-sizing: border-box;
+  }
+  .systemTalked{
+    height: 100%;
+  }
+  .no_data{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 </style>

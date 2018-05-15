@@ -92,9 +92,7 @@ Vue.prototype.$axios = (params) => {
               showClose: false,
               message: response.data.msg,
               callback:function(){
-                // window.location.href = "/"
                 router.push({name:"login"})
-                // this.$router.push({name:"login"})
               }
             });
           }
