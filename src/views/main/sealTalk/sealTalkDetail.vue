@@ -116,18 +116,36 @@
           }
         }
 //				console.log('list', this.tabsList)
-				this.tabsList = []
+				if (this.tabsList.length < this.localTalkData.length) {
+					this.tabsList = []
+				}
+				
 				for (let val in this.localTalkData) {
 					let nowData = this.localTalkData[val]
-					this.$set(this.tabsList, val, {url: '', name: '', type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无', showIcon: false})
+					if (this.tabsList[val]) {
+							this.tabsList[val].type = nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : ''
+							if (this.tabsList[val].time != nowData.content[nowData.content.length - 1].time) {
+								this.tabsList[val].time = nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime()
+							}
+							if (this.tabsList[val].content != nowData.content[nowData.content.length - 1].content) {
+								this.tabsList[val].content = nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无'
+							}
+					} else {
+						 this.$set(this.tabsList, val, {url: '', name: '', type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无', showIcon: false})
+					}
 					this.$axios({
 						url: '/dabai-chaorenjob/resumeReceived/getRongInfoByRrid',
 						type: 'get',
 						data: {rrid: nowData.rrid},
 						fuc: (res) => {
 							let data = res.data
-							console.log(data.name, nowData)
-							this.$set(this.tabsList, val, {url: data.headerUrl, name: data.name, type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无', showIcon: nowData.showIcon})
+							if (!this.tabsList[val].url) {
+								this.tabsList[val].url = data.headerUrl
+							}
+							if (!this.tabsList[val].name) {
+								this.tabsList[val].name = data.name
+							}
+//							this.$set(this.tabsList, val, {url: data.headerUrl, name: data.name, type: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].type : '', targetId: nowData.targetId, time: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].time : new Date().getTime(), content: nowData.content.length > 0 ? nowData.content[nowData.content.length - 1].content : '暂无', showIcon: nowData.showIcon})
 							this.$nextTick(() => {
 								console.log('targetId', this.targetId)
 								if (document.getElementsByClassName('actived')[0]) {

@@ -67,6 +67,9 @@
         if (!isLt2M) {
           this.$message.error('上传反馈图片大小不能超过 1M!')
         }
+				if ((isJPG || isPNG) && isLt2M) {
+					document.getElementsByClassName('el-upload el-upload--picture-card')[0].style.display = 'none'
+				}
         return (isJPG || isPNG) && isLt2M
       },
       handleAvatarSuccessImages (res){
