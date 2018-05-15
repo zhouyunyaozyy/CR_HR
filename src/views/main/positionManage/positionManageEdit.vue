@@ -84,9 +84,9 @@
           <el-col :span="5">
             <el-input
               placeholder="输入招聘人数"
-              type="number"
-              min="1"
-              v-model="form.hire_number"></el-input>
+              :maxlength='3'
+              type="text"
+              v-model="form.hire_number" @keyup.native="form.hire_number = $inputKeyUp($event)" @afterpaste.native="form.hire_number = $inputKeyUp($event)"></el-input>
           </el-col>
         </el-form-item>
         <el-form-item label="职位描述">

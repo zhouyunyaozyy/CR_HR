@@ -666,7 +666,7 @@
   .g_header{
     color:#fff;
     font-size: 20px;
-    background: url(./../../assets/header_bj.png) no-repeat center;
+    background: url(./../../assets/header_bj.png) no-repeat left center;
     height: 60px;
     display: flex;
     align-items: center;
