@@ -184,10 +184,10 @@
 								break
 							// 其他设备登陆
 							case RongIMLib.ConnectionStatus.KICKED_OFFLINE_BY_OTHER_CLIENT:
-								console.log('其他设备登陆')
 								this.$alert('该账号已在其他位置使用，点击确认按钮可重新登录。', '提示', {
 									confirmButtonText: '确定',
 									callback: action => {
+									  this.$router.push({name:"login"})
 //											RongIMClient.connect(window.sessionStorage.getItem('rongToken'), {
 //											onSuccess: function (userId) {
 //												console.log('Login successfully.' + userId)

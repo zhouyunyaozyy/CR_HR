@@ -63,7 +63,6 @@
         <page v-if="pageSize > 0"
               @change-page="init"
               @change-size="_page"
-              ref="Pages"
               :page_size="pageSize"
               :count="count"
               :start1="start"
@@ -81,9 +80,9 @@
     data() {
       return {
         tableData: [],
-        start: 0,
-        count:0,
         pageSize:3,
+        count:0,
+        start: 1,
         loading:true,
       }
     },
@@ -91,6 +90,7 @@
       Page
     },
     activated () {
+      this.$store.state.tj.startPage = 1;
       this.init();
     },
     methods:{
@@ -100,10 +100,15 @@
           this.init()
         }
       },
-      init (){
+      init (page){
         this.loading = true;
+        if(page){
+          var _start = page;
+        }else{
+          var _start = 1;
+        }
         let resultData = {
-					_start: this.start,
+          _start: _start,
           cid:window.sessionStorage.getItem("cid")
         };
         if(this.pageSize){
@@ -115,14 +120,13 @@
           data: resultData,
           fuc: (res) => {
             if(this.pageSize > 0){
-              this.$refs.Pages.initStart(res.data.start)
+              this.$store.state.tj.startPage = res.data.start
             }
             this.pageSize = res.data.pageSize
             this.count = res.data.count
             this.start = res.data.start
             this.tableData = res.data.data;
             this.loading = false;
-            console.log( res)
           }
         })
       },
@@ -193,9 +197,6 @@
 									type: 'success',
 									message: '删除成功!'
 								});
-								if (this.pageData.count % this.$limit == 1) {
-									this.$start--
-								}
 								this.init();
 							}else{
 								this.$message({

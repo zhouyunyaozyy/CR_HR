@@ -9,6 +9,7 @@ const tj = {
       includePageNames:[],
       isPage:false,
       is_login:false,
+      startPage:1,
     },
     mutations: {
       addTab (state,key) {

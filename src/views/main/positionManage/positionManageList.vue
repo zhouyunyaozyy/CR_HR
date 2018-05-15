@@ -134,6 +134,7 @@
       Page
     },
     activated () {
+      this.$store.state.tj.startPage = 1;
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
 			console.log(this.permissionConfig[2].onOrOffJob)
       this.init();
@@ -172,7 +173,7 @@
           data: resultData,
           fuc: (res) => {
             if(this.pageSize > 0){
-              this.$refs.Pages.initStart(res.data.start)
+              this.$store.state.tj.startPage = res.data.start
             }
             this.pageSize = res.data.pageSize
             this.count = res.data.count

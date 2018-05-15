@@ -181,7 +181,7 @@
         </div>
       </div>
       <div class="recruit_list_cont">
-        <el-row v-show="!pattern" class="chart_list"
+        <el-row v-if="!pattern" class="chart_list"
                 v-loading="loading">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-col
@@ -236,7 +236,7 @@
             </el-col>
           </el-checkbox-group>
         </el-row>
-        <div v-show="pattern" class="list_list">
+        <div v-else class="list_list">
           <el-checkbox-group v-model="checkedCities" @change="checkItem">
             <el-table
               v-loading="loading"
@@ -450,6 +450,7 @@
     activated () {
 //			this.start = this.$start
 			this.start = 1
+      this.$store.state.tj.startPage = 1;
 			this.permissionConfig = JSON.parse(window.sessionStorage.getItem('permissionConfig'))
       this.jobName = window.sessionStorage.getItem("jobName");
       this.jid = window.sessionStorage.getItem("jid")
@@ -657,7 +658,7 @@
           data:screenArr,
           fuc: (res) => {
             if(this.pageSize > 0){
-              this.$refs.Pages.initStart(res.data.start)
+              this.$store.state.tj.startPage = res.data.start
             }
             this.pageSize = res.data.pageSize
             this.count = res.data.count
@@ -1018,5 +1019,8 @@
   .check_cont{
     display: flex;
     align-items: center;
+  }
+  .chart_list,.list_list {
+    width: 100%;
   }
 </style>

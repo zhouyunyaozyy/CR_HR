@@ -54,6 +54,9 @@
 				}
 			}
 		},
+    activated (){
+      this.$store.state.tj.is_login = false;
+    },
 		methods: {
 			login () {
 				this.$refs['loginForm'].validate((valid) => {
@@ -140,7 +143,6 @@
 											}
 											this.showPlane = false
 											this.$router.push('/main')
-                      this.$store.state.tj.is_login = false;
 										} else {
 											this.showPlane = false
 										}

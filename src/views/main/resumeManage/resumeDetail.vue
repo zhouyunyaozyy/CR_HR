@@ -367,7 +367,6 @@
 				window.open(global.configSelf.nodeUrl + '/toNodeGetPdf?id='+ window.sessionStorage.getItem("rrid"))
 			},
       changeState(type){
-			  alert(type)
         this.state = type;
         if(type == 1){
           this.init()
