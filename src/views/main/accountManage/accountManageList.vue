@@ -90,6 +90,7 @@
       Page
     },
     activated () {
+      console.log(this.$store.state.tj.startPage)
       this.$store.state.tj.startPage = 1;
       this.init();
     },
