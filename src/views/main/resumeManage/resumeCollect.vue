@@ -29,11 +29,11 @@
       </el-form>
     </div>
     <div class="collect_list">
-      <div class="collect_title">
-        <el-checkbox
-          v-model="checkState"
-          @change="checkAll">全选</el-checkbox>
-      </div>
+      <!--<div class="collect_title">-->
+        <!--<el-checkbox-->
+          <!--v-model="checkState"-->
+          <!--@change="checkAll">全选</el-checkbox>-->
+      <!--</div>-->
       <div class="collect_cont">
         <el-checkbox-group v-model="checkedCities" @change="checkItem">
           <el-table
@@ -46,9 +46,10 @@
               label="应聘职位"
               min-width="150">
               <template slot-scope="scope">
-                <el-checkbox
-                  :label="scope.row.name"
-                >{{scope.row.job_name}}</el-checkbox>
+                <span>{{scope.row.job_name}}</span>
+                <!--<el-checkbox-->
+                  <!--:label="scope.row.name"-->
+                <!--&gt;{{scope.row.job_name}}</el-checkbox>-->
               </template>
             </el-table-column>
             <el-table-column
@@ -268,6 +269,7 @@
         })
       },
       checkItem(val){
+        console.log(val)
 				this.checkSum = val.length
         if(this.tableData.length == this.checkSum){
           this.checkState = true;
@@ -367,9 +369,10 @@
     font-size: 16px;
     color:#333;
   }
-  .collect_cont .el-table th:first-child{
-    padding-left: 30px;
-  }
+  /*全选对齐*/
+  /*.collect_cont .el-table th:first-child{*/
+    /*padding-left: 30px;*/
+  /*}*/
   .collect_cont .el-table td{
     font-size: 14px;
     color:#4c4c4c;
